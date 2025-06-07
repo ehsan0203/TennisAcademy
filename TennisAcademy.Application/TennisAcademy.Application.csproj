@@ -5,6 +5,13 @@
     <ProjectReference Include="..\TennisAcademy.Shared\TennisAcademy.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\" />
+    <Folder Include="Validators\" />
+    <Folder Include="UseCases\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

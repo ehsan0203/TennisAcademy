@@ -1,0 +1,12 @@
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Domain\obj\Debug\net9.0\TennisAcademy.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Domain\obj\Debug\net9.0\TennisAcademy.Domain.AssemblyInfoInputs.cache
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Domain\obj\Debug\net9.0\TennisAcademy.Domain.AssemblyInfo.cs
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Domain\obj\Debug\net9.0\TennisAcademy.Domain.csproj.CoreCompileInputs.cache
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Domain\obj\Debug\net9.0\TennisAcademy.Domain.sourcelink.json
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Domain\bin\Debug\net9.0\TennisAcademy.Domain.deps.json
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Domain\bin\Debug\net9.0\TennisAcademy.Domain.dll
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Domain\bin\Debug\net9.0\TennisAcademy.Domain.pdb
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Domain\obj\Debug\net9.0\TennisAcademy.Domain.dll
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Domain\obj\Debug\net9.0\refint\TennisAcademy.Domain.dll
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Domain\obj\Debug\net9.0\TennisAcademy.Domain.pdb
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Domain\obj\Debug\net9.0\ref\TennisAcademy.Domain.dll

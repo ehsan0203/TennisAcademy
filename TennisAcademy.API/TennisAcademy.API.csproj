@@ -8,12 +8,19 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TennisAcademy.Application\TennisAcademy.Application.csproj" />
     <ProjectReference Include="..\TennisAcademy.Domain\TennisAcademy.Domain.csproj" />
+    <ProjectReference Include="..\TennisAcademy.Infrastructure\TennisAcademy.Infrastructure.csproj" />
     <ProjectReference Include="..\TennisAcademy.Shared\TennisAcademy.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Middlewares\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 
 </Project>

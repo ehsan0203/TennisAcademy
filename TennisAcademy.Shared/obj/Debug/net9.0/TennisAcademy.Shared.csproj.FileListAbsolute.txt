@@ -1,0 +1,12 @@
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Shared\bin\Debug\net9.0\TennisAcademy.Shared.deps.json
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Shared\bin\Debug\net9.0\TennisAcademy.Shared.dll
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Shared\bin\Debug\net9.0\TennisAcademy.Shared.pdb
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Shared\obj\Debug\net9.0\TennisAcademy.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Shared\obj\Debug\net9.0\TennisAcademy.Shared.AssemblyInfoInputs.cache
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Shared\obj\Debug\net9.0\TennisAcademy.Shared.AssemblyInfo.cs
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Shared\obj\Debug\net9.0\TennisAcademy.Shared.csproj.CoreCompileInputs.cache
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Shared\obj\Debug\net9.0\TennisAcademy.Shared.sourcelink.json
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Shared\obj\Debug\net9.0\TennisAcademy.Shared.dll
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Shared\obj\Debug\net9.0\refint\TennisAcademy.Shared.dll
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Shared\obj\Debug\net9.0\TennisAcademy.Shared.pdb
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.Shared\obj\Debug\net9.0\ref\TennisAcademy.Shared.dll
