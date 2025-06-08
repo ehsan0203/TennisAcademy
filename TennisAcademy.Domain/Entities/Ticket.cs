@@ -29,7 +29,8 @@ namespace TennisAcademy.Domain.Entities
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? AnsweredAt { get; set; }
-
+        public string? CoachReplyVoiceUrl { get; set; }
+        public string? CoachReplyVideoUrl { get; set; }
         public string? CoachReply { get; set; }
     }
 

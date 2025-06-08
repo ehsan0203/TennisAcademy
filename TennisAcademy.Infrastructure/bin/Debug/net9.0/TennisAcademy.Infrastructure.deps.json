@@ -993,6 +993,9 @@
       },
       "TennisAcademy.Application/1.0.0": {
         "dependencies": {
+          "Microsoft.Extensions.Options": "9.0.5",
+          "Microsoft.IdentityModel.Tokens": "6.35.0",
+          "System.IdentityModel.Tokens.Jwt": "6.35.0",
           "TennisAcademy.Domain": "1.0.0",
           "TennisAcademy.Shared": "1.0.0"
         },

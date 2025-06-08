@@ -21,6 +21,8 @@ namespace TennisAcademy.Infrastructure.Persistence
         public DbSet<Plan> Plans { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<CoachMedia> CoachMedia { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -60,6 +62,12 @@ namespace TennisAcademy.Infrastructure.Persistence
                 .WithMany()
                 .HasForeignKey(t => t.CoachId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<CoachMedia>()
+    .HasOne(m => m.Coach)
+    .WithMany()
+    .HasForeignKey(m => m.CoachId)
+    .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

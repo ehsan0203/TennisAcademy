@@ -84,3 +84,4 @@ C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.API\obj\Debug\net9.0
 C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.API\obj\Debug\net9.0\TennisAcademy.API.pdb
 C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.API\obj\Debug\net9.0\TennisAcademy.API.genruntimeconfig.cache
 C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.API\obj\Debug\net9.0\ref\TennisAcademy.API.dll
+C:\Users\ehsan0203\source\repos\TennisAcademy\TennisAcademy.API\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
