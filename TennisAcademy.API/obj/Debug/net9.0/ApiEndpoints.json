@@ -149,6 +149,16 @@
   },
   {
     "ContainingType": "TennisAcademy.API.Controllers.PurchaseController",
+    "Method": "GetAllPurchases",
+    "RelativePath": "api/Purchase/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TennisAcademy.API.Controllers.PurchaseController",
     "Method": "GetByUser",
     "RelativePath": "api/Purchase/user/{userId}",
     "HttpMethod": "GET",

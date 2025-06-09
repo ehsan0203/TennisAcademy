@@ -29,6 +29,7 @@ namespace TennisAcademy.Domain.Entities
 
         public ICollection<Ticket> Tickets { get; set; }
         public ICollection<Purchase> Purchases { get; set; }
+        public UserScore UserScore { get; set; }
     }
 
 }

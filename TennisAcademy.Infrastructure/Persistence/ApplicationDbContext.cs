@@ -22,7 +22,7 @@ namespace TennisAcademy.Infrastructure.Persistence
         public DbSet<Purchase> Purchases { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<CoachMedia> CoachMedia { get; set; }
-
+        public DbSet<UserScore> UserScores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -67,6 +67,16 @@ namespace TennisAcademy.Infrastructure.Persistence
     .WithMany()
     .HasForeignKey(m => m.CoachId)
     .OnDelete(DeleteBehavior.Restrict);
+
+
+            modelBuilder.Entity<UserScore>()
+    .HasKey(us => us.Id);
+
+            modelBuilder.Entity<UserScore>()
+    .HasOne(us => us.User)
+    .WithOne(u => u.UserScore)
+    .HasForeignKey<UserScore>(us => us.UserId);
+
 
         }
     }

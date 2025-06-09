@@ -12,15 +12,21 @@ namespace TennisAcademy.API.Controllers
     public class TicketController : ControllerBase
     {
         private readonly ITicketService _ticketService;
+        private readonly IUserScoreService _userScoreService;
 
-        public TicketController(ITicketService ticketService)
+        public TicketController(ITicketService ticketService, IUserScoreService userScoreService)
         {
             _ticketService = ticketService;
+            _userScoreService = userScoreService;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateTicketDto dto)
         {
+            var credit = await _userScoreService.GetUserCreditAsync(dto.UserId);
+            if (credit < 1)
+                return BadRequest("شما کردیت کافی برای ارسال تیکت ندارید.");
+
             var ticket = new Ticket
             {
                 Id = Guid.NewGuid(),
@@ -35,6 +41,7 @@ namespace TennisAcademy.API.Controllers
             };
 
             await _ticketService.AddTicketAsync(ticket);
+            await _userScoreService.DecreaseCreditAsync(dto.UserId, 1); // کاهش کردیت بعد از ارسال
 
             return Ok();
         }

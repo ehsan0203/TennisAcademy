@@ -29,6 +29,9 @@ builder.Services.AddScoped<ICoachMediaService, CoachMediaService>();
 builder.Services.AddScoped<ICoachMediaRepository, CoachMediaRepository>();
 builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
 builder.Services.AddScoped<IPurchaseService, PurchaseService>();
+builder.Services.AddScoped<IUserScoreService, UserScoreService>();
+builder.Services.AddScoped<IUserScoreRepository, UserScoreRepository>();
+
 
 //=======
 
