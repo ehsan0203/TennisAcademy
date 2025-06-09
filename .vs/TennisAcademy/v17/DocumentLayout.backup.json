@@ -3,20 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{55E1CD5C-CB6B-44DE-8112-556374E869A7}|TennisAcademy.API\\TennisAcademy.API.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{55E1CD5C-CB6B-44DE-8112-556374E869A7}|TennisAcademy.API\\TennisAcademy.API.csproj|solutionrelative:tennisacademy.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.application\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|solutionrelative:tennisacademy.application\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.application\\services\\userscoreservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|solutionrelative:tennisacademy.application\\services\\userscoreservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A996E621-5FAC-4704-AC88-1466099ABBD5}|TennisAcademy.Infrastructure\\TennisAcademy.Infrastructure.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.infrastructure\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A996E621-5FAC-4704-AC88-1466099ABBD5}|TennisAcademy.Infrastructure\\TennisAcademy.Infrastructure.csproj|solutionrelative:tennisacademy.infrastructure\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A996E621-5FAC-4704-AC88-1466099ABBD5}|TennisAcademy.Infrastructure\\TennisAcademy.Infrastructure.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.infrastructure\\repositories\\userscorerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A996E621-5FAC-4704-AC88-1466099ABBD5}|TennisAcademy.Infrastructure\\TennisAcademy.Infrastructure.csproj|solutionrelative:tennisacademy.infrastructure\\repositories\\userscorerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A996E621-5FAC-4704-AC88-1466099ABBD5}|TennisAcademy.Infrastructure\\TennisAcademy.Infrastructure.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.infrastructure\\persistence\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A996E621-5FAC-4704-AC88-1466099ABBD5}|TennisAcademy.Infrastructure\\TennisAcademy.Infrastructure.csproj|solutionrelative:tennisacademy.infrastructure\\persistence\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57A9F832-5AB2-4D99-9FAF-DACA5E16F653}|TennisAcademy.Domain\\TennisAcademy.Domain.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57A9F832-5AB2-4D99-9FAF-DACA5E16F653}|TennisAcademy.Domain\\TennisAcademy.Domain.csproj|solutionrelative:tennisacademy.domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{57A9F832-5AB2-4D99-9FAF-DACA5E16F653}|TennisAcademy.Domain\\TennisAcademy.Domain.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.domain\\entities\\userscore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{57A9F832-5AB2-4D99-9FAF-DACA5E16F653}|TennisAcademy.Domain\\TennisAcademy.Domain.csproj|solutionrelative:tennisacademy.domain\\entities\\userscore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{55E1CD5C-CB6B-44DE-8112-556374E869A7}|TennisAcademy.API\\TennisAcademy.API.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{55E1CD5C-CB6B-44DE-8112-556374E869A7}|TennisAcademy.API\\TennisAcademy.API.csproj|solutionrelative:tennisacademy.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.application\\services\\userscoreservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|solutionrelative:tennisacademy.application\\services\\userscoreservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.application\\interfaces\\repositories\\iuserscorerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -43,16 +59,8 @@
       "RelativeMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|solutionrelative:tennisacademy.application\\interfaces\\services\\iuserscoreservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{57A9F832-5AB2-4D99-9FAF-DACA5E16F653}|TennisAcademy.Domain\\TennisAcademy.Domain.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{57A9F832-5AB2-4D99-9FAF-DACA5E16F653}|TennisAcademy.Domain\\TennisAcademy.Domain.csproj|solutionrelative:tennisacademy.domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.application\\services\\purchaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|solutionrelative:tennisacademy.application\\services\\purchaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A996E621-5FAC-4704-AC88-1466099ABBD5}|TennisAcademy.Infrastructure\\TennisAcademy.Infrastructure.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.infrastructure\\persistence\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A996E621-5FAC-4704-AC88-1466099ABBD5}|TennisAcademy.Infrastructure\\TennisAcademy.Infrastructure.csproj|solutionrelative:tennisacademy.infrastructure\\persistence\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.application\\interfaces\\services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -120,10 +128,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{55E1CD5C-CB6B-44DE-8112-556374E869A7}|TennisAcademy.API\\TennisAcademy.API.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{55E1CD5C-CB6B-44DE-8112-556374E869A7}|TennisAcademy.API\\TennisAcademy.API.csproj|solutionrelative:tennisacademy.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.application\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|solutionrelative:tennisacademy.application\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.application\\dtos\\auth\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -242,10 +246,6 @@
       "RelativeMoniker": "D:0:0:{A58612E5-2891-4433-9B7E-C95D6956AB25}|TennisAcademy.Application\\TennisAcademy.Application.csproj|solutionrelative:tennisacademy.application\\dtos\\course\\coursedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A996E621-5FAC-4704-AC88-1466099ABBD5}|TennisAcademy.Infrastructure\\TennisAcademy.Infrastructure.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.infrastructure\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A996E621-5FAC-4704-AC88-1466099ABBD5}|TennisAcademy.Infrastructure\\TennisAcademy.Infrastructure.csproj|solutionrelative:tennisacademy.infrastructure\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A996E621-5FAC-4704-AC88-1466099ABBD5}|TennisAcademy.Infrastructure\\TennisAcademy.Infrastructure.csproj|c:\\users\\ehsan0203\\source\\repos\\tennisacademy\\tennisacademy.infrastructure\\tennisacademy.infrastructure.csproj.backup.tmp||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
       "RelativeMoniker": "D:0:0:{A996E621-5FAC-4704-AC88-1466099ABBD5}|TennisAcademy.Infrastructure\\TennisAcademy.Infrastructure.csproj|solutionrelative:tennisacademy.infrastructure\\tennisacademy.infrastructure.csproj.backup.tmp||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
@@ -285,19 +285,117 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "UserScoreService.cs",
-              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\UserScoreService.cs",
-              "RelativeDocumentMoniker": "TennisAcademy.Application\\Services\\UserScoreService.cs",
-              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\UserScoreService.cs*",
-              "RelativeToolTip": "TennisAcademy.Application\\Services\\UserScoreService.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC0AAAAAAAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "UserScore.cs",
+              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Domain\\Entities\\UserScore.cs",
+              "RelativeDocumentMoniker": "TennisAcademy.Domain\\Entities\\UserScore.cs",
+              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Domain\\Entities\\UserScore.cs",
+              "RelativeToolTip": "TennisAcademy.Domain\\Entities\\UserScore.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-09T08:09:54.018Z",
+              "WhenOpened": "2025-06-09T07:56:27.246Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "IUserScoreService.cs",
+              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Services\\IUserScoreService.cs",
+              "RelativeDocumentMoniker": "TennisAcademy.Application\\Interfaces\\Services\\IUserScoreService.cs",
+              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Services\\IUserScoreService.cs",
+              "RelativeToolTip": "TennisAcademy.Application\\Interfaces\\Services\\IUserScoreService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T07:55:06.05Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\Program.cs",
+              "RelativeDocumentMoniker": "TennisAcademy.API\\Program.cs",
+              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\Program.cs",
+              "RelativeToolTip": "TennisAcademy.API\\Program.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAASwBsAAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T16:25:40.463Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "PurchaseResultDto.cs",
+              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Purchase\\PurchaseResultDto.cs",
+              "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\Purchase\\PurchaseResultDto.cs",
+              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Purchase\\PurchaseResultDto.cs",
+              "RelativeToolTip": "TennisAcademy.Application\\DTOs\\Purchase\\PurchaseResultDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-08T15:25:46.738Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "PurchaseService.cs",
+              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\PurchaseService.cs",
+              "RelativeDocumentMoniker": "TennisAcademy.Application\\Services\\PurchaseService.cs",
+              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\PurchaseService.cs",
+              "RelativeToolTip": "TennisAcademy.Application\\Services\\PurchaseService.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAA5wDsAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-08T15:22:32.725Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Domain\\Entities\\User.cs",
+              "RelativeDocumentMoniker": "TennisAcademy.Domain\\Entities\\User.cs",
+              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Domain\\Entities\\User.cs",
+              "RelativeToolTip": "TennisAcademy.Domain\\Entities\\User.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAqwB8AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T16:20:12.549Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Persistence\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "TennisAcademy.Infrastructure\\Persistence\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Persistence\\ApplicationDbContext.cs",
+              "RelativeToolTip": "TennisAcademy.Infrastructure\\Persistence\\ApplicationDbContext.cs",
+              "ViewState": "AgIAADEAAAAAAAAAAAASwEcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T16:23:25.333Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "TennisAcademy.Application\\Services\\AuthService.cs",
+              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\AuthService.cs*",
+              "RelativeToolTip": "TennisAcademy.Application\\Services\\AuthService.cs*",
+              "ViewState": "AgIAABgAAAAAAAAAAAAgwDMAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-08T15:34:26.891Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Repositories\\UserRepository.cs",
+              "RelativeDocumentMoniker": "TennisAcademy.Infrastructure\\Repositories\\UserRepository.cs",
+              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Repositories\\UserRepository.cs",
+              "RelativeToolTip": "TennisAcademy.Infrastructure\\Repositories\\UserRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T16:40:14.645Z",
               "EditorCaption": ""
             },
             {
@@ -306,94 +404,40 @@
               "Title": "UserScoreRepository.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Repositories\\UserScoreRepository.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Infrastructure\\Repositories\\UserScoreRepository.cs",
-              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Repositories\\UserScoreRepository.cs*",
-              "RelativeToolTip": "TennisAcademy.Infrastructure\\Repositories\\UserScoreRepository.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAJAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Repositories\\UserScoreRepository.cs",
+              "RelativeToolTip": "TennisAcademy.Infrastructure\\Repositories\\UserScoreRepository.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAA1wBUAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-09T08:08:38.44Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 8,
               "Title": "IUserScoreRepository.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Repositories\\IUserScoreRepository.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Interfaces\\Repositories\\IUserScoreRepository.cs",
-              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Repositories\\IUserScoreRepository.cs*",
-              "RelativeToolTip": "TennisAcademy.Application\\Interfaces\\Repositories\\IUserScoreRepository.cs*",
+              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Repositories\\IUserScoreRepository.cs",
+              "RelativeToolTip": "TennisAcademy.Application\\Interfaces\\Repositories\\IUserScoreRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-09T08:08:13.072Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-09T08:08:13.072Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "UserScore.cs",
-              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Domain\\Entities\\UserScore.cs",
-              "RelativeDocumentMoniker": "TennisAcademy.Domain\\Entities\\UserScore.cs",
-              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Domain\\Entities\\UserScore.cs*",
-              "RelativeToolTip": "TennisAcademy.Domain\\Entities\\UserScore.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAbAAAAAAAAAA==",
+              "DocumentIndex": 7,
+              "Title": "UserScoreService.cs",
+              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\UserScoreService.cs",
+              "RelativeDocumentMoniker": "TennisAcademy.Application\\Services\\UserScoreService.cs",
+              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\UserScoreService.cs",
+              "RelativeToolTip": "TennisAcademy.Application\\Services\\UserScoreService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-09T07:56:27.246Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-09T08:09:54.018Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "IUserScoreService.cs",
-              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Services\\IUserScoreService.cs",
-              "RelativeDocumentMoniker": "TennisAcademy.Application\\Interfaces\\Services\\IUserScoreService.cs",
-              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Services\\IUserScoreService.cs*",
-              "RelativeToolTip": "TennisAcademy.Application\\Interfaces\\Services\\IUserScoreService.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-09T07:55:06.05Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\Program.cs",
-              "RelativeDocumentMoniker": "TennisAcademy.API\\Program.cs",
-              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\Program.cs",
-              "RelativeToolTip": "TennisAcademy.API\\Program.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAASwBsAAABEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-07T16:25:40.463Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "PurchaseResultDto.cs",
-              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Purchase\\PurchaseResultDto.cs",
-              "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\Purchase\\PurchaseResultDto.cs",
-              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Purchase\\PurchaseResultDto.cs",
-              "RelativeToolTip": "TennisAcademy.Application\\DTOs\\Purchase\\PurchaseResultDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-08T15:25:46.738Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "PurchaseService.cs",
-              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\PurchaseService.cs",
-              "RelativeDocumentMoniker": "TennisAcademy.Application\\Services\\PurchaseService.cs",
-              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\PurchaseService.cs",
-              "RelativeToolTip": "TennisAcademy.Application\\Services\\PurchaseService.cs",
-              "ViewState": "AgIAACQAAAAAAAAAAAA5wDsAAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-08T15:22:32.725Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "CourseController.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\Controllers\\CourseController.cs",
               "RelativeDocumentMoniker": "TennisAcademy.API\\Controllers\\CourseController.cs",
@@ -405,20 +449,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Domain\\Entities\\User.cs",
-              "RelativeDocumentMoniker": "TennisAcademy.Domain\\Entities\\User.cs",
-              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Domain\\Entities\\User.cs",
-              "RelativeToolTip": "TennisAcademy.Domain\\Entities\\User.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAqwAoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-07T16:20:12.549Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 12,
               "Title": "TicketService.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\TicketService.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Services\\TicketService.cs",
@@ -426,12 +457,11 @@
               "RelativeToolTip": "TennisAcademy.Application\\Services\\TicketService.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAADkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-08T14:51:19.267Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-08T14:51:19.267Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 11,
               "Title": "TicketRepository.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Repositories\\TicketRepository.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Infrastructure\\Repositories\\TicketRepository.cs",
@@ -439,12 +469,11 @@
               "RelativeToolTip": "TennisAcademy.Infrastructure\\Repositories\\TicketRepository.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAB8AAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-07T16:40:53.725Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-07T16:40:53.725Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 10,
               "Title": "CourseService.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\CourseService.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Services\\CourseService.cs",
@@ -452,25 +481,23 @@
               "RelativeToolTip": "TennisAcademy.Application\\Services\\CourseService.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAABIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-08T14:35:49.479Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-08T14:35:49.479Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 9,
               "Title": "TicketController.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\Controllers\\TicketController.cs",
               "RelativeDocumentMoniker": "TennisAcademy.API\\Controllers\\TicketController.cs",
-              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\Controllers\\TicketController.cs*",
-              "RelativeToolTip": "TennisAcademy.API\\Controllers\\TicketController.cs*",
+              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\Controllers\\TicketController.cs",
+              "RelativeToolTip": "TennisAcademy.API\\Controllers\\TicketController.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAAxwBYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-08T14:53:05.765Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-08T14:53:05.765Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 18,
               "Title": "CoachMediaController.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\Controllers\\CoachMediaController.cs",
               "RelativeDocumentMoniker": "TennisAcademy.API\\Controllers\\CoachMediaController.cs",
@@ -482,7 +509,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 22,
               "Title": "PlanController.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\Controllers\\PlanController.cs",
               "RelativeDocumentMoniker": "TennisAcademy.API\\Controllers\\PlanController.cs",
@@ -494,7 +521,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 23,
               "Title": "ClaimsPrincipalExtensions.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\Extensions\\ClaimsPrincipalExtensions.cs",
               "RelativeDocumentMoniker": "TennisAcademy.API\\Extensions\\ClaimsPrincipalExtensions.cs",
@@ -506,20 +533,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "ApplicationDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Persistence\\ApplicationDbContext.cs",
-              "RelativeDocumentMoniker": "TennisAcademy.Infrastructure\\Persistence\\ApplicationDbContext.cs",
-              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Persistence\\ApplicationDbContext.cs*",
-              "RelativeToolTip": "TennisAcademy.Infrastructure\\Persistence\\ApplicationDbContext.cs*",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAkwE0AAAA7AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-07T16:23:25.333Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "IAuthService.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Services\\IAuthService.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Interfaces\\Services\\IAuthService.cs",
@@ -527,12 +541,11 @@
               "RelativeToolTip": "TennisAcademy.Application\\Interfaces\\Services\\IAuthService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-08T15:34:16.673Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-08T15:34:16.673Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 21,
               "Title": "CourseRepository.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Repositories\\CourseRepository.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Infrastructure\\Repositories\\CourseRepository.cs",
@@ -544,7 +557,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 19,
               "Title": "ICourseRepository.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Repositories\\ICourseRepository.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Interfaces\\Repositories\\ICourseRepository.cs",
@@ -556,7 +569,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 20,
               "Title": "ICourseService.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Services\\ICourseService.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Interfaces\\Services\\ICourseService.cs",
@@ -568,7 +581,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 25,
               "Title": "ICoachMediaRepository.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Repositories\\ICoachMediaRepository.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Interfaces\\Repositories\\ICoachMediaRepository.cs",
@@ -580,7 +593,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 24,
               "Title": "IPurchaseService.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Services\\IPurchaseService.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Interfaces\\Services\\IPurchaseService.cs",
@@ -592,7 +605,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 26,
               "Title": "Microsoft.NET.Sdk.DefaultItems.Shared.targets",
               "DocumentMoniker": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.DefaultItems.Shared.targets",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\dotnet\\sdk\\9.0.300\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.DefaultItems.Shared.targets",
@@ -604,7 +617,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 30,
               "Title": "IPurchaseRepository.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Repositories\\IPurchaseRepository.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Interfaces\\Repositories\\IPurchaseRepository.cs",
@@ -616,7 +629,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 27,
               "Title": "PurchaseController.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\Controllers\\PurchaseController.cs",
               "RelativeDocumentMoniker": "TennisAcademy.API\\Controllers\\PurchaseController.cs",
@@ -628,7 +641,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 29,
               "Title": "PurchaseRepository.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Repositories\\PurchaseRepository.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Infrastructure\\Repositories\\PurchaseRepository.cs",
@@ -640,7 +653,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 28,
               "Title": "CreatePurchaseDto.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Purchase\\CreatePurchaseDto.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\Purchase\\CreatePurchaseDto.cs",
@@ -652,7 +665,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 31,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "TennisAcademy.API\\Controllers\\AuthController.cs",
@@ -664,7 +677,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 38,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\appsettings.json",
               "RelativeDocumentMoniker": "TennisAcademy.API\\appsettings.json",
@@ -676,7 +689,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 36,
               "Title": "RegisterDto.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Auth\\RegisterDto.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\Auth\\RegisterDto.cs",
@@ -688,7 +701,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 32,
               "Title": "LoginDto.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Auth\\LoginDto.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\Auth\\LoginDto.cs",
@@ -700,7 +713,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 33,
               "Title": "AuthResultDto.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Auth\\AuthResultDto.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\Auth\\AuthResultDto.cs",
@@ -712,19 +725,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\AuthService.cs",
-              "RelativeDocumentMoniker": "TennisAcademy.Application\\Services\\AuthService.cs",
-              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\AuthService.cs",
-              "RelativeToolTip": "TennisAcademy.Application\\Services\\AuthService.cs",
-              "ViewState": "AgIAAEMAAAAAAAAAAAAiwF4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-08T15:34:26.891Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 34,
               "Title": "JwtTokenGenerator.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Helpers\\JwtTokenGenerator.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Helpers\\JwtTokenGenerator.cs",
@@ -736,7 +737,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 35,
               "Title": "JwtSettings.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Helpers\\JwtSettings.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Helpers\\JwtSettings.cs",
@@ -748,7 +749,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 39,
               "Title": "TennisAcademy.API.csproj",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.API\\TennisAcademy.API.csproj",
               "RelativeDocumentMoniker": "TennisAcademy.API\\TennisAcademy.API.csproj",
@@ -760,7 +761,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 37,
               "Title": "CoachMedia.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Domain\\Entities\\CoachMedia.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Domain\\Entities\\CoachMedia.cs",
@@ -772,7 +773,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 41,
               "Title": "CoachMediaRepository.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Repositories\\CoachMediaRepository.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Infrastructure\\Repositories\\CoachMediaRepository.cs",
@@ -784,7 +785,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 42,
               "Title": "ICoachMediaService.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Services\\ICoachMediaService.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Interfaces\\Services\\ICoachMediaService.cs",
@@ -796,7 +797,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 44,
               "Title": "ITicketService.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Services\\ITicketService.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Interfaces\\Services\\ITicketService.cs",
@@ -808,7 +809,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 43,
               "Title": "CoachMediaService.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\CoachMediaService.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Services\\CoachMediaService.cs",
@@ -820,7 +821,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 40,
               "Title": "Purchase.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Domain\\Entities\\Purchase.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Domain\\Entities\\Purchase.cs",
@@ -832,7 +833,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 45,
               "Title": "AnswerTicketDto.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Ticket\\AnswerTicketDto.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\Ticket\\AnswerTicketDto.cs",
@@ -844,7 +845,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 46,
               "Title": "CreateCoachMediaDto.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\CoachMedia\\CreateCoachMediaDto.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\CoachMedia\\CreateCoachMediaDto.cs",
@@ -856,7 +857,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 47,
               "Title": "CoachMediaDto.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\CoachMedia\\CoachMediaDto.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\CoachMedia\\CoachMediaDto.cs",
@@ -868,7 +869,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 48,
               "Title": "MediaType.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Domain\\Enums\\MediaType.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Domain\\Enums\\MediaType.cs",
@@ -880,7 +881,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 50,
               "Title": "TennisAcademy.Application.csproj",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\TennisAcademy.Application.csproj",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\TennisAcademy.Application.csproj",
@@ -892,7 +893,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 50,
+              "DocumentIndex": 51,
               "Title": "TicketDto.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Ticket\\TicketDto.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\Ticket\\TicketDto.cs",
@@ -904,7 +905,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 51,
+              "DocumentIndex": 52,
               "Title": "CreateTicketDto.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Ticket\\CreateTicketDto.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\Ticket\\CreateTicketDto.cs",
@@ -916,7 +917,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 53,
+              "DocumentIndex": 54,
               "Title": "IPlanRepository.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Repositories\\IPlanRepository.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Interfaces\\Repositories\\IPlanRepository.cs",
@@ -928,7 +929,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 52,
+              "DocumentIndex": 53,
               "Title": "IPlanService.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Interfaces\\Services\\IPlanService.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Interfaces\\Services\\IPlanService.cs",
@@ -940,7 +941,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 49,
               "Title": "Ticket.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Domain\\Entities\\Ticket.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Domain\\Entities\\Ticket.cs",
@@ -952,7 +953,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 54,
+              "DocumentIndex": 55,
               "Title": "PlanService.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\Services\\PlanService.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\Services\\PlanService.cs",
@@ -964,7 +965,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 55,
+              "DocumentIndex": 56,
               "Title": "PlanRepository.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Repositories\\PlanRepository.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Infrastructure\\Repositories\\PlanRepository.cs",
@@ -976,7 +977,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 56,
+              "DocumentIndex": 57,
               "Title": "CreatePlanDto.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Plan\\CreatePlanDto.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\Plan\\CreatePlanDto.cs",
@@ -988,7 +989,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 57,
+              "DocumentIndex": 58,
               "Title": "PlanDto.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Plan\\PlanDto.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\Plan\\PlanDto.cs",
@@ -1000,7 +1001,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 58,
+              "DocumentIndex": 59,
               "Title": "CreateCourseDto.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Course\\CreateCourseDto.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\Course\\CreateCourseDto.cs",
@@ -1012,7 +1013,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 59,
+              "DocumentIndex": 60,
               "Title": "CourseDto.cs",
               "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Application\\DTOs\\Course\\CourseDto.cs",
               "RelativeDocumentMoniker": "TennisAcademy.Application\\DTOs\\Course\\CourseDto.cs",
@@ -1021,18 +1022,6 @@
               "ViewState": "AgIAAAYAAAAAAAAAAAAAABUAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-08T14:37:22.035Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 60,
-              "Title": "UserRepository.cs",
-              "DocumentMoniker": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Repositories\\UserRepository.cs",
-              "RelativeDocumentMoniker": "TennisAcademy.Infrastructure\\Repositories\\UserRepository.cs",
-              "ToolTip": "C:\\Users\\ehsan0203\\source\\repos\\TennisAcademy\\TennisAcademy.Infrastructure\\Repositories\\UserRepository.cs",
-              "RelativeToolTip": "TennisAcademy.Infrastructure\\Repositories\\UserRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-07T16:40:14.645Z"
             },
             {
               "$type": "Document",

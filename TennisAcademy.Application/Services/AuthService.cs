@@ -17,12 +17,14 @@ namespace TennisAcademy.Application.Services
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepo;
+        private readonly IUserScoreRepository _userScoreRepository;
         private readonly JwtTokenGenerator _jwt;
 
-        public AuthService(IUserRepository userRepo, JwtTokenGenerator jwt)
+        public AuthService(IUserRepository userRepo, JwtTokenGenerator jwt, IUserScoreRepository userScoreRepository)
         {
             _userRepo = userRepo;
             _jwt = jwt;
+            _userScoreRepository = userScoreRepository;
         }
 
         public async Task<AuthResultDto> RegisterAsync(RegisterDto dto)
@@ -47,6 +49,15 @@ namespace TennisAcademy.Application.Services
 
             await _userRepo.AddAsync(user);
             await _userRepo.SaveChangesAsync();
+            // ساخت UserScore با 1 کردیت
+            var userScore = new UserScore
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                Credit = 1
+            };
+
+            await _userScoreRepository.AddOrUpdateAsync(userScore); // ✅ درست
 
             var token = _jwt.GenerateToken(user);
 

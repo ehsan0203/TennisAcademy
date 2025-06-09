@@ -23,6 +23,8 @@ namespace TennisAcademy.Infrastructure.Persistence
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<CoachMedia> CoachMedia { get; set; }
         public DbSet<UserScore> UserScores { get; set; }
+        public DbSet<CreditHistory> CreditHistories { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

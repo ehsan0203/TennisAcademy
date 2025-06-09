@@ -12,10 +12,12 @@ namespace TennisAcademy.Application.Services
     public class UserScoreService : IUserScoreService
     {
         private readonly IUserScoreRepository _repository;
+        private readonly ICreditHistoryRepository _creditHistoryRepository;
 
-        public UserScoreService(IUserScoreRepository repository)
+        public UserScoreService(IUserScoreRepository repository, ICreditHistoryRepository creditHistoryRepository)
         {
             _repository = repository;
+            _creditHistoryRepository = creditHistoryRepository;
         }
 
         public async Task<int> GetUserCreditAsync(Guid userId)
@@ -27,11 +29,22 @@ namespace TennisAcademy.Application.Services
         public async Task AddCreditAsync(Guid userId, int amount)
         {
             var userScore = await _repository.GetByUserIdAsync(userId)
-                ?? new UserScore { UserId = userId, Credit = 0 };
+                ?? new UserScore { Id = Guid.NewGuid(), UserId = userId, Credit = 0 };
 
             userScore.Credit += amount;
+
+            await _creditHistoryRepository.AddAsync(new CreditHistory
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                Amount = amount,
+                Description = "افزایش توسط ادمین",
+                CreatedAt = DateTime.UtcNow
+            });
+
             await _repository.AddOrUpdateAsync(userScore);
         }
+
 
         public async Task DecreaseCreditAsync(Guid userId, int amount)
         {
@@ -42,6 +55,7 @@ namespace TennisAcademy.Application.Services
             userScore.Credit -= amount;
             await _repository.AddOrUpdateAsync(userScore);
         }
+
     }
 
 }
