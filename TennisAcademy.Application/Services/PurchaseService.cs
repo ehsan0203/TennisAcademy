@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BuildingBlocks.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,7 +38,8 @@ namespace TennisAcademy.Application.Services
         public async Task<List<PurchaseResultDto>> GetUserPurchasesAsync(Guid userId, string? type)
         {
             var purchases = await _purchaseRepo.GetByUserIdAsync(userId);
-
+            if (purchases == null || !purchases.Any())
+                throw new NotFoundException("No purchases found.");
             var result = purchases.Select(p =>
             {
                 if (p.Course != null)
@@ -81,7 +83,8 @@ namespace TennisAcademy.Application.Services
         public async Task<List<PurchaseResultDto>> GetAllAsync()
         {
             var purchases = await _purchaseRepo.GetAllAsync();
-
+            if (purchases == null || !purchases.Any())
+                throw new NotFoundException("No purchases found.");
             var result = purchases.Select(p =>
             {
                 if (p.Course != null)

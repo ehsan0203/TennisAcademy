@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BuildingBlocks.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,8 @@ namespace TennisAcademy.Application.Services
         public async Task<int> GetUserCreditAsync(Guid userId)
         {
             var userScore = await _repository.GetByUserIdAsync(userId);
+                if (userScore == null)
+                    throw new NotFoundException(" user score found for this user.");
             return userScore?.Credit ?? 0;
         }
 
@@ -50,7 +53,7 @@ namespace TennisAcademy.Application.Services
         {
             var userScore = await _repository.GetByUserIdAsync(userId);
             if (userScore == null || userScore.Credit < amount)
-                throw new InvalidOperationException("کردیت کافی نیست");
+                throw new BadRequestException("You don't have enough credit");
 
             userScore.Credit -= amount;
             await _repository.AddOrUpdateAsync(userScore);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BuildingBlocks.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,11 @@ namespace TennisAcademy.Application.Services
 
         public async Task<List<Plan>> GetAllPlansAsync()
         {
-            return await _planRepository.GetAllAsync();
+            var plans = await _planRepository.GetAllAsync();
+            if (plans == null || !plans.Any())
+                throw new NotFoundException("No plans found.");
+
+            return plans;
         }
 
         public async Task AddPlanAsync(Plan plan)

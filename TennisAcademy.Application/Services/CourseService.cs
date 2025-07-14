@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BuildingBlocks.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,12 +21,18 @@ namespace TennisAcademy.Application.Services
 
         public async Task<List<Course>> GetAllCoursesAsync()
         {
-            return await _courseRepository.GetAllAsync();
+            var result = await _courseRepository.GetAllAsync();
+            if (result == null || !result.Any())
+              throw new NotFoundException("Course list is empty.");
+            return result;
         }
 
         public async Task<Course?> GetCourseByIdAsync(Guid id)
         {
-            return await _courseRepository.GetByIdAsync(id);
+            var result = await _courseRepository.GetByIdAsync(id);
+           if (result == null)
+                throw new NotFoundException("Course not found.");
+            return result;
         }
 
         public async Task AddCourseAsync(Course course)

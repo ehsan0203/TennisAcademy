@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BuildingBlocks.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -31,7 +32,8 @@ namespace TennisAcademy.Application.Services
         {
             var existingUser = await _userRepo.GetByEmailAsync(dto.Email);
             if (existingUser != null)
-                throw new Exception("Email is already registered.");
+                throw new BadRequestException("Email is already registered.");
+              
 
             var user = new User
             {
@@ -57,7 +59,7 @@ namespace TennisAcademy.Application.Services
                 Credit = 1
             };
 
-            await _userScoreRepository.AddOrUpdateAsync(userScore); // ✅ درست
+            await _userScoreRepository.AddOrUpdateAsync(userScore); 
 
             var token = _jwt.GenerateToken(user);
 
@@ -83,7 +85,7 @@ namespace TennisAcademy.Application.Services
             var user = await _userRepo.GetByEmailAsync(dto.Email);
 
             if (user == null || !VerifyPassword(dto.Password, user.PasswordHash))
-                throw new Exception("Invalid email or password.");
+                throw new FileNotFoundException("Invalid email or password.");
 
             var token = _jwt.GenerateToken(user);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BuildingBlocks.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,18 +33,26 @@ namespace TennisAcademy.Application.Services
 
         public async Task<List<Ticket>> GetByUserAsync(Guid userId)
         {
-            return await _ticketRepo.GetByUserIdAsync(userId);
+           var ticket = await _ticketRepo.GetByUserIdAsync(userId);
+            if (ticket == null)
+                throw new NotFoundException("No ticket found.");
+
+            return ticket;
         }
 
         public async Task<Ticket?> GetByIdAsync(Guid id)
         {
-            return await _ticketRepo.GetByIdAsync(id);
+            var ticket =await _ticketRepo.GetByIdAsync(id);
+            if (ticket == null)
+                throw new NotFoundException("Ticket not found.");
+            return ticket;
         }
 
         public async Task AnswerTicketAsync(AnswerTicketDto dto)
         {
             var ticket = await _ticketRepo.GetByIdAsync(dto.TicketId);
-            if (ticket == null) return;
+            if (ticket == null) 
+                throw new NotFoundException("Ticket not found.");
 
             ticket.CoachReply = dto.CoachReply;
             ticket.AnsweredAt = DateTime.UtcNow;

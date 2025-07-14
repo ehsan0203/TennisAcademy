@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TennisAcademy.Shared")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0f5cd4e6d875f39eea06d702a29c12fb2d96ba77")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c96c667992da7f8a843f05b6ec7f411260dae988")]
 [assembly: System.Reflection.AssemblyProductAttribute("TennisAcademy.Shared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TennisAcademy.Shared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
