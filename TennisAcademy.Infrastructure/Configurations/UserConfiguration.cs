@@ -31,6 +31,11 @@ namespace TennisAcademy.Infrastructure.Configurations
 
             builder.Property(u => u.Credit)
                    .HasDefaultValue(0);
+
+            builder.Property(u => u.RefreshToken)
+                   .HasMaxLength(200);
+
+            builder.Property(u => u.RefreshTokenExpiryTime);
         }
     }
 }

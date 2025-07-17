@@ -27,6 +27,10 @@ namespace TennisAcademy.Domain.Entities
 
         public int Credit { get; set; } = 0;
 
+        public string? RefreshToken { get; set; }
+
+        public DateTime RefreshTokenExpiryTime { get; set; }
+
         public ICollection<Ticket> Tickets { get; set; }
         public ICollection<Purchase> Purchases { get; set; }
         public UserScore UserScore { get; set; }
