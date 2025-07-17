@@ -5,6 +5,9 @@ using TennisAcademy.Application.Helpers;
 using TennisAcademy.Application.Interfaces.Repositories;
 using TennisAcademy.Application.Interfaces.Services;
 using TennisAcademy.Application.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using TennisAcademy.Application.Validators;
 using TennisAcademy.Infrastructure.Persistence;
 using TennisAcademy.Infrastructure.Repositories;
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+builder.Services.AddFluentValidationAutoValidation();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
