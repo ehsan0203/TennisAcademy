@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using TennisAcademy.API.Extensions;
 using TennisAcademy.Application.DTOs.Purchase;
 using TennisAcademy.Application.Interfaces.Services;
+using BuildingBlocks.Response;
 
 namespace TennisAcademy.API.Controllers
 {
@@ -19,31 +21,35 @@ namespace TennisAcademy.API.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpGet("all")]
+        [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<PurchaseResultDto>>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllPurchases()
         {
             var list = await _purchaseService.GetAllAsync();
-            return Ok(list);
+            return new CustomJsonResult<IEnumerable<PurchaseResultDto>>(list);
         }
         [Authorize(Roles = "User,Coach")]
         [HttpPost]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreatePurchaseDto dto)
         {
             if (dto.CourseId == null && dto.PlanId == null)
-                return BadRequest("Either CourseId or PlanId is required.");
+                return new CustomJsonResult<string>(null, StatusCodes.Status400BadRequest, "Either CourseId or PlanId is required.");
 
             var userId = User.GetUserId(); // 👈 از Claimها
             await _purchaseService.AddPurchaseAsync(userId, dto);
 
-            return Ok(new { message = "Purchase successful." });
+            return new CustomJsonResult<object>(new { message = "Purchase successful." });
         }
 
 
 
         [HttpGet("user/{userId}")]
+        [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<PurchaseResultDto>>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetByUser(Guid userId, [FromQuery] string? type)
         {
             var result = await _purchaseService.GetUserPurchasesAsync(userId, type);
-            return Ok(result);
+            return new CustomJsonResult<IEnumerable<PurchaseResultDto>>(result);
         }
 
 

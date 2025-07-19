@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using TennisAcademy.Application.DTOs.CoachMedia;
 using TennisAcademy.Application.Interfaces.Services;
 using TennisAcademy.Domain.Entities;
+using BuildingBlocks.Response;
 
 namespace TennisAcademy.API.Controllers
 {
@@ -18,6 +20,7 @@ namespace TennisAcademy.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Create([FromBody] CreateCoachMediaDto dto)
         {
             var media = new CoachMedia
@@ -30,10 +33,12 @@ namespace TennisAcademy.API.Controllers
             };
 
             await _service.AddAsync(media);
-            return Ok();
+            return new CustomJsonResult<string>(null);
         }
 
         [HttpGet("{coachId}")]
+        [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<CoachMediaDto>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetByCoach(Guid coachId)
         {
             var list = await _service.GetByCoachAsync(coachId);
@@ -45,7 +50,7 @@ namespace TennisAcademy.API.Controllers
                 Type = m.Type.ToString()
             });
 
-            return Ok(result);
+            return new CustomJsonResult<IEnumerable<CoachMediaDto>>(result);
         }
     }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TennisAcademy.Application.Interfaces.Repositories;
 using TennisAcademy.Application.Interfaces.Services;
 using TennisAcademy.Domain.Entities;
+using BuildingBlocks.Exceptions;
 
 namespace TennisAcademy.Application.Services
 {
@@ -20,7 +21,10 @@ namespace TennisAcademy.Application.Services
 
         public async Task<List<CoachMedia>> GetByCoachAsync(Guid coachId)
         {
-            return await _repository.GetByCoachIdAsync(coachId);
+            var media = await _repository.GetByCoachIdAsync(coachId);
+            if (media == null || !media.Any())
+                throw new NotFoundException("No coach media found.");
+            return media;
         }
 
         public async Task AddAsync(CoachMedia media)

@@ -1,6 +1,6 @@
-﻿using BuildingBlocks.Response;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using BuildingBlocks.Response;
 using System.Net;
 using TennisAcademy.Application.DTOs.Auth;
 using TennisAcademy.Application.Interfaces.Services;
@@ -17,30 +17,29 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    [ProducesResponseType(typeof(CustomJsonResult<bool>), (int) HttpStatusCode.OK),
-     ProducesResponseType(typeof(CustomJsonResult<string>), (int) HttpStatusCode.NotFound),
-     ProducesResponseType(typeof(CustomJsonResult<string>), (int) HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(CustomJsonResult<AuthResultDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Register([FromBody] RegisterDto dto)
     {
         var result = await _authService.RegisterAsync(dto);
-
-        return Ok(result);
-        return Ok(new CustomJsonResult<bool>(true));
+        return new CustomJsonResult<AuthResultDto>(result);
     }
     [HttpPost("login")]
+    [ProducesResponseType(typeof(CustomJsonResult<AuthResultDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
         var result = await _authService.LoginAsync(dto);
-        return Ok(result);
+        return new CustomJsonResult<AuthResultDto>(result);
     }
 
     [HttpPost("refresh")]
+    [ProducesResponseType(typeof(CustomJsonResult<AuthResultDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Refresh([FromBody] RefreshTokenDto dto)
     {
         var result = await _authService.RefreshTokenAsync(dto.Token, dto.RefreshToken);
         if (result == null)
-            return Unauthorized();
-        return Ok(result);
+            return new CustomJsonResult<string>(null, StatusCodes.Status401Unauthorized);
+        return new CustomJsonResult<AuthResultDto>(result);
     }
 
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using BuildingBlocks.Response;
+using System.Net;
 using TennisAcademy.Application.DTOs.Course;
 using TennisAcademy.Application.Interfaces.Services;
 using TennisAcademy.Domain.Entities;
@@ -18,6 +20,7 @@ namespace TennisAcademy.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<CourseDto>>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAll()
         {
             var courses = await _courseService.GetAllCoursesAsync();
@@ -31,17 +34,17 @@ namespace TennisAcademy.API.Controllers
                 IsActive = c.IsActive
             });
 
-            return Ok(result);
+            return new CustomJsonResult<IEnumerable<CourseDto>>(result);
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(CustomJsonResult<CourseDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetById(Guid id)
         {
             var course = await _courseService.GetCourseByIdAsync(id);
-            if (course == null)
-                return NotFound();
 
-            return Ok(new CourseDto
+            return new CustomJsonResult<CourseDto>(new CourseDto
             {
                 Id = course.Id,
                 Title = course.Title,
@@ -53,6 +56,7 @@ namespace TennisAcademy.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Create([FromBody] CreateCourseDto dto)
         {
             var course = new Course
@@ -68,7 +72,7 @@ namespace TennisAcademy.API.Controllers
 
             await _courseService.AddCourseAsync(course);
 
-            return Ok();
+            return new CustomJsonResult<string>(null);
         }
     }
 }
