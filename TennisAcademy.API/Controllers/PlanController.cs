@@ -21,6 +21,9 @@ namespace TennisAcademy.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<PlanDto>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> GetAll()
         {
             var plans = await _planService.GetAllPlansAsync();
@@ -37,6 +40,9 @@ namespace TennisAcademy.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> Create([FromBody] CreatePlanDto dto)
         {
             var plan = new Plan

@@ -18,6 +18,9 @@ public class AuthController : ControllerBase
 
     [HttpPost("register")]
     [ProducesResponseType(typeof(CustomJsonResult<AuthResultDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
     public async Task<IActionResult> Register([FromBody] RegisterDto dto)
     {
         var result = await _authService.RegisterAsync(dto);
@@ -25,6 +28,9 @@ public class AuthController : ControllerBase
     }
     [HttpPost("login")]
     [ProducesResponseType(typeof(CustomJsonResult<AuthResultDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
         var result = await _authService.LoginAsync(dto);
@@ -33,6 +39,9 @@ public class AuthController : ControllerBase
 
     [HttpPost("refresh")]
     [ProducesResponseType(typeof(CustomJsonResult<AuthResultDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
     [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Refresh([FromBody] RefreshTokenDto dto)
     {

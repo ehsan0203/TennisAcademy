@@ -26,6 +26,9 @@ namespace TennisAcademy.API.Controllers
 
         [HttpGet("credit")]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> GetCredit()
         {
             var userId = User.GetUserId(); // از Claim
@@ -37,6 +40,8 @@ namespace TennisAcademy.API.Controllers
         [HttpPost("add-credit")]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> AddCredit([FromBody] AddCreditDto dto)
         {
             if (dto.Amount <= 0)
@@ -48,6 +53,9 @@ namespace TennisAcademy.API.Controllers
         [Authorize(Roles = "Admin")]
         [HttpGet("credit-history")]
         [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<object>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> GetCreditHistory()
         {
             var history = await _creditHistoryRepository.GetAllAsync();

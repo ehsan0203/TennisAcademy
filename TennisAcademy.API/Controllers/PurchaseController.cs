@@ -22,6 +22,9 @@ namespace TennisAcademy.API.Controllers
         [Authorize(Roles = "Admin")]
         [HttpGet("all")]
         [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<PurchaseResultDto>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> GetAllPurchases()
         {
             var list = await _purchaseService.GetAllAsync();
@@ -31,6 +34,8 @@ namespace TennisAcademy.API.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> Create([FromBody] CreatePurchaseDto dto)
         {
             if (dto.CourseId == null && dto.PlanId == null)
@@ -46,6 +51,9 @@ namespace TennisAcademy.API.Controllers
 
         [HttpGet("user/{userId}")]
         [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<PurchaseResultDto>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> GetByUser(Guid userId, [FromQuery] string? type)
         {
             var result = await _purchaseService.GetUserPurchasesAsync(userId, type);
