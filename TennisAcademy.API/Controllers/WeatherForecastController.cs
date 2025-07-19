@@ -23,9 +23,6 @@ namespace TennisAcademy.API.Controllers
 
         [HttpGet(Name = "GetWeatherForecast")]
         [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<WeatherForecast>>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public IActionResult Get()
         {
             var result = Enumerable.Range(1, 5).Select(index => new WeatherForecast

@@ -26,8 +26,6 @@ namespace TennisAcademy.API.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> Create([FromBody] CreateTicketDto dto)
         {
             var credit = await _userScoreService.GetUserCreditAsync(dto.UserId);
@@ -55,9 +53,7 @@ namespace TennisAcademy.API.Controllers
 
         [HttpGet("user/{userId}")]
         [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<TicketDto>>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> GetUserTickets(Guid userId)
         {
             var tickets = await _ticketService.GetByUserAsync(userId);
@@ -78,9 +74,7 @@ namespace TennisAcademy.API.Controllers
 
         [HttpPatch("answer")]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> AnswerTicket([FromBody] AnswerTicketDto dto)
         {
             await _ticketService.AnswerTicketAsync(dto);

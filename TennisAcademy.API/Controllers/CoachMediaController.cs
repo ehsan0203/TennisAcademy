@@ -21,9 +21,6 @@ namespace TennisAcademy.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> Create([FromBody] CreateCoachMediaDto dto)
         {
             var media = new CoachMedia
@@ -41,9 +38,7 @@ namespace TennisAcademy.API.Controllers
 
         [HttpGet("{coachId}")]
         [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<CoachMediaDto>>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> GetByCoach(Guid coachId)
         {
             var list = await _service.GetByCoachAsync(coachId);

@@ -21,9 +21,7 @@ namespace TennisAcademy.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<CourseDto>>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> GetAll()
         {
             var courses = await _courseService.GetAllCoursesAsync();
@@ -42,9 +40,7 @@ namespace TennisAcademy.API.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(CustomJsonResult<CourseDto>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> GetById(Guid id)
         {
             var course = await _courseService.GetCourseByIdAsync(id);
@@ -62,9 +58,6 @@ namespace TennisAcademy.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> Create([FromBody] CreateCourseDto dto)
         {
             var course = new Course
