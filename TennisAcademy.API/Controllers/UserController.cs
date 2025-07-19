@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using TennisAcademy.API.Extensions;
 using TennisAcademy.Application.DTOs.UserScore;
 using TennisAcademy.Application.Interfaces.Repositories;
 using TennisAcademy.Application.Interfaces.Services;
+using BuildingBlocks.Response;
 
 namespace TennisAcademy.API.Controllers
 {
@@ -23,29 +25,41 @@ namespace TennisAcademy.API.Controllers
         }
 
         [HttpGet("credit")]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> GetCredit()
         {
             var userId = User.GetUserId(); // از Claim
             var credit = await _userScoreService.GetUserCreditAsync(userId);
-            return Ok(new { credit });
+            return new CustomJsonResult<object>(new { credit });
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost("add-credit")]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> AddCredit([FromBody] AddCreditDto dto)
         {
             if (dto.Amount <= 0)
-                return BadRequest("مقدار باید بیشتر از صفر باشد.");
+                return new CustomJsonResult<string>(null, StatusCodes.Status400BadRequest, "مقدار باید بیشتر از صفر باشد.");
 
             await _userScoreService.AddCreditAsync(dto.UserId, dto.Amount);
-            return Ok(new { message = "کردیت با موفقیت اضافه شد." });
+            return new CustomJsonResult<object>(new { message = "کردیت با موفقیت اضافه شد." });
         }
         [Authorize(Roles = "Admin")]
         [HttpGet("credit-history")]
+        [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<object>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> GetCreditHistory()
         {
             var history = await _creditHistoryRepository.GetAllAsync();
-            return Ok(history.Select(h => new
+            return new CustomJsonResult<IEnumerable<object>>(history.Select(h => new
             {
                 h.UserId,
                 User = $"{h.User.FirstName} {h.User.LastName}",

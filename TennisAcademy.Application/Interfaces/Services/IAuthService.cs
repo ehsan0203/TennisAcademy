@@ -11,7 +11,7 @@ namespace TennisAcademy.Application.Interfaces.Services
     {
         Task<AuthResultDto> RegisterAsync(RegisterDto dto);
         Task<AuthResultDto> LoginAsync(LoginDto dto);
-        Task<AuthResultDto?> RefreshTokenAsync(string token, string refreshToken);
+        Task<AuthResultDto> RefreshTokenAsync(string token, string refreshToken);
 
     }
 }

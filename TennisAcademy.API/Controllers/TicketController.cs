@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.Net;
 using TennisAcademy.Application.DTOs.Ticket;
 using TennisAcademy.Application.Interfaces.Services;
 using TennisAcademy.Domain.Entities;
 using TennisAcademy.Domain.Enums;
+using BuildingBlocks.Response;
 
 namespace TennisAcademy.API.Controllers
 {
@@ -21,11 +24,15 @@ namespace TennisAcademy.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> Create([FromBody] CreateTicketDto dto)
         {
             var credit = await _userScoreService.GetUserCreditAsync(dto.UserId);
             if (credit < 1)
-                return BadRequest("شما کردیت کافی برای ارسال تیکت ندارید.");
+                return new CustomJsonResult<string>(null, StatusCodes.Status400BadRequest, "شما کردیت کافی برای ارسال تیکت ندارید.");
 
             var ticket = new Ticket
             {
@@ -43,10 +50,14 @@ namespace TennisAcademy.API.Controllers
             await _ticketService.AddTicketAsync(ticket);
             await _userScoreService.DecreaseCreditAsync(dto.UserId, 1); // کاهش کردیت بعد از ارسال
 
-            return Ok();
+            return new CustomJsonResult<string>(null);
         }
 
         [HttpGet("user/{userId}")]
+        [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<TicketDto>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> GetUserTickets(Guid userId)
         {
             var tickets = await _ticketService.GetByUserAsync(userId);
@@ -62,16 +73,20 @@ namespace TennisAcademy.API.Controllers
                 Status = t.Status.ToString()
             });
 
-            return Ok(result);
+            return new CustomJsonResult<IEnumerable<TicketDto>>(result);
         }
 
         [HttpPatch("answer")]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> AnswerTicket([FromBody] AnswerTicketDto dto)
         {
             await _ticketService.AnswerTicketAsync(dto);
 
 
-            return Ok();
+            return new CustomJsonResult<string>(null);
         }
     }
 }

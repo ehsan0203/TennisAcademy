@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using BuildingBlocks.Response;
+using System.Net;
 using TennisAcademy.Application.DTOs.Plan;
 using TennisAcademy.Application.Interfaces.Services;
 using TennisAcademy.Domain.Entities;
@@ -18,6 +20,10 @@ namespace TennisAcademy.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<PlanDto>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> GetAll()
         {
             var plans = await _planService.GetAllPlansAsync();
@@ -29,10 +35,14 @@ namespace TennisAcademy.API.Controllers
                 Price = p.Price
             });
 
-            return Ok(result);
+            return new CustomJsonResult<IEnumerable<PlanDto>>(result);
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> Create([FromBody] CreatePlanDto dto)
         {
             var plan = new Plan
@@ -45,7 +55,7 @@ namespace TennisAcademy.API.Controllers
 
             await _planService.AddPlanAsync(plan);
 
-            return Ok();
+            return new CustomJsonResult<string>(null);
         }
     }
 }
