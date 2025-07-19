@@ -46,8 +46,6 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Refresh([FromBody] RefreshTokenDto dto)
     {
         var result = await _authService.RefreshTokenAsync(dto.Token, dto.RefreshToken);
-        if (result == null)
-            return new CustomJsonResult<string>(null, StatusCodes.Status401Unauthorized);
         return new CustomJsonResult<AuthResultDto>(result);
     }
 

@@ -107,11 +107,11 @@ namespace TennisAcademy.Application.Services
             };
         }
 
-        public async Task<AuthResultDto?> RefreshTokenAsync(string token, string refreshToken)
+        public async Task<AuthResultDto> RefreshTokenAsync(string token, string refreshToken)
         {
             var user = await _userRepo.GetByRefreshTokenAsync(refreshToken);
             if (user == null || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
-                return null;
+                throw new UnauthorizedAccessException("Invalid refresh token.");
 
             var newToken = _jwt.GenerateToken(user);
             user.RefreshToken = GenerateRefreshToken();
