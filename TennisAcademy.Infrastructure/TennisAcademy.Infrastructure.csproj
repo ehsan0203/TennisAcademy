@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <Compile Include="obj\Debug\net9.0\.NETCoreApp,Version=v9.0.AssemblyAttributes.cs" />
+    <Compile Include="obj\Debug\net9.0\TennisAcademy.Infrastructure.AssemblyInfo.cs" />
+    <Compile Include="obj\Debug\net9.0\TennisAcademy.Infrastructure.GlobalUsings.g.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="bin\Debug\net9.0\TennisAcademy.Infrastructure.deps.json" />
+    <Content Include="bin\Debug\net9.0\TennisAcademy.Infrastructure.runtimeconfig.json" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BuildingBlocks\BuildingBlocks.csproj" />
+    <ProjectReference Include="..\TennisAcademy.Application\TennisAcademy.Application.csproj" />
+    <ProjectReference Include="..\TennisAcademy.Domain\TennisAcademy.Domain.csproj" />
+    <ProjectReference Include="..\TennisAcademy.Shared\TennisAcademy.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configurations\" />
+    <Folder Include="FileUpload\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bin\Debug\net9.0\TennisAcademy.Application.dll" />
+    <None Include="bin\Debug\net9.0\TennisAcademy.Application.pdb" />
+    <None Include="bin\Debug\net9.0\TennisAcademy.Domain.dll" />
+    <None Include="bin\Debug\net9.0\TennisAcademy.Domain.pdb" />
+    <None Include="bin\Debug\net9.0\TennisAcademy.Infrastructure.dll" />
+    <None Include="bin\Debug\net9.0\TennisAcademy.Infrastructure.pdb" />
+    <None Include="bin\Debug\net9.0\TennisAcademy.Shared.dll" />
+    <None Include="bin\Debug\net9.0\TennisAcademy.Shared.pdb" />
+    <None Include="obj\Debug\net9.0\refint\TennisAcademy.Infrastructure.dll" />
+    <None Include="obj\Debug\net9.0\ref\TennisAcademy.Infrastructure.dll" />
+    <None Include="obj\Debug\net9.0\TennisAc.CF1FFC16.Up2Date" />
+    <None Include="obj\Debug\net9.0\TennisAcademy.Infrastructure.AssemblyInfoInputs.cache" />
+    <None Include="obj\Debug\net9.0\TennisAcademy.Infrastructure.assets.cache" />
+    <None Include="obj\Debug\net9.0\TennisAcademy.Infrastructure.csproj.AssemblyReference.cache" />
+    <None Include="obj\Debug\net9.0\TennisAcademy.Infrastructure.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Debug\net9.0\TennisAcademy.Infrastructure.dll" />
+    <None Include="obj\Debug\net9.0\TennisAcademy.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig" />
+    <None Include="obj\Debug\net9.0\TennisAcademy.Infrastructure.genruntimeconfig.cache" />
+    <None Include="obj\Debug\net9.0\TennisAcademy.Infrastructure.pdb" />
+    <None Include="obj\project.nuget.cache" />
+    <None Include="obj\TennisAcademy.Infrastructure.csproj.nuget.g.props" />
+    <None Include="obj\TennisAcademy.Infrastructure.csproj.nuget.g.targets" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

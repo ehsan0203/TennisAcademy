@@ -1,0 +1,51 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# VS folders
+.vs/
+.vscode/
+.idea/
+
+# ReSharper
+_ReSharper*/
+*.DotSettings.user
+
+# Rider
+.idea/
+
+# Logs
+*.log
+
+# EntityFramework
+*.sqlite
+*.db
+*.db-shm
+*.db-wal
+
+# Auto-generated files
+Generated_Code/
+*.g.cs
+*.g.i.cs
+
+# Backup files
+*.bak
+
+# Config transforms
+*.transform
+
+# Others
+TestResults/
+*.ncrunch*
+*.vssscc
+*.cache
+*.pdb
+
+# Git merge conflict
+*.orig
