@@ -1,0 +1,16 @@
+# Ignore user-specific files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore Copilot / IntelliSense cache
+FileContentIndex/
+*.db
+*.db-shm
+*.db-wal
+
+# Build output
+bin/
+obj/
