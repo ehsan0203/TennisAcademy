@@ -16,6 +16,7 @@ namespace TennisAcademy.Application.DTOs.Auth
 
         public DateTime BirthYear { get; set; }
 
+        public string? Description { get; set; }
         public int? TennisLevel { get; set; }
         public int? TennisExperienceYears { get; set; }
 
