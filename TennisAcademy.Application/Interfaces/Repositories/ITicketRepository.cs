@@ -11,6 +11,7 @@ namespace TennisAcademy.Application.Interfaces.Repositories
     {
         Task<Ticket?> GetByIdAsync(Guid id);
         Task<List<Ticket>> GetByUserIdAsync(Guid userId);
+        Task<List<Ticket>> GetAllAsync();
         Task AddAsync(Ticket ticket);
         void Update(Ticket ticket);
         Task SaveChangesAsync();

@@ -25,6 +25,14 @@ public class TicketRepository : ITicketRepository
             .FirstOrDefaultAsync(t => t.Id == id);
     }
 
+    public async Task<List<Ticket>> GetAllAsync()
+    {
+        return await _context.Tickets
+            .Include(t => t.User)
+            .Include(t => t.Coach)
+            .ToListAsync();
+    }
+
     public async Task<List<Ticket>> GetByUserIdAsync(Guid userId)
     {
         return await _context.Tickets
