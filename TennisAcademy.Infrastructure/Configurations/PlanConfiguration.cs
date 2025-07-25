@@ -19,6 +19,9 @@ namespace TennisAcademy.Infrastructure.Configurations
 
             builder.Property(p => p.Price)
                    .HasColumnType("decimal(18,2)");
+
+            builder.Property(p => p.Credit)
+                   .IsRequired();
         }
     }
 }

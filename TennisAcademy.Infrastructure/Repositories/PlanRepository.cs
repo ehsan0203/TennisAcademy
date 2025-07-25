@@ -24,6 +24,11 @@ namespace TennisAcademy.Infrastructure.Repositories
             return await _context.Plans.ToListAsync();
         }
 
+        public async Task<Plan?> GetByIdAsync(Guid id)
+        {
+            return await _context.Plans.FirstOrDefaultAsync(p => p.Id == id);
+        }
+
         public async Task AddAsync(Plan plan)
         {
             await _context.Plans.AddAsync(plan);

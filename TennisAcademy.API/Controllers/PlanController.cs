@@ -26,7 +26,8 @@ namespace TennisAcademy.API.Controllers
                 Id = p.Id,
                 Title = p.Title,
                 Description = p.Description,
-                Price = p.Price
+                Price = p.Price,
+                Credit = p.Credit
             });
 
             return Ok(result);
@@ -40,7 +41,8 @@ namespace TennisAcademy.API.Controllers
                 Id = Guid.NewGuid(),
                 Title = dto.Title,
                 Description = dto.Description,
-                Price = dto.Price
+                Price = dto.Price,
+                Credit = dto.Credit
             };
 
             await _planService.AddPlanAsync(plan);

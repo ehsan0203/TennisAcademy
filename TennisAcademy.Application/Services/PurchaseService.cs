@@ -14,10 +14,16 @@ namespace TennisAcademy.Application.Services
     public class PurchaseService : IPurchaseService
     {
         private readonly IPurchaseRepository _purchaseRepo;
+        private readonly IPlanRepository _planRepository;
+        private readonly IUserScoreService _userScoreService;
 
-        public PurchaseService(IPurchaseRepository purchaseRepo)
+        public PurchaseService(IPurchaseRepository purchaseRepo,
+            IPlanRepository planRepository,
+            IUserScoreService userScoreService)
         {
             _purchaseRepo = purchaseRepo;
+            _planRepository = planRepository;
+            _userScoreService = userScoreService;
         }
 
         public async Task AddPurchaseAsync(Guid userId, CreatePurchaseDto dto)
@@ -25,7 +31,7 @@ namespace TennisAcademy.Application.Services
             var purchase = new Purchase
             {
                 Id = Guid.NewGuid(),
-                UserId = userId, // 👈 حالا مستقیم از پارامتر
+                UserId = userId,
                 CourseId = dto.CourseId,
                 PlanId = dto.PlanId,
                 PurchaseDate = DateTime.UtcNow
@@ -33,6 +39,15 @@ namespace TennisAcademy.Application.Services
 
             await _purchaseRepo.AddAsync(purchase);
             await _purchaseRepo.SaveChangesAsync();
+
+            if (dto.PlanId.HasValue)
+            {
+                var plan = await _planRepository.GetByIdAsync(dto.PlanId.Value);
+                if (plan == null)
+                    throw new NotFoundException("Plan not found.");
+
+                await _userScoreService.AddCreditAsync(userId, plan.Credit);
+            }
         }
 
         public async Task<List<PurchaseResultDto>> GetUserPurchasesAsync(Guid userId, string? type)
