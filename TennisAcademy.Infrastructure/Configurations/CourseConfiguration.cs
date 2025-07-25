@@ -23,6 +23,8 @@ namespace TennisAcademy.Infrastructure.Configurations
             builder.Property(c => c.CoverImageUrl)
                    .HasMaxLength(500);
 
+            builder.Property(c => c.TotalDurationMinutes);
+
             builder.Property(c => c.Price)
                    .HasColumnType("decimal(18,2)");
 

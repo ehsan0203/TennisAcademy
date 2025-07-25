@@ -14,6 +14,8 @@ namespace TennisAcademy.Domain.Entities
 
         public string VideoUrl { get; set; }
 
+        public int DurationMinutes { get; set; }
+
         public bool IsFreePreview { get; set; }
 
         public Guid CourseId { get; set; }

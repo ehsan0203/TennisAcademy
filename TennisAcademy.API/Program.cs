@@ -39,6 +39,8 @@ builder.Services.AddScoped<IPurchaseService, PurchaseService>();
 builder.Services.AddScoped<IUserScoreService, UserScoreService>();
 builder.Services.AddScoped<IUserScoreRepository, UserScoreRepository>();
 builder.Services.AddScoped<ICreditHistoryRepository, CreditHistoryRepository>();
+builder.Services.AddScoped<ICourseVideoRepository, CourseVideoRepository>();
+builder.Services.AddScoped<ICourseVideoService, CourseVideoService>();
 
 
 
