@@ -14,5 +14,6 @@ namespace TennisAcademy.Application.Interfaces.Services
         Task<Ticket?> GetByIdAsync(Guid id);
         Task AddTicketAsync(Ticket ticket);
         Task AnswerTicketAsync(AnswerTicketDto dto);
+        Task CloseTicketAsync(Guid ticketId);
     }
 }

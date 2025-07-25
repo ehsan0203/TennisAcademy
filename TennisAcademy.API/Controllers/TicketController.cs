@@ -35,13 +35,12 @@ namespace TennisAcademy.API.Controllers
                 FileUrl = dto.FileUrl,
                 VoiceUrl = dto.VoiceUrl,
                 UserId = dto.UserId,
-                CoachId = dto.CoachId,
+                CoachId = null,
                 CreatedAt = DateTime.UtcNow,
                 Status = TicketStatus.Waiting
             };
 
             await _ticketService.AddTicketAsync(ticket);
-            await _userScoreService.DecreaseCreditAsync(dto.UserId, 1); // کاهش کردیت بعد از ارسال
 
             return Ok();
         }
@@ -69,7 +68,18 @@ namespace TennisAcademy.API.Controllers
         public async Task<IActionResult> AnswerTicket([FromBody] AnswerTicketDto dto)
         {
             await _ticketService.AnswerTicketAsync(dto);
+            return Ok();
+        }
 
+        [HttpPatch("{id}/close")]
+        public async Task<IActionResult> CloseTicket(Guid id)
+        {
+            var ticket = await _ticketService.GetByIdAsync(id);
+            if (ticket == null)
+                return NotFound();
+
+            await _ticketService.CloseTicketAsync(id);
+            await _userScoreService.DecreaseCreditAsync(ticket.UserId, 1);
 
             return Ok();
         }
