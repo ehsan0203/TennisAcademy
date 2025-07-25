@@ -51,7 +51,7 @@ namespace TennisAcademy.Application.Services
         public async Task AnswerTicketAsync(AnswerTicketDto dto)
         {
             var ticket = await _ticketRepo.GetByIdAsync(dto.TicketId);
-            if (ticket == null) 
+            if (ticket == null)
                 throw new NotFoundException("Ticket not found.");
 
             ticket.CoachReply = dto.CoachReply;
@@ -80,6 +80,17 @@ namespace TennisAcademy.Application.Services
                     ticket.CoachReplyVideoUrl = video.FileUrl;
             }
 
+            _ticketRepo.Update(ticket);
+            await _ticketRepo.SaveChangesAsync();
+        }
+
+        public async Task CloseTicketAsync(Guid ticketId)
+        {
+            var ticket = await _ticketRepo.GetByIdAsync(ticketId);
+            if (ticket == null)
+                throw new NotFoundException("Ticket not found.");
+
+            ticket.Status = TicketStatus.Closed;
             _ticketRepo.Update(ticket);
             await _ticketRepo.SaveChangesAsync();
         }
