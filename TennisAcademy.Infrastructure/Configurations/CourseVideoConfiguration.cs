@@ -18,6 +18,8 @@ namespace TennisAcademy.Infrastructure.Configurations
                    .IsRequired()
                    .HasMaxLength(500);
 
+            builder.Property(cv => cv.DurationMinutes);
+
             builder.HasOne(cv => cv.Course)
                    .WithMany(c => c.Videos)
                    .HasForeignKey(cv => cv.CourseId)

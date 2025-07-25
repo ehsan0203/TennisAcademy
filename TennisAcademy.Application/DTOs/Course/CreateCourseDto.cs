@@ -16,6 +16,8 @@ namespace TennisAcademy.Application.DTOs.Course
 
         public string VideoIntroUrl { get; set; }
 
+        public int TotalDurationMinutes { get; set; }
+
         public decimal Price { get; set; }
     }
 }

@@ -28,6 +28,7 @@ namespace TennisAcademy.API.Controllers
                 Description = c.Description,
                 Price = c.Price,
                 CoverImageUrl = c.CoverImageUrl,
+                TotalDurationMinutes = c.TotalDurationMinutes,
                 IsActive = c.IsActive
             });
 
@@ -47,6 +48,7 @@ namespace TennisAcademy.API.Controllers
                 Title = course.Title,
                 Description = course.Description,
                 CoverImageUrl = course.CoverImageUrl,
+                TotalDurationMinutes = course.TotalDurationMinutes,
                 Price = course.Price,
                 IsActive = course.IsActive
             });
@@ -62,6 +64,7 @@ namespace TennisAcademy.API.Controllers
                 Description = dto.Description,
                 CoverImageUrl = dto.CoverImageUrl,
                 VideoIntroUrl = dto.VideoIntroUrl,
+                TotalDurationMinutes = dto.TotalDurationMinutes,
                 Price = dto.Price,
                 IsActive = true
             };

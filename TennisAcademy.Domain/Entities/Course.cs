@@ -18,6 +18,8 @@ namespace TennisAcademy.Domain.Entities
 
         public string CoverImageUrl { get; set; }
 
+        public int TotalDurationMinutes { get; set; }
+
         public decimal Price { get; set; }
 
         public bool IsActive { get; set; } = true;
