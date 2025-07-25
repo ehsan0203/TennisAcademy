@@ -12,6 +12,8 @@ namespace TennisAcademy.Application.Interfaces.Services
     {
         Task<List<Ticket>> GetByUserAsync(Guid userId);
         Task<Ticket?> GetByIdAsync(Guid id);
+        Task<List<Ticket>> GetAllAsync(AdminTicketFilterDto filter);
+        Task<TicketStatisticsDto> GetStatisticsAsync();
         Task AddTicketAsync(Ticket ticket);
         Task AnswerTicketAsync(AnswerTicketDto dto);
         Task CloseTicketAsync(Guid ticketId);

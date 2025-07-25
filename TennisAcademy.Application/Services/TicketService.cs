@@ -1,7 +1,6 @@
 ﻿using BuildingBlocks.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TennisAcademy.Application.DTOs.Ticket;
@@ -9,6 +8,7 @@ using TennisAcademy.Application.Interfaces.Repositories;
 using TennisAcademy.Application.Interfaces.Services;
 using TennisAcademy.Domain.Entities;
 using TennisAcademy.Domain.Enums;
+using System.Linq;
 
 namespace TennisAcademy.Application.Services
 {
@@ -22,6 +22,57 @@ namespace TennisAcademy.Application.Services
         {
             _ticketRepo = ticketRepo;
             _mediaRepo = mediaRepo; // 👈 این خط مهمه
+        }
+
+        public async Task<List<Ticket>> GetAllAsync(AdminTicketFilterDto filter)
+        {
+            var tickets = await _ticketRepo.GetAllAsync();
+            if (tickets == null || !tickets.Any())
+                throw new NotFoundException("No ticket found.");
+
+            var query = tickets.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filter.Query))
+            {
+                query = query.Where(t =>
+                    (t.User.FirstName + " " + t.User.LastName).Contains(filter.Query, StringComparison.OrdinalIgnoreCase)
+                    || t.User.Email.Contains(filter.Query, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (filter.Status.HasValue)
+                query = query.Where(t => t.Status == filter.Status.Value);
+
+            if (!string.IsNullOrWhiteSpace(filter.Subject))
+                query = query.Where(t => t.Subject.Contains(filter.Subject));
+
+            if (filter.CoachId.HasValue)
+                query = query.Where(t => t.CoachId == filter.CoachId.Value);
+
+            if (filter.FromCreated.HasValue)
+                query = query.Where(t => t.CreatedAt >= filter.FromCreated.Value);
+
+            if (filter.ToCreated.HasValue)
+                query = query.Where(t => t.CreatedAt <= filter.ToCreated.Value);
+
+            if (filter.FromAnswered.HasValue)
+                query = query.Where(t => t.AnsweredAt.HasValue && t.AnsweredAt.Value >= filter.FromAnswered.Value);
+
+            if (filter.ToAnswered.HasValue)
+                query = query.Where(t => t.AnsweredAt.HasValue && t.AnsweredAt.Value <= filter.ToAnswered.Value);
+
+            return query.OrderByDescending(t => t.CreatedAt).ToList();
+        }
+
+        public async Task<TicketStatisticsDto> GetStatisticsAsync()
+        {
+            var tickets = await _ticketRepo.GetAllAsync();
+            var stats = new TicketStatisticsDto
+            {
+                TotalTickets = tickets.Count,
+                OpenTickets = tickets.Count(t => t.Status != TicketStatus.Closed),
+                ClosedTickets = tickets.Count(t => t.Status == TicketStatus.Closed)
+            };
+            return stats;
         }
 
 
