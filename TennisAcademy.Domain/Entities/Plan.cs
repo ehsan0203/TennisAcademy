@@ -16,6 +16,11 @@ namespace TennisAcademy.Domain.Entities
 
         public decimal Price { get; set; }
 
+        /// <summary>
+        /// Amount of credit granted to the user after purchasing this plan
+        /// </summary>
+        public int Credit { get; set; }
+
         public ICollection<Purchase> Purchases { get; set; }
     }
 

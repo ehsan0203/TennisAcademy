@@ -10,5 +10,6 @@ public class CreatePlanDtoValidator : AbstractValidator<CreatePlanDto>
         RuleFor(x => x.Title).NotEmpty();
         RuleFor(x => x.Description).NotEmpty();
         RuleFor(x => x.Price).GreaterThan(0);
+        RuleFor(x => x.Credit).GreaterThan(0);
     }
 }

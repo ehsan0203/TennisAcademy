@@ -160,6 +160,8 @@ namespace TennisAcademy.Infrastructure.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Credit")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
