@@ -1,7 +1,5 @@
 # Visual Studio cache files
-.vs/*
 .vs/
-.vs
 *.vsidx
 
 # Build results
