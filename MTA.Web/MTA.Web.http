@@ -1,0 +1,6 @@
+@MTA.Web_HostAddress = http://localhost:5052
+
+GET {{MTA.Web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

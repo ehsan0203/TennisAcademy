@@ -1,0 +1,93 @@
+using AutoMapper;
+using MTA.Domain.Entities;
+using MTA.Application.DTOs;
+
+namespace MTA.Application.Mapping;
+
+/// <summary>
+/// Mapping profile for Package and MediaFile entities
+/// </summary>
+public class PackageMappingProfile : BaseMappingProfile
+{
+    public PackageMappingProfile()
+    {
+        // Package mappings
+        CreateMap<Package, PackageDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
+            .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
+            .ForMember(dest => dest.TicketCount, opt => opt.MapFrom(src => src.TicketCount))
+            .ForMember(dest => dest.MessageCount, opt => opt.MapFrom(src => src.MessageCount))
+            .ForMember(dest => dest.DurationUnitId, opt => opt.MapFrom(src => src.DurationUnitId))
+            .ForMember(dest => dest.DurationUnitValue, opt => opt.MapFrom(src => src.DurationUnit.Value))
+            .ForMember(dest => dest.UsedTicketCount, opt => opt.Ignore()) 
+            .ForMember(dest => dest.UsedMessageCount, opt => opt.Ignore()); 
+
+        CreateMap<PackageDto, Package>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
+            .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
+            .ForMember(dest => dest.TicketCount, opt => opt.MapFrom(src => src.TicketCount))
+            .ForMember(dest => dest.MessageCount, opt => opt.MapFrom(src => src.MessageCount))
+            .ForMember(dest => dest.DurationUnitId, opt => opt.MapFrom(src => src.DurationUnitId))
+            .ForMember(dest => dest.DurationUnit, opt => opt.Ignore()) 
+            .ForMember(dest => dest.Tickets, opt => opt.Ignore())
+            .ForMember(dest => dest.PackageHistories, opt => opt.Ignore());
+
+
+        // PackageHistory mappings
+        CreateMap<PackageHistory, PackageHistoryDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
+            .ForMember(dest => dest.PackageId, opt => opt.MapFrom(src => src.PackageId))
+            .ForMember(dest => dest.ExpiredDate, opt => opt.MapFrom(src => src.ExpiredDate))
+            .ForMember(dest => dest.RemainingTickets, opt => opt.MapFrom(src => src.RemainingTickets))
+            .ForMember(dest => dest.RemainingMessages, opt => opt.MapFrom(src => src.RemainingMessages))
+            .ForMember(dest => dest.PackageTitle, opt => opt.MapFrom(src => src.Package.Title))
+            .ForMember(dest => dest.PackagePrice, opt => opt.MapFrom(src => src.Package.Price))
+            .ForMember(dest => dest.TotalTickets, opt => opt.MapFrom(src => src.Package.TicketCount))
+            .ForMember(dest => dest.TotalMessages, opt => opt.MapFrom(src => src.Package.MessageCount))
+            .ForMember(dest => dest.UserFirstName, opt => opt.MapFrom(src => src.Account.UserProfile.FirstName))
+            .ForMember(dest => dest.UserLastName, opt => opt.MapFrom(src => src.Account.UserProfile.LastName))
+            .ForMember(dest => dest.UserEmail, opt => opt.MapFrom(src => src.Account.Email))
+            .ForMember(dest => dest.IsExpired, opt => opt.MapFrom(src => src.ExpiredDate < DateTime.Now));
+
+        CreateMap<PackageHistoryDto, PackageHistory>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
+            .ForMember(dest => dest.PackageId, opt => opt.MapFrom(src => src.PackageId))
+            .ForMember(dest => dest.ExpiredDate, opt => opt.MapFrom(src => src.ExpiredDate))
+            .ForMember(dest => dest.RemainingTickets, opt => opt.MapFrom(src => src.RemainingTickets))
+            .ForMember(dest => dest.RemainingMessages, opt => opt.MapFrom(src => src.RemainingMessages))
+            .ForMember(dest => dest.Account, opt => opt.Ignore())
+            .ForMember(dest => dest.Package, opt => opt.Ignore());
+
+
+        // MediaFile mappings
+        CreateMap<MediaFile, MediaFileDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+            .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Url))
+            .ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.TypeId))
+            .ForMember(dest => dest.TypeValue, opt => opt.MapFrom(src => src.Type.Value)) 
+            .ForMember(dest => dest.LessonId, opt => opt.MapFrom(src => src.LessonId))
+            .ForMember(dest => dest.LessonTitle, opt => opt.MapFrom(src => src.Lesson.Title))
+            .ForMember(dest => dest.MessageId, opt => opt.MapFrom(src => src.MessageId))
+            .ForMember(dest => dest.FileSize, opt => opt.Ignore()) 
+            .ForMember(dest => dest.FileExtension, opt => opt.Ignore()); 
+
+        CreateMap<MediaFileDto, MediaFile>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+            .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Url))
+            .ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.TypeId))
+            .ForMember(dest => dest.LessonId, opt => opt.MapFrom(src => src.LessonId))
+            .ForMember(dest => dest.MessageId, opt => opt.MapFrom(src => src.MessageId))
+            .ForMember(dest => dest.Type, opt => opt.Ignore())   
+            .ForMember(dest => dest.Lesson, opt => opt.Ignore()) 
+            .ForMember(dest => dest.Message, opt => opt.Ignore()); 
+
+    }
+}

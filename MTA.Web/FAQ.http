@@ -1,0 +1,118 @@
+### FAQ API Testing
+
+### 1. Get All FAQ Categories
+GET {{baseUrl}}/api/faq/categories
+Accept: application/json
+
+### 2. Get FAQ Categories with Pagination
+GET {{baseUrl}}/api/faq/categories?page=1&pageSize=5
+Accept: application/json
+
+### 3. Get FAQ Categories with Search
+GET {{baseUrl}}/api/faq/categories?searchTerm=General
+Accept: application/json
+
+### 4. Get FAQ Categories by Active Status
+GET {{baseUrl}}/api/faq/categories?isActive=true
+Accept: application/json
+
+### 5. Get FAQ Category by ID
+GET {{baseUrl}}/api/faq/categories/1
+Accept: application/json
+
+### 6. Create New FAQ Category
+POST {{baseUrl}}/api/faq/categories
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "title": "Technical Support",
+  "description": "Technical issues and troubleshooting",
+  "sortOrder": 5,
+  "isActive": true
+}
+
+### 7. Update FAQ Category
+PUT {{baseUrl}}/api/faq/categories/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "title": "General Information",
+  "description": "General questions about the platform",
+  "sortOrder": 1,
+  "isActive": true
+}
+
+### 8. Toggle Category Status
+PATCH {{baseUrl}}/api/faq/categories/1/toggle-status
+Authorization: Bearer {{authToken}}
+
+### 9. Get Questions by Category
+GET {{baseUrl}}/api/faq/categories/1/questions
+Accept: application/json
+
+### 10. Get Questions by Category with Pagination
+GET {{baseUrl}}/api/faq/categories/1/questions?page=1&pageSize=5
+Accept: application/json
+
+### 11. Get Question by ID
+GET {{baseUrl}}/api/faq/questions/1
+Accept: application/json
+
+### 12. Create New Question
+POST {{baseUrl}}/api/faq/questions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "questionText": "How do I reset my password?",
+  "answerText": "You can reset your password by clicking on the 'Forgot Password' link on the login page.",
+  "isActive": true,
+  "categoryId": 1
+}
+
+### 13. Update Question
+PUT {{baseUrl}}/api/faq/questions/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "questionText": "How do I reset my password?",
+  "answerText": "You can reset your password by clicking on the 'Forgot Password' link on the login page and following the instructions sent to your email.",
+  "isActive": true,
+  "categoryId": 1
+}
+
+### 14. Toggle Question Status
+PATCH {{baseUrl}}/api/faq/questions/1/toggle-status
+Authorization: Bearer {{authToken}}
+
+### 15. Search Questions
+GET {{baseUrl}}/api/faq/search?searchTerm=password
+Accept: application/json
+
+### 16. Get Frequently Asked Questions
+GET {{baseUrl}}/api/faq/frequently-asked?limit=5
+Accept: application/json
+
+### 17. Get FAQ Statistics
+GET {{baseUrl}}/api/faq/statistics
+Authorization: Bearer {{authToken}}
+
+### 18. Get Categories with Question Count
+GET {{baseUrl}}/api/faq/categories-with-counts
+Accept: application/json
+
+### 19. Delete Question
+DELETE {{baseUrl}}/api/faq/questions/1
+Authorization: Bearer {{authToken}}
+
+### 20. Delete Category (only if no questions)
+DELETE {{baseUrl}}/api/faq/categories/1
+Authorization: Bearer {{authToken}}
+
+### Variables
+@baseUrl = https://localhost:7001
+@authToken = your_jwt_token_here
+
