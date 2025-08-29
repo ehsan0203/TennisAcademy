@@ -30,7 +30,7 @@ public class UnitOfWork : IUnitOfWork
     public IRepository<T> Repository<T>() where T : BaseEntity
     {
         var type = typeof(T);
-        
+
         if (!_repositories.ContainsKey(type))
         {
             var repositoryType = typeof(Repository<>).MakeGenericType(type);
@@ -40,6 +40,26 @@ public class UnitOfWork : IUnitOfWork
 
         return (IRepository<T>)_repositories[type];
     }
+
+    /// <summary>
+    /// Gets the UserProfiles repository
+    /// </summary>
+    public IRepository<UserProfile> UserProfiles => Repository<UserProfile>();
+
+    /// <summary>
+    /// Gets the Accounts repository
+    /// </summary>
+    public IRepository<Account> Accounts => Repository<Account>();
+
+    /// <summary>
+    /// Gets the Roles repository
+    /// </summary>
+    public IRepository<Role> Roles => Repository<Role>();
+
+    /// <summary>
+    /// Gets the Levels repository
+    /// </summary>
+    public IRepository<Level> Levels => Repository<Level>();
 
 
     /// <summary>

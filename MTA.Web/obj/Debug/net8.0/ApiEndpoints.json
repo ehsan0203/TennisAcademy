@@ -157,29 +157,6 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.AuthController",
-    "Method": "GetSiteRules",
-    "RelativePath": "api/Auth/site-rules",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.LookupDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.AuthController",
     "Method": "ValidateToken",
     "RelativePath": "api/Auth/validate-token",
     "HttpMethod": "POST",
@@ -857,283 +834,6 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.FAQController",
-    "Method": "CreateCategory",
-    "RelativePath": "api/FAQ/categories",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "categoryDto",
-        "Type": "MTA.Application.DTOs.FAQCategoryDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.FAQCategoryDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 201
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 401
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 403
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.FAQController",
-    "Method": "GetCategoriesWithQuestionCount",
-    "RelativePath": "api/FAQ/categories-with-counts",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.FAQCategoryDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.FAQController",
-    "Method": "GetQuestionsByCategory",
-    "RelativePath": "api/FAQ/categories/{categoryId}/questions",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "categoryId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "pageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "isActive",
-        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.Services.PaginatedResult\u00601[[MTA.Application.DTOs.QuestionDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.FAQController",
-    "Method": "GetCategory",
-    "RelativePath": "api/FAQ/categories/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.FAQCategoryDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.FAQController",
-    "Method": "UpdateCategory",
-    "RelativePath": "api/FAQ/categories/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "categoryDto",
-        "Type": "MTA.Application.DTOs.FAQCategoryDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.FAQCategoryDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 401
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 403
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.FAQController",
-    "Method": "DeleteCategory",
-    "RelativePath": "api/FAQ/categories/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 204
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 401
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 403
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.FAQController",
     "Method": "ToggleCategoryStatus",
     "RelativePath": "api/FAQ/categories/{id}/toggle-status",
     "HttpMethod": "PATCH",
@@ -1170,25 +870,82 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.FAQController",
-    "Method": "GetFrequentlyAskedQuestions",
-    "RelativePath": "api/FAQ/frequently-asked",
+    "Method": "GetCategory",
+    "RelativePath": "api/FAQ/category/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "limit",
+        "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.QuestionDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "MTA.Application.DTOs.FAQCategoryDto",
         "MediaTypes": [
           "application/json"
         ],
         "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.FAQController",
+    "Method": "CreateCategory",
+    "RelativePath": "api/FAQ/CreateCategory",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "categoryDto",
+        "Type": "MTA.Application.DTOs.FAQCategoryDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.FAQCategoryDto",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 201
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 401
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 403
       },
       {
         "Type": "System.Void",
@@ -1200,7 +957,7 @@
   {
     "ContainingType": "MTA.Web.Controllers.FAQController",
     "Method": "CreateQuestion",
-    "RelativePath": "api/FAQ/questions",
+    "RelativePath": "api/FAQ/CreateQuestion",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -1249,9 +1006,9 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.FAQController",
-    "Method": "GetQuestion",
-    "RelativePath": "api/FAQ/questions/{id}",
-    "HttpMethod": "GET",
+    "Method": "DeleteCategory",
+    "RelativePath": "api/FAQ/DeleteCategory/{id}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -1262,53 +1019,10 @@
       }
     ],
     "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.QuestionDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
       {
         "Type": "System.Void",
         "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.FAQController",
-    "Method": "UpdateQuestion",
-    "RelativePath": "api/FAQ/questions/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "questionDto",
-        "Type": "MTA.Application.DTOs.QuestionDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.QuestionDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
+        "StatusCode": 204
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
@@ -1348,7 +1062,7 @@
   {
     "ContainingType": "MTA.Web.Controllers.FAQController",
     "Method": "DeleteQuestion",
-    "RelativePath": "api/FAQ/questions/{id}",
+    "RelativePath": "api/FAQ/DeleteQuestion/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -1385,6 +1099,93 @@
           "application/json"
         ],
         "StatusCode": 403
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.FAQController",
+    "Method": "GetQuestion",
+    "RelativePath": "api/FAQ/GetQuestion/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.QuestionDto",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.FAQController",
+    "Method": "GetQuestionsByCategory",
+    "RelativePath": "api/FAQ/GetQuestionsByCategory/{categoryId}/questions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "categoryId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "isActive",
+        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.Services.PaginatedResult\u00601[[MTA.Application.DTOs.QuestionDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 400
       },
       {
         "Type": "System.Void",
@@ -1477,19 +1278,120 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.FAQController",
-    "Method": "GetStatistics",
-    "RelativePath": "api/FAQ/statistics",
-    "HttpMethod": "GET",
+    "Method": "UpdateCategory",
+    "RelativePath": "api/FAQ/UpdateCategory/{id}",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "categoryDto",
+        "Type": "MTA.Application.DTOs.FAQCategoryDto",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": [
       {
-        "Type": "MTA.Application.Services.FAQStatisticsDto",
+        "Type": "MTA.Application.DTOs.FAQCategoryDto",
         "MediaTypes": [
           "application/json"
         ],
         "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 401
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 403
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.FAQController",
+    "Method": "UpdateQuestion",
+    "RelativePath": "api/FAQ/UpdateQuestion/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "questionDto",
+        "Type": "MTA.Application.DTOs.QuestionDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.QuestionDto",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 401
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 403
       },
       {
         "Type": "System.Void",
@@ -1670,6 +1572,167 @@
         "Type": "System.Void",
         "MediaTypes": [],
         "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.PermissionController",
+    "Method": "GetPermissions",
+    "RelativePath": "api/Permission",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "searchTerm",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.Services.PaginatedResult\u00601[[MTA.Application.DTOs.PermissionDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.PermissionController",
+    "Method": "CreatePermission",
+    "RelativePath": "api/Permission",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "permissionDto",
+        "Type": "MTA.Application.DTOs.PermissionDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.PermissionDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.PermissionController",
+    "Method": "GetPermission",
+    "RelativePath": "api/Permission/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.PermissionDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.PermissionController",
+    "Method": "UpdatePermission",
+    "RelativePath": "api/Permission/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "permissionDto",
+        "Type": "MTA.Application.DTOs.PermissionDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.PermissionDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.PermissionController",
+    "Method": "DeletePermission",
+    "RelativePath": "api/Permission/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.PermissionController",
+    "Method": "SearchPermissions",
+    "RelativePath": "api/Permission/search",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "searchDto",
+        "Type": "MTA.Web.Controllers.PermissionSearchDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.Services.PaginatedResult\u00601[[MTA.Application.DTOs.PermissionDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
       }
     ]
   },
@@ -1910,6 +1973,165 @@
         "Type": "System.Void",
         "MediaTypes": [],
         "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.SiteRulesController",
+    "Method": "GetAll",
+    "RelativePath": "api/SiteRules",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.LookupDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.SiteRulesController",
+    "Method": "Create",
+    "RelativePath": "api/SiteRules",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "MTA.Application.DTOs.LookupDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.LookupDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 201
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.SiteRulesController",
+    "Method": "GetById",
+    "RelativePath": "api/SiteRules/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.LookupDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.SiteRulesController",
+    "Method": "Update",
+    "RelativePath": "api/SiteRules/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MTA.Application.DTOs.LookupDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 204
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.SiteRulesController",
+    "Method": "Delete",
+    "RelativePath": "api/SiteRules/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 204
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
       }
     ]
   },
@@ -2244,6 +2466,254 @@
         "Type": "System.Void",
         "MediaTypes": [],
         "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.UserController",
+    "Method": "GetUsers",
+    "RelativePath": "api/User",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "roleId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "isActive",
+        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "skillLevelId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.Services.PaginatedResult\u00601[[MTA.Application.DTOs.User.AccountDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.UserController",
+    "Method": "GetUser",
+    "RelativePath": "api/User/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.User.AccountDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.UserController",
+    "Method": "UpdateUser",
+    "RelativePath": "api/User/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "updateDto",
+        "Type": "MTA.Application.DTOs.User.UserProfileDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.User.UserProfileDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.UserController",
+    "Method": "DeleteUser",
+    "RelativePath": "api/User/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.UserController",
+    "Method": "UpdateAvatar",
+    "RelativePath": "api/User/{id}/avatar",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "ImageUrl",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.User.UserProfileDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.UserController",
+    "Method": "UpdateExperience",
+    "RelativePath": "api/User/{id}/experience",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "ExperienceId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.User.UserProfileDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.UserController",
+    "Method": "UpdateSkillLevel",
+    "RelativePath": "api/User/{id}/skill-level",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "SkillLevelId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.User.UserProfileDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.UserController",
+    "Method": "GetClaims",
+    "RelativePath": "api/User/debug/claims",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.UserController",
+    "Method": "QueryUsers",
+    "RelativePath": "api/User/query",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "queryDto",
+        "Type": "MTA.Application.DTOs.User.UserSearchDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MTA.Application.DTOs.User.PagedResult\u00601[[MTA.Application.DTOs.User.UserProfileDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
       }
     ]
   },

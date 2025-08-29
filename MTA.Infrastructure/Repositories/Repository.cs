@@ -120,4 +120,23 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
     public async Task<IEnumerable<T>> GetPagedAsync(IQueryable<T> query, int page, int pageSize) =>
         await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
+    /// <summary>
+    /// Filters entities based on predicate
+    /// </summary>
+    /// <param name="predicate">Filter condition</param>
+    /// <returns>Filtered entities</returns>
+    public virtual async Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.Where(predicate).ToListAsync();
+    }
+
+    /// <summary>
+    /// Gets first entity that matches predicate
+    /// </summary>
+    /// <param name="predicate">Filter condition</param>
+    /// <returns>First matching entity or null</returns>
+    public virtual async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.FirstOrDefaultAsync(predicate);
+    }
 }

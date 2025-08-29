@@ -2,6 +2,7 @@ using AutoMapper;
 using MTA.Domain.Entities;
 using MTA.Application.DTOs;
 using MTA.Application.DTOs.Auth;
+using MTA.Application.DTOs.User;
 
 namespace MTA.Application.Mapping;
 

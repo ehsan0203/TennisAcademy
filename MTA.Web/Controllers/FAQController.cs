@@ -73,7 +73,7 @@ public class FAQController : ControllerBase
     /// <response code="200">Returns the requested FAQ category</response>
     /// <response code="404">If the FAQ category was not found</response>
     /// <response code="500">If there was an internal server error</response>
-    [HttpGet("categories/{id}")]
+    [HttpGet("category/{id}")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -104,7 +104,7 @@ public class FAQController : ControllerBase
     /// <response code="401">If the user is not authenticated</response>
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
-    [HttpPost("categories")]
+    [HttpPost("CreateCategory")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -138,7 +138,7 @@ public class FAQController : ControllerBase
     /// <response code="401">If the user is not authenticated</response>
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
-    [HttpPut("categories/{id}")]
+    [HttpPut("UpdateCategory/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -176,7 +176,7 @@ public class FAQController : ControllerBase
     /// <response code="401">If the user is not authenticated</response>
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
-    [HttpDelete("categories/{id}")]
+    [HttpDelete("DeleteCategory/{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -247,7 +247,7 @@ public class FAQController : ControllerBase
     /// <response code="200">Returns the paginated list of questions</response>
     /// <response code="400">If the request parameters are invalid</response>
     /// <response code="500">If there was an internal server error</response>
-    [HttpGet("categories/{categoryId}/questions")]
+    [HttpGet("GetQuestionsByCategory/{categoryId}/questions")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -280,7 +280,7 @@ public class FAQController : ControllerBase
     /// <response code="200">Returns the requested question</response>
     /// <response code="404">If the question was not found</response>
     /// <response code="500">If there was an internal server error</response>
-    [HttpGet("questions/{id}")]
+    [HttpGet("GetQuestion/{id}")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -311,7 +311,7 @@ public class FAQController : ControllerBase
     /// <response code="401">If the user is not authenticated</response>
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
-    [HttpPost("questions")]
+    [HttpPost("CreateQuestion")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -345,7 +345,7 @@ public class FAQController : ControllerBase
     /// <response code="401">If the user is not authenticated</response>
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
-    [HttpPut("questions/{id}")]
+    [HttpPut("UpdateQuestion/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -382,7 +382,7 @@ public class FAQController : ControllerBase
     /// <response code="401">If the user is not authenticated</response>
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
-    [HttpDelete("questions/{id}")]
+    [HttpDelete("DeleteQuestion/{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -474,77 +474,77 @@ public class FAQController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Gets frequently asked questions
-    /// </summary>
-    /// <param name="limit">Maximum number of questions to return (default: 10)</param>
-    /// <returns>List of frequently asked questions</returns>
-    /// <response code="200">Returns the list of frequently asked questions</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpGet("frequently-asked")]
-    [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<QuestionDto>>> GetFrequentlyAskedQuestions([FromQuery] int limit = 10)
-    {
-        try
-        {
-            if (limit < 1 || limit > 100)
-                limit = 10;
+    ///// <summary>
+    ///// Gets frequently asked questions
+    ///// </summary>
+    ///// <param name="limit">Maximum number of questions to return (default: 10)</param>
+    ///// <returns>List of frequently asked questions</returns>
+    ///// <response code="200">Returns the list of frequently asked questions</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpGet("frequently-asked")]
+    //[AllowAnonymous]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<IEnumerable<QuestionDto>>> GetFrequentlyAskedQuestions([FromQuery] int limit = 10)
+    //{
+    //    try
+    //    {
+    //        if (limit < 1 || limit > 100)
+    //            limit = 10;
 
-            var questions = await _faqService.GetFrequentlyAskedQuestionsAsync(limit);
-            return Ok(questions);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    //        var questions = await _faqService.GetFrequentlyAskedQuestionsAsync(limit);
+    //        return Ok(questions);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
-    /// <summary>
-    /// Gets FAQ statistics
-    /// </summary>
-    /// <returns>FAQ statistics</returns>
-    /// <response code="200">Returns the FAQ statistics</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpGet("statistics")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<FAQStatisticsDto>> GetStatistics()
-    {
-        try
-        {
-            var statistics = await _faqService.GetStatisticsAsync();
-            return Ok(statistics);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    ///// <summary>
+    ///// Gets FAQ statistics
+    ///// </summary>
+    ///// <returns>FAQ statistics</returns>
+    ///// <response code="200">Returns the FAQ statistics</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpGet("statistics")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<FAQStatisticsDto>> GetStatistics()
+    //{
+    //    try
+    //    {
+    //        var statistics = await _faqService.GetStatisticsAsync();
+    //        return Ok(statistics);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
-    /// <summary>
-    /// Gets categories with question count
-    /// </summary>
-    /// <returns>List of categories with question counts</returns>
-    /// <response code="200">Returns the list of categories with question counts</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpGet("categories-with-counts")]
-    [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<FAQCategoryDto>>> GetCategoriesWithQuestionCount()
-    {
-        try
-        {
-            var categories = await _faqService.GetCategoriesWithQuestionCountAsync();
-            return Ok(categories);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    ///// <summary>
+    ///// Gets categories with question count
+    ///// </summary>
+    ///// <returns>List of categories with question counts</returns>
+    ///// <response code="200">Returns the list of categories with question counts</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpGet("categories-with-counts")]
+    //[AllowAnonymous]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<IEnumerable<FAQCategoryDto>>> GetCategoriesWithQuestionCount()
+    //{
+    //    try
+    //    {
+    //        var categories = await _faqService.GetCategoriesWithQuestionCountAsync();
+    //        return Ok(categories);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
     #endregion
 }

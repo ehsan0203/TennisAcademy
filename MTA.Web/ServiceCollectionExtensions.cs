@@ -12,6 +12,9 @@ namespace MTA.Web
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IFAQService, FAQService>();
             services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IUserProfileService, UserProfileService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IPermissionService, PermissionService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ILookupService, LookupService>();
 

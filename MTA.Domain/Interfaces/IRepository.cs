@@ -64,4 +64,18 @@ public interface IRepository<T> where T : BaseEntity
     Task<int> CountAsync(IQueryable<T> query);
 
     Task<IEnumerable<T>> GetPagedAsync(IQueryable<T> query, int page, int pageSize);
+
+    /// <summary>
+    /// Filters entities based on predicate
+    /// </summary>
+    /// <param name="predicate">Filter condition</param>
+    /// <returns>Filtered entities</returns>
+    Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> predicate);
+
+    /// <summary>
+    /// Gets first entity that matches predicate
+    /// </summary>
+    /// <param name="predicate">Filter condition</param>
+    /// <returns>First matching entity or null</returns>
+    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
 }
