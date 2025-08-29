@@ -1,0 +1,303 @@
+### PackageHistory API Tests
+### This file contains HTTP requests for testing the PackageHistory API endpoints
+
+@baseUrl = https://localhost:7001
+@authToken = {{auth.response.body.token}}
+
+### Authentication (if needed)
+# @name auth
+# POST {{baseUrl}}/api/auth/login
+# Content-Type: application/json
+# 
+# {
+#   "email": "admin@example.com",
+#   "password": "Admin123!"
+# }
+
+### Get All Package Histories
+GET {{baseUrl}}/api/packagehistory?page=1&pageSize=10
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get All Package Histories with Filters
+GET {{baseUrl}}/api/packagehistory?page=1&pageSize=10&accountId=1&packageId=1&isExpired=false
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Package History by ID
+GET {{baseUrl}}/api/packagehistory/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Create New Package History
+POST {{baseUrl}}/api/packagehistory
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "expiredDate": "2024-12-31T23:59:59Z",
+  "remainingTickets": 10,
+  "remainingMessages": 20,
+  "packageId": 1,
+  "accountId": 1
+}
+
+### Update Package History
+PUT {{baseUrl}}/api/packagehistory/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "expiredDate": "2024-12-31T23:59:59Z",
+  "remainingTickets": 8,
+  "remainingMessages": 18,
+  "packageId": 1,
+  "accountId": 1
+}
+
+### Delete Package History
+DELETE {{baseUrl}}/api/packagehistory/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Update Remaining Tickets
+PATCH {{baseUrl}}/api/packagehistory/1/remaining-tickets
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+5
+
+### Update Remaining Messages
+PATCH {{baseUrl}}/api/packagehistory/1/remaining-messages
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+15
+
+### Extend Package Expiration
+PATCH {{baseUrl}}/api/packagehistory/1/extend-expiration
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+"2025-01-31T23:59:59Z"
+
+### Get Package Histories by Account ID
+GET {{baseUrl}}/api/packagehistory/account/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Package Histories by Package ID
+GET {{baseUrl}}/api/packagehistory/package/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Active Package Histories for Account
+GET {{baseUrl}}/api/packagehistory/account/1/active
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Expired Package Histories for Account
+GET {{baseUrl}}/api/packagehistory/account/1/expired
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Check if User Has Active Package
+GET {{baseUrl}}/api/packagehistory/check-active?accountId=1&packageId=1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Package Histories by Date Range
+GET {{baseUrl}}/api/packagehistory/date-range?startDate=2024-01-01&endDate=2024-12-31
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Expiring Packages
+GET {{baseUrl}}/api/packagehistory/expiring?days=7
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Package History Statistics
+GET {{baseUrl}}/api/packagehistory/statistics
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get User Package Usage Summary
+GET {{baseUrl}}/api/packagehistory/account/1/usage-summary
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Test Error Cases
+
+### Get Non-existent Package History
+GET {{baseUrl}}/api/packagehistory/999
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Update Non-existent Package History
+PUT {{baseUrl}}/api/packagehistory/999
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "expiredDate": "2024-12-31T23:59:59Z",
+  "remainingTickets": 10,
+  "remainingMessages": 20,
+  "packageId": 1,
+  "accountId": 1
+}
+
+### Delete Non-existent Package History
+DELETE {{baseUrl}}/api/packagehistory/999
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Update Remaining Tickets of Non-existent Package History
+PATCH {{baseUrl}}/api/packagehistory/999/remaining-tickets
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+5
+
+### Update Remaining Messages of Non-existent Package History
+PATCH {{baseUrl}}/api/packagehistory/999/remaining-messages
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+15
+
+### Extend Expiration of Non-existent Package History
+PATCH {{baseUrl}}/api/packagehistory/999/extend-expiration
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+"2025-01-31T23:59:59Z"
+
+### Invalid Date Range
+GET {{baseUrl}}/api/packagehistory/date-range?startDate=2024-12-31&endDate=2024-01-01
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Invalid Days Parameter
+GET {{baseUrl}}/api/packagehistory/expiring?days=0
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Negative Remaining Tickets
+PATCH {{baseUrl}}/api/packagehistory/1/remaining-tickets
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+-5
+
+### Negative Remaining Messages
+PATCH {{baseUrl}}/api/packagehistory/1/remaining-messages
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+-10
+
+### Past Expiration Date
+PATCH {{baseUrl}}/api/packagehistory/1/extend-expiration
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+"2023-01-01T00:00:00Z"
+
+### Create Package History with Invalid Data
+POST {{baseUrl}}/api/packagehistory
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "expiredDate": "2023-01-01T00:00:00Z",
+  "remainingTickets": -5,
+  "remainingMessages": -10,
+  "packageId": -1,
+  "accountId": -1
+}
+
+### Test Different Package History Scenarios
+
+### Create Premium Package History
+POST {{baseUrl}}/api/packagehistory
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "expiredDate": "2024-12-31T23:59:59Z",
+  "remainingTickets": 50,
+  "remainingMessages": 100,
+  "packageId": 2,
+  "accountId": 1
+}
+
+### Create Basic Package History
+POST {{baseUrl}}/api/packagehistory
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "expiredDate": "2024-06-30T23:59:59Z",
+  "remainingTickets": 10,
+  "remainingMessages": 20,
+  "packageId": 1,
+  "accountId": 2
+}
+
+### Create Expired Package History
+POST {{baseUrl}}/api/packagehistory
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "expiredDate": "2023-12-31T23:59:59Z",
+  "remainingTickets": 5,
+  "remainingMessages": 10,
+  "packageId": 1,
+  "accountId": 3
+}
+
+### Test Package Usage Scenarios
+
+### Use Tickets (Update Remaining)
+PATCH {{baseUrl}}/api/packagehistory/1/remaining-tickets
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+8
+
+### Use Messages (Update Remaining)
+PATCH {{baseUrl}}/api/packagehistory/1/remaining-messages
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+18
+
+### Extend Package for Another Month
+PATCH {{baseUrl}}/api/packagehistory/1/extend-expiration
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+"2025-01-31T23:59:59Z"
+
+### Test Statistics and Reports
+
+### Get Statistics for Current Month
+GET {{baseUrl}}/api/packagehistory/statistics
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get User Usage Summary for Active User
+GET {{baseUrl}}/api/packagehistory/account/1/usage-summary
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Expiring Packages in Next 30 Days
+GET {{baseUrl}}/api/packagehistory/expiring?days=30
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Package Histories for Last Quarter
+GET {{baseUrl}}/api/packagehistory/date-range?startDate=2024-01-01&endDate=2024-03-31
+Authorization: Bearer {{authToken}}
+Content-Type: application/json

@@ -82,19 +82,19 @@ public interface IUserCourseHistoryService
     /// <returns>List of user course histories</returns>
     Task<IEnumerable<UserCourseHistoryDto>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
     
-    /// <summary>
-    /// Get popular courses (by purchase count)
-    /// </summary>
-    /// <param name="count">Number of courses to return</param>
-    /// <returns>List of popular courses</returns>
-    Task<IEnumerable<CourseDto>> GetPopularCoursesAsync(int count = 10);
+    ///// <summary>
+    ///// Get popular courses (by purchase count)
+    ///// </summary>
+    ///// <param name="count">Number of courses to return</param>
+    ///// <returns>List of popular courses</returns>
+    //Task<IEnumerable<CourseDto>> GetPopularCoursesAsync(int count = 10);
     
-    /// <summary>
-    /// Get user learning progress
-    /// </summary>
-    /// <param name="accountId">Account ID</param>
-    /// <returns>User learning progress</returns>
-    Task<UserLearningProgressDto> GetUserLearningProgressAsync(int accountId);
+    ///// <summary>
+    ///// Get user learning progress
+    ///// </summary>
+    ///// <param name="accountId">Account ID</param>
+    ///// <returns>User learning progress</returns>
+    //Task<UserLearningProgressDto> GetUserLearningProgressAsync(int accountId);
 }
 
 /// <summary>

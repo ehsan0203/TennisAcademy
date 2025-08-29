@@ -100,11 +100,6 @@ public interface IRolePermissionService
     /// <returns>True if all permissions removed successfully</returns>
     Task<bool> BulkRemovePermissionsFromRoleAsync(int roleId, IEnumerable<int> permissionIds);
     
-    /// <summary>
-    /// Get role permission statistics
-    /// </summary>
-    /// <returns>Role permission statistics</returns>
-    Task<RolePermissionStatisticsDto> GetStatisticsAsync();
 }
 
 /// <summary>

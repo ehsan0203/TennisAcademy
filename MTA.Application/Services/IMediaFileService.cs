@@ -48,13 +48,6 @@ public interface IMediaFileService
     Task<IEnumerable<MediaFileDto>> GetByMessageAsync(int messageId);
     
     /// <summary>
-    /// Get media files by file extension
-    /// </summary>
-    /// <param name="extension">File extension</param>
-    /// <returns>List of media files</returns>
-    Task<IEnumerable<MediaFileDto>> GetByExtensionAsync(string extension);
-    
-    /// <summary>
     /// Create new media file
     /// </summary>
     /// <param name="mediaFileDto">Media file data</param>
@@ -91,12 +84,6 @@ public interface IMediaFileService
     /// <param name="url">New URL</param>
     /// <returns>Updated media file</returns>
     Task<MediaFileDto> UpdateUrlAsync(int id, string url);
-    
-    /// <summary>
-    /// Get media file statistics
-    /// </summary>
-    /// <returns>Media file statistics</returns>
-    Task<MediaFileStatisticsDto> GetStatisticsAsync();
     
     /// <summary>
     /// Get media files by date range

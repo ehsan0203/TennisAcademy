@@ -1,0 +1,129 @@
+@baseUrl = http://localhost:5000/api/UserCourseHistory
+@authToken = your_jwt_token_here
+
+### ========================================
+### UserCourseHistory CRUD Operations
+### ========================================
+
+# Get all user course histories with pagination
+GET {{baseUrl}}?page=1&pageSize=10
+Authorization: Bearer {{authToken}}
+
+# Get all user course histories filtered by account ID
+GET {{baseUrl}}?accountId=1&page=1&pageSize=20
+Authorization: Bearer {{authToken}}
+
+# Get all user course histories filtered by course ID
+GET {{baseUrl}}?courseId=2&page=1&pageSize=20
+Authorization: Bearer {{authToken}}
+
+# Get specific user course history by ID
+GET {{baseUrl}}/1
+Authorization: Bearer {{authToken}}
+
+# Create new user course history
+POST {{baseUrl}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "courseId": 1,
+  "accountId": 3
+}
+
+# Update existing user course history
+PUT {{baseUrl}}/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "courseId": 2,
+  "accountId": 3
+}
+
+# Delete user course history
+DELETE {{baseUrl}}/1
+Authorization: Bearer {{authToken}}
+
+### ========================================
+### UserCourseHistory Queries
+### ========================================
+
+# Get user course histories by account ID
+GET {{baseUrl}}/account/1
+Authorization: Bearer {{authToken}}
+
+# Get user course histories by course ID
+GET {{baseUrl}}/course/2
+Authorization: Bearer {{authToken}}
+
+# Check if user has purchased specific course
+GET {{baseUrl}}/check-purchase?accountId=1&courseId=3
+Authorization: Bearer {{authToken}}
+
+### ========================================
+### UserCourseHistory Analytics and Reports
+### ========================================
+
+# Get user course history statistics
+GET {{baseUrl}}/statistics
+Authorization: Bearer {{authToken}}
+
+# Get user course histories by date range
+GET {{baseUrl}}/date-range?startDate=2024-01-01&endDate=2024-12-31
+Authorization: Bearer {{authToken}}
+
+# Get popular courses by purchase count
+GET {{baseUrl}}/popular-courses?count=10
+Authorization: Bearer {{authToken}}
+
+# Get user learning progress
+GET {{baseUrl}}/learning-progress/1
+Authorization: Bearer {{authToken}}
+
+### ========================================
+### Error Testing
+### ========================================
+
+# Test with invalid account ID
+GET {{baseUrl}}/account/999
+Authorization: Bearer {{authToken}}
+
+# Test with invalid course ID
+GET {{baseUrl}}/course/999
+Authorization: Bearer {{authToken}}
+
+# Test creating duplicate user course history
+POST {{baseUrl}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "courseId": 1,
+  "accountId": 3
+}
+
+# Test updating non-existent user course history
+PUT {{baseUrl}}/999
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "courseId": 2,
+  "accountId": 3
+}
+
+# Test deleting non-existent user course history
+DELETE {{baseUrl}}/999
+Authorization: Bearer {{authToken}}
+
+# Test date range with invalid dates
+GET {{baseUrl}}/date-range?startDate=2024-12-31&endDate=2024-01-01
+Authorization: Bearer {{authToken}}
+
+# Test popular courses with invalid count
+GET {{baseUrl}}/popular-courses?count=0
+Authorization: Bearer {{authToken}}
+
+# Test without authorization
+GET {{baseUrl}}

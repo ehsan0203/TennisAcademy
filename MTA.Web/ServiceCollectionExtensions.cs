@@ -8,17 +8,24 @@ namespace MTA.Web
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IJwtService, JwtService>();
-            services.AddScoped<IFAQService, FAQService>();
-            services.AddScoped<ICourseService, CourseService>();
-            services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IPermissionService, PermissionService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IFAQService, FAQService>();
+            services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<ILessonService, LessonService>();
-            services.AddScoped<IPackageService, PackageService>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ILookupService, LookupService>();
+            services.AddScoped<IMappingService, MappingService>();
+            services.AddScoped<IMediaFileService, MediaFileService>();
+            services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IPackageHistoryService, PackageHistoryService>();
+            services.AddScoped<IPackageService, PackageService>();
+            services.AddScoped<IPermissionService, PermissionService>();
+            services.AddScoped<IRolePermissionService, RolePermissionService>();
+            services.AddScoped<IUserCourseHistoryService,UserCourseHistoryService>();
+            services.AddScoped<IVideoContentService, VideoContentService>();
+            services.AddScoped<IUserProfileService, UserProfileService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

@@ -28,6 +28,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Lookup> Lookups { get; set; }
     public DbSet<FAQCategory> FAQCategories { get; set; }
     public DbSet<QuestionFAQ> QuestionFAQs { get; set; }
+    public DbSet<VideoContent> VideoContents { get; set; } 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
