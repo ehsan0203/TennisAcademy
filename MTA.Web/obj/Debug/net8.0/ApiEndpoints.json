@@ -157,6 +157,29 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.AuthController",
+    "Method": "GetSiteRules",
+    "RelativePath": "api/Auth/site-rules",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.LookupDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.AuthController",
     "Method": "ValidateToken",
     "RelativePath": "api/Auth/validate-token",
     "HttpMethod": "POST",

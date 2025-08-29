@@ -13,6 +13,7 @@ namespace MTA.Web
             services.AddScoped<IFAQService, FAQService>();
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ILookupService, LookupService>();
 
             return services;
         }

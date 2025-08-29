@@ -20,3 +20,25 @@ C:\Users\ZahraMld\Desktop\MTA Project\MTA\MTA.Infrastructure.Persistence\obj\Deb
 C:\Users\ZahraMld\Desktop\MTA Project\MTA\MTA.Infrastructure.Persistence\obj\Debug\net8.0\MTA.Infrastructure.Persistence.pdb
 C:\Users\ZahraMld\Desktop\MTA Project\MTA\MTA.Infrastructure.Persistence\obj\Debug\net8.0\MTA.Infrastructure.Persistence.genruntimeconfig.cache
 C:\Users\ZahraMld\Desktop\MTA Project\MTA\MTA.Infrastructure.Persistence\obj\Debug\net8.0\ref\MTA.Infrastructure.Persistence.dll
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\bin\Debug\net8.0\MTA.Infrastructure.Persistence.deps.json
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\bin\Debug\net8.0\MTA.Infrastructure.Persistence.runtimeconfig.json
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\bin\Debug\net8.0\MTA.Infrastructure.Persistence.dll
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\bin\Debug\net8.0\MTA.Infrastructure.Persistence.pdb
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\bin\Debug\net8.0\MTA.Application.dll
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\bin\Debug\net8.0\MTA.Domain.dll
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\bin\Debug\net8.0\MTA.Infrastructure.dll
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\bin\Debug\net8.0\MTA.Infrastructure.pdb
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\bin\Debug\net8.0\MTA.Application.pdb
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\bin\Debug\net8.0\MTA.Domain.pdb
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\obj\Debug\net8.0\MTA.Infrastructure.Persistence.csproj.AssemblyReference.cache
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\obj\Debug\net8.0\MTA.Infrastructure.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\obj\Debug\net8.0\MTA.Infrastructure.Persistence.AssemblyInfoInputs.cache
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\obj\Debug\net8.0\MTA.Infrastructure.Persistence.AssemblyInfo.cs
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\obj\Debug\net8.0\MTA.Infrastructure.Persistence.csproj.CoreCompileInputs.cache
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\obj\Debug\net8.0\MTA.Infrastructure.Persistence.sourcelink.json
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\obj\Debug\net8.0\MTA.Infr.0BECC8BF.Up2Date
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\obj\Debug\net8.0\MTA.Infrastructure.Persistence.dll
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\obj\Debug\net8.0\refint\MTA.Infrastructure.Persistence.dll
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\obj\Debug\net8.0\MTA.Infrastructure.Persistence.pdb
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\obj\Debug\net8.0\MTA.Infrastructure.Persistence.genruntimeconfig.cache
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Infrastructure.Persistence\obj\Debug\net8.0\ref\MTA.Infrastructure.Persistence.dll

@@ -565,11 +565,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ZahraMld\\Desktop\\MTA Project - Copy\\MTA\\MTA.Domain\\MTA.Domain.csproj",
+      "projectUniqueName": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj",
       "projectName": "MTA.Domain",
-      "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA Project - Copy\\MTA\\MTA.Domain\\MTA.Domain.csproj",
+      "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj",
       "packagesPath": "C:\\Users\\ZahraMld\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ZahraMld\\Desktop\\MTA Project - Copy\\MTA\\MTA.Domain\\obj\\",
+      "outputPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

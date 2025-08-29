@@ -35,7 +35,9 @@ public class LookupService : ILookupService
                 Id = l.Id,
                 Category = l.Category,
                 Key = l.Key,
-                Value = l.Value
+                Value = l.Value,
+                CreatedAt = l.CreatedAt,
+                UpdatedAt = l.UpdatedAt ?? l.CreatedAt
             }),
             Page = page,
             PageSize = pageSize,
@@ -53,7 +55,9 @@ public class LookupService : ILookupService
             Id = entity.Id,
             Category = entity.Category,
             Key = entity.Key,
-            Value = entity.Value
+            Value = entity.Value,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt ?? entity.CreatedAt
         };
     }
 
@@ -68,8 +72,8 @@ public class LookupService : ILookupService
             Category = l.Category,
             Key = l.Key,
             Value = l.Value,
-            CreateAt = l.CreatedAt.Date,
-            UpdateAt = (l.UpdatedAt ?? l.CreatedAt).Date
+            CreatedAt = l.CreatedAt,
+            UpdatedAt = l.UpdatedAt ?? l.CreatedAt
         });
     }
 
@@ -84,7 +88,9 @@ public class LookupService : ILookupService
             Id = entity.Id,
             Category = entity.Category,
             Key = entity.Key,
-            Value = entity.Value
+            Value = entity.Value,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt ?? entity.CreatedAt
         };
     }
 
@@ -105,13 +111,17 @@ public class LookupService : ILookupService
         {
             Category = lookupDto.Category,
             Key = lookupDto.Key,
-            Value = lookupDto.Value
+            Value = lookupDto.Value,
+            CreatedAt = DateTime.UtcNow
         };
 
         await repo.AddAsync(entity);
         await _unitOfWork.SaveChangesAsync();
 
         lookupDto.Id = entity.Id;
+        lookupDto.CreatedAt = entity.CreatedAt;
+        lookupDto.UpdatedAt = entity.UpdatedAt ?? entity.CreatedAt;
+
         return lookupDto;
     }
 
@@ -134,9 +144,11 @@ public class LookupService : ILookupService
         return new LookupDto
         {
             Id = entity.Id,
-            Category = lookupDto.Category,
-            Key = lookupDto.Key,
-            Value = lookupDto.Value
+            Category = entity.Category,
+            Key = entity.Key,
+            Value = entity.Value,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt ?? entity.CreatedAt
         };
     }
 
@@ -169,8 +181,8 @@ public class LookupService : ILookupService
 
         var lookupsPerCategory = await query
             .GroupBy(l => l.Category)
-            .Select(g => new { Category = g.Key, Count = g.Count() })
-            .ToDictionaryAsync(g => g.Category, g => g.Count);
+            .Select(g => new { g.Key, Count = g.Count() })
+            .ToDictionaryAsync(g => g.Key, g => g.Count);
 
         var now = DateTime.UtcNow;
         var startOfThisMonth = new DateTime(now.Year, now.Month, 1);
@@ -196,7 +208,8 @@ public class LookupService : ILookupService
         {
             Category = dto.Category,
             Key = dto.Key,
-            Value = dto.Value
+            Value = dto.Value,
+            CreatedAt = DateTime.UtcNow
         }).ToList();
 
         foreach (var entity in entities)
@@ -211,7 +224,9 @@ public class LookupService : ILookupService
             Id = e.Id,
             Category = e.Category,
             Key = e.Key,
-            Value = e.Value
+            Value = e.Value,
+            CreatedAt = e.CreatedAt,
+            UpdatedAt = e.UpdatedAt ?? e.CreatedAt
         });
     }
 }

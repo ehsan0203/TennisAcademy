@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MTA.Application.DTOs;
 using MTA.Application.DTOs.Auth;
 using MTA.Application.Services;
 
@@ -13,10 +14,29 @@ namespace MTA.Web.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly ILookupService _lookupService;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, ILookupService lookupService)
     {
         _authService = authService;
+        _lookupService = lookupService;
+    }
+
+
+    [HttpGet("site-rules")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<IEnumerable<LookupDto>>> GetSiteRules()
+    {
+        try
+        {
+            var rules = await _lookupService.GetByCategoryAsync("SiteRules");
+            return Ok(rules);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+        }
     }
 
     /// <summary>

@@ -4666,11 +4666,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ZahraMld\\Desktop\\MTA Project - Copy\\MTA\\MTA.Web\\MTA.Web.csproj",
+      "projectUniqueName": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Web\\MTA.Web.csproj",
       "projectName": "MTA.Web",
-      "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA Project - Copy\\MTA\\MTA.Web\\MTA.Web.csproj",
+      "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Web\\MTA.Web.csproj",
       "packagesPath": "C:\\Users\\ZahraMld\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ZahraMld\\Desktop\\MTA Project - Copy\\MTA\\MTA.Web\\obj\\",
+      "outputPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4692,11 +4692,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\ZahraMld\\Desktop\\MTA Project - Copy\\MTA\\MTA.Application\\MTA.Application.csproj": {
-              "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA Project - Copy\\MTA\\MTA.Application\\MTA.Application.csproj"
+            "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj": {
+              "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj"
             },
-            "C:\\Users\\ZahraMld\\Desktop\\MTA Project - Copy\\MTA\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj": {
-              "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA Project - Copy\\MTA\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj"
+            "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj": {
+              "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj"
             }
           }
         }
