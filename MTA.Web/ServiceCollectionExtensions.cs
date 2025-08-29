@@ -15,11 +15,12 @@ namespace MTA.Web
             services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IPermissionService, PermissionService>();
+            services.AddScoped<ILessonService, LessonService>();
+            services.AddScoped<IPackageService, PackageService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ILookupService, LookupService>();
 
             return services;
         }
     }
-
 }

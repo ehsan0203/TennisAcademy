@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using BCrypt.Net;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MTA.Application.DTOs.Auth;
 using MTA.Domain.Entities;
@@ -31,8 +31,10 @@ public class AuthService : IAuthService
     public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
     {
         // Find user by email
-        var account = (await _unitOfWork.Repository<Account>().GetAllAsync())
+        var account = (await _unitOfWork.Repository<Account>()
+            .GetAllAsync(include: q => q.Include(a => a.Role).Include(a => a.UserProfile).ThenInclude(p => p.SkillLevel)))
             .FirstOrDefault(a => a.Email.ToLower() == loginDto.Email.ToLower());
+
 
         if (account == null)
             throw new UnauthorizedAccessException("Invalid email or password");
@@ -64,6 +66,7 @@ public class AuthService : IAuthService
                 Email = account.Email,
                 FirstName = profile?.FirstName ?? "",
                 LastName = profile?.LastName ?? "",
+                RoleId = account.RoleId,
                 RoleTitle = account.Role?.Title ?? "",
                 SkillLevelValue = profile?.SkillLevel?.Title ?? "", 
                 ImageUrl = account.Image

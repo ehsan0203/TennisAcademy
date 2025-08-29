@@ -8,7 +8,7 @@ namespace MTA.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin")]
 public class PermissionController : ControllerBase
 {
     private readonly IPermissionService _permissionService;

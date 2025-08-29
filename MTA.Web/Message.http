@@ -1,0 +1,149 @@
+### Message API Tests
+### This file contains HTTP requests for testing the Message API endpoints
+
+@baseUrl = https://localhost:7001
+@authToken = {{auth.response.body.token}}
+
+### Authentication (if needed)
+# @name auth
+# POST {{baseUrl}}/api/auth/login
+# Content-Type: application/json
+# 
+# {
+#   "email": "admin@example.com",
+#   "password": "Admin123!"
+# }
+
+### Get All Messages
+GET {{baseUrl}}/api/message?page=1&pageSize=10
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get All Messages with Filters
+GET {{baseUrl}}/api/message?page=1&pageSize=10&searchTerm=test&ticketId=1&senderId=1&isRead=false
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Message by ID
+GET {{baseUrl}}/api/message/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Create New Message
+POST {{baseUrl}}/api/message
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "text": "This is a test message for ticket support",
+  "ticketId": 1,
+  "senderId": 1,
+  "isRead": false
+}
+
+### Update Message
+PUT {{baseUrl}}/api/message/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "text": "This is an updated test message",
+  "ticketId": 1,
+  "senderId": 1,
+  "isRead": false
+}
+
+### Delete Message
+DELETE {{baseUrl}}/api/message/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Mark Message as Read
+PATCH {{baseUrl}}/api/message/1/mark-read
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Mark Message as Unread
+PATCH {{baseUrl}}/api/message/1/mark-unread
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Mark All Messages in Ticket as Read
+PATCH {{baseUrl}}/api/message/ticket/1/mark-all-read
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Messages by Ticket ID
+GET {{baseUrl}}/api/message/ticket/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Messages by Sender ID
+GET {{baseUrl}}/api/message/sender/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get All Unread Messages
+GET {{baseUrl}}/api/message/unread
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Unread Messages by Ticket ID
+GET {{baseUrl}}/api/message/ticket/1/unread
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Messages by Date Range
+GET {{baseUrl}}/api/message/date-range?startDate=2024-01-01&endDate=2024-12-31
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Get Message Statistics
+GET {{baseUrl}}/api/message/statistics
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Test Error Cases
+
+### Get Non-existent Message
+GET {{baseUrl}}/api/message/999
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Update Non-existent Message
+PUT {{baseUrl}}/api/message/999
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "text": "This message doesn't exist",
+  "ticketId": 1,
+  "senderId": 1,
+  "isRead": false
+}
+
+### Delete Non-existent Message
+DELETE {{baseUrl}}/api/message/999
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Mark Non-existent Message as Read
+PATCH {{baseUrl}}/api/message/999/mark-read
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Invalid Date Range
+GET {{baseUrl}}/api/message/date-range?startDate=2024-12-31&endDate=2024-01-01
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Create Message with Invalid Data
+POST {{baseUrl}}/api/message
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "text": "",
+  "ticketId": -1,
+  "senderId": -1
+}

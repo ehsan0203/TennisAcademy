@@ -95,13 +95,7 @@ public interface IMessageService
     /// <param name="ticketId">Ticket ID</param>
     /// <returns>Number of messages marked as read</returns>
     Task<int> MarkAllAsReadByTicketAsync(int ticketId);
-    
-    /// <summary>
-    /// Get message statistics
-    /// </summary>
-    /// <returns>Message statistics</returns>
-    Task<MessageStatisticsDto> GetStatisticsAsync();
-    
+       
     /// <summary>
     /// Get messages by date range
     /// </summary>

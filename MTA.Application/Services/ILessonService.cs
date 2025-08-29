@@ -33,18 +33,6 @@ public interface ILessonService
     Task<IEnumerable<LessonDto>> GetByCourseAsync(int courseId);
     
     /// <summary>
-    /// Get free lessons
-    /// </summary>
-    /// <returns>List of free lessons</returns>
-    Task<IEnumerable<LessonDto>> GetFreeLessonsAsync();
-    
-    /// <summary>
-    /// Get paid lessons
-    /// </summary>
-    /// <returns>List of paid lessons</returns>
-    Task<IEnumerable<LessonDto>> GetPaidLessonsAsync();
-    
-    /// <summary>
     /// Create new lesson
     /// </summary>
     /// <param name="lessonDto">Lesson data</param>
@@ -67,14 +55,6 @@ public interface ILessonService
     Task<bool> DeleteAsync(int id);
     
     /// <summary>
-    /// Change lesson free status
-    /// </summary>
-    /// <param name="id">Lesson ID</param>
-    /// <param name="isFree">Free status</param>
-    /// <returns>Updated lesson</returns>
-    Task<LessonDto> SetFreeStatusAsync(int id, bool isFree);
-    
-    /// <summary>
     /// Change lesson course
     /// </summary>
     /// <param name="id">Lesson ID</param>
@@ -89,20 +69,6 @@ public interface ILessonService
     /// <param name="order">New order</param>
     /// <returns>Updated lesson</returns>
     Task<LessonDto> UpdateOrderAsync(int id, int order);
-    
-    /// <summary>
-    /// Get lesson statistics
-    /// </summary>
-    /// <returns>Lesson statistics</returns>
-    Task<LessonStatisticsDto> GetStatisticsAsync();
-    
-    /// <summary>
-    /// Get lessons by date range
-    /// </summary>
-    /// <param name="startDate">Start date</param>
-    /// <param name="endDate">End date</param>
-    /// <returns>List of lessons</returns>
-    Task<IEnumerable<LessonDto>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
 }
 
 /// <summary>

@@ -88,19 +88,6 @@ public interface IPackageService
     /// <param name="durationUnitId">New duration unit ID</param>
     /// <returns>Updated package</returns>
     Task<PackageDto> UpdateDurationAsync(int id, int duration, int durationUnitId);
-    
-    /// <summary>
-    /// Get package statistics
-    /// </summary>
-    /// <returns>Package statistics</returns>
-    Task<PackageStatisticsDto> GetStatisticsAsync();
-    
-    /// <summary>
-    /// Get popular packages (by purchase count)
-    /// </summary>
-    /// <param name="count">Number of packages to return</param>
-    /// <returns>List of popular packages</returns>
-    Task<IEnumerable<PackageDto>> GetPopularPackagesAsync(int count = 10);
 }
 
 /// <summary>

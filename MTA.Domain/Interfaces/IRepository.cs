@@ -16,7 +16,8 @@ public interface IRepository<T> where T : BaseEntity
     /// <returns>Collection of all entities</returns>
     Task<IEnumerable<T>> GetAllAsync();
     Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate);
-    
+    Task<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>, IQueryable<T>>? include = null);
+
     /// <summary>
     /// Gets an entity by ID asynchronously
     /// </summary>

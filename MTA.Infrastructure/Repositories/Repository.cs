@@ -43,6 +43,18 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         return await _dbSet.ToListAsync();
     }
 
+    public async Task<IEnumerable<T>> GetAllAsync(
+    Func<IQueryable<T>, IQueryable<T>>? include = null)
+    {
+        IQueryable<T> query = _dbSet;
+
+        if (include != null)
+            query = include(query);
+
+        return await query.ToListAsync();
+    }
+
+
     public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? predicate) =>
         predicate != null ? await _dbSet.Where(predicate).ToListAsync() : await GetAllAsync();
 
