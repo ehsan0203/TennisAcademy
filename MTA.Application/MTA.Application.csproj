@@ -22,4 +22,8 @@
     <ProjectReference Include="..\MTA.Domain\MTA.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NewFolder\NewFolder\" />
+  </ItemGroup>
+
 </Project>

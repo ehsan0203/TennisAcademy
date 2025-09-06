@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MTA.Infrastructure.Persistence")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9fb8bb20f9591a4c1eeae9fe98e1f22f6dfbcaf5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+94ae68af0c678051f914b88e0e73729cd23e737e")]
 [assembly: System.Reflection.AssemblyProductAttribute("MTA.Infrastructure.Persistence")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MTA.Infrastructure.Persistence")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

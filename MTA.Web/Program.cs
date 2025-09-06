@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MTA.Application.Services;
+using MTA.Domain.Entities;
 using MTA.Infrastructure.Data;
 using MTA.Infrastructure.Data;
 using MTA.Infrastructure.Persistence;
@@ -102,8 +104,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // 1. Register the custom authorization handler
 builder.Services.AddScoped<IAuthorizationHandler, CustomAuthorizationHandler>();
 
+builder.Services.AddValidatorsFromAssemblyContaining<RoleValidator>();
+
 // 2. Register custom policy provider
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, CustomAuthorizationPolicyProvider>();
+
+
 
 // 3. (Optional) Add default policies if needed
 builder.Services.AddAuthorization(options =>

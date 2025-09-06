@@ -49,5 +49,5 @@ public abstract class BaseEntity
     /// This property is part of the audit trail and helps track when records were last modified.
     /// It should be updated automatically by the repository or service layer when changes are made.
     /// </remarks>
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 }

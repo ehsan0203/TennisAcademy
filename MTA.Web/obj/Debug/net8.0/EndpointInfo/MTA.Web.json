@@ -9677,6 +9677,15 @@
           "roleId": {
             "type": "integer",
             "format": "int32"
+          },
+          "healthCondition": {
+            "type": "boolean"
+          },
+          "healthDescription": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -10215,6 +10224,13 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "healthCondition": {
+            "type": "boolean"
+          },
+          "healthDescription": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -10307,8 +10323,7 @@
           },
           "updatedAt": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "title": {
             "type": "string",

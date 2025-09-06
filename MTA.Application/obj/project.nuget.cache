@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "3d93bPsv4pE=",
+  "dgSpecHash": "2OCbHS9Nl0c=",
   "success": true,
   "projectFilePath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj",
   "expectedPackageFiles": [
@@ -32,5 +32,15 @@
     "C:\\Users\\ZahraMld\\.nuget\\packages\\microsoft.identitymodel.tokens\\7.3.1\\microsoft.identitymodel.tokens.7.3.1.nupkg.sha512",
     "C:\\Users\\ZahraMld\\.nuget\\packages\\system.identitymodel.tokens.jwt\\7.3.1\\system.identitymodel.tokens.jwt.7.3.1.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.",
+      "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj",
+      "targetGraphs": []
+    }
+  ]
 }

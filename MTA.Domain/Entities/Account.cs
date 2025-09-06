@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MTA.Domain.Entities;
 
@@ -224,5 +225,7 @@ public class Account : BaseEntity
     /// - Audit trail of user communications
     /// </remarks>
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }
 

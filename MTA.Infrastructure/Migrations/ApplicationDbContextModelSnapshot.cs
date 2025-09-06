@@ -56,7 +56,7 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -108,7 +108,7 @@ namespace MTA.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -146,7 +146,7 @@ namespace MTA.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -183,7 +183,7 @@ namespace MTA.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -209,7 +209,7 @@ namespace MTA.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -223,26 +223,30 @@ namespace MTA.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(3155),
-                            Title = "Beginner"
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4330),
+                            Title = "Beginner",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(3156),
-                            Title = "Intermediate"
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4331),
+                            Title = "Intermediate",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(3157),
-                            Title = "Advanced"
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4332),
+                            Title = "Advanced",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(3158),
-                            Title = "Professional"
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4333),
+                            Title = "Professional",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -267,7 +271,7 @@ namespace MTA.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Value")
@@ -287,225 +291,343 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 1,
                             Category = "AccountStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2821),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4084),
                             Key = "Active",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "فعال"
                         },
                         new
                         {
                             Id = 2,
                             Category = "AccountStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2825),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4088),
                             Key = "Inactive",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "غیرفعال"
                         },
                         new
                         {
                             Id = 3,
                             Category = "AccountStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2826),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4088),
                             Key = "Suspended",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "مسدود"
                         },
                         new
                         {
                             Id = 4,
                             Category = "CourseStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2827),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4089),
                             Key = "Draft",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "پیش‌نویس"
                         },
                         new
                         {
                             Id = 5,
                             Category = "CourseStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2828),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4090),
                             Key = "Published",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "منتشر شده"
                         },
                         new
                         {
                             Id = 6,
                             Category = "CourseStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2828),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4091),
                             Key = "Archived",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "بایگانی"
                         },
                         new
                         {
                             Id = 7,
                             Category = "CourseStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2829),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4092),
                             Key = "Suspended",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "معلق"
                         },
                         new
                         {
                             Id = 8,
                             Category = "CourseStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2830),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4093),
                             Key = "Retired",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "منقضی شده"
                         },
                         new
                         {
                             Id = 9,
                             Category = "MediaType",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2831),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4093),
                             Key = "Video",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "ویدئو"
                         },
                         new
                         {
                             Id = 10,
                             Category = "MediaType",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2832),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4094),
                             Key = "Document",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "سند"
                         },
                         new
                         {
                             Id = 11,
                             Category = "MediaType",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2832),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4095),
                             Key = "Image",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "تصویر"
                         },
                         new
                         {
                             Id = 12,
                             Category = "MediaType",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2833),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4096),
                             Key = "Audio",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "صوت"
                         },
                         new
                         {
                             Id = 13,
                             Category = "DurationUnit",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2834),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4096),
                             Key = "Day",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "روز"
                         },
                         new
                         {
                             Id = 14,
                             Category = "DurationUnit",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2835),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4097),
                             Key = "Week",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "هفته"
                         },
                         new
                         {
                             Id = 15,
                             Category = "DurationUnit",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2909),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4098),
                             Key = "Month",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "ماه"
                         },
                         new
                         {
                             Id = 16,
                             Category = "FAQCategory",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2910),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4099),
                             Key = "General",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "عمومی"
                         },
                         new
                         {
                             Id = 17,
                             Category = "FAQCategory",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2911),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4099),
                             Key = "Payment",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "پرداخت"
                         },
                         new
                         {
                             Id = 18,
                             Category = "FAQCategory",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2912),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4100),
                             Key = "Technical",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "فنی"
                         },
                         new
                         {
                             Id = 19,
                             Category = "FAQCategory",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2913),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4101),
                             Key = "Course",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "دوره‌ها"
                         },
                         new
                         {
                             Id = 20,
                             Category = "TicketStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2913),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4102),
                             Key = "Open",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "باز"
                         },
                         new
                         {
                             Id = 21,
                             Category = "TicketStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2914),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4103),
                             Key = "Pending",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "در انتظار"
                         },
                         new
                         {
                             Id = 22,
                             Category = "TicketStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2915),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4103),
                             Key = "Closed",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "بسته شده"
                         },
                         new
                         {
                             Id = 23,
                             Category = "PackageStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2916),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4104),
                             Key = "Active",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "فعال"
                         },
                         new
                         {
                             Id = 24,
                             Category = "PackageStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2917),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4105),
                             Key = "Expired",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "منقضی"
                         },
                         new
                         {
                             Id = 25,
                             Category = "PackageStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2917),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4106),
                             Key = "Pending",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "در انتظار"
                         },
                         new
                         {
                             Id = 26,
                             Category = "UserCourseStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2918),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4107),
                             Key = "Active",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "فعال"
                         },
                         new
                         {
                             Id = 27,
                             Category = "UserCourseStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2919),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4107),
                             Key = "Completed",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "تکمیل شده"
                         },
                         new
                         {
                             Id = 28,
                             Category = "UserCourseStatus",
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(2920),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4108),
                             Key = "Cancelled",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "لغو شده"
+                        },
+                        new
+                        {
+                            Id = 100,
+                            Category = "SiteRule",
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4109),
+                            Key = "RespectOthers",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "کاربران باید با احترام با یکدیگر رفتار کنند"
+                        },
+                        new
+                        {
+                            Id = 101,
+                            Category = "SiteRule",
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4110),
+                            Key = "NoSpam",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "ارسال پیام‌های تبلیغاتی یا اسپم مجاز نیست"
+                        },
+                        new
+                        {
+                            Id = 102,
+                            Category = "SiteRule",
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4111),
+                            Key = "FairPlay",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "رعایت اصول بازی جوانمردانه الزامی است"
+                        },
+                        new
+                        {
+                            Id = 103,
+                            Category = "SiteRule",
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4111),
+                            Key = "ProperContent",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "انتشار محتوای نامناسب یا توهین‌آمیز ممنوع است"
+                        },
+                        new
+                        {
+                            Id = 104,
+                            Category = "SiteRule",
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4112),
+                            Key = "FollowCoach",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "پیروی از دستورالعمل‌های مربی در طول تمرینات ضروری است"
+                        },
+                        new
+                        {
+                            Id = 105,
+                            Category = "SiteRule",
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4113),
+                            Key = "NoCheating",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "هرگونه تقلب یا رفتار غیر ورزشی ممنوع است"
+                        },
+                        new
+                        {
+                            Id = 106,
+                            Category = "SiteRule",
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4114),
+                            Key = "EquipmentCare",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "رعایت اصول نگهداری و مراقبت از تجهیزات الزامی است"
+                        },
+                        new
+                        {
+                            Id = 107,
+                            Category = "SiteRule",
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4114),
+                            Key = "Attendance",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "حضور به موقع در کلاس‌ها ضروری است"
+                        },
+                        new
+                        {
+                            Id = 108,
+                            Category = "SiteRule",
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4115),
+                            Key = "NoSmoking",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "سیگار کشیدن در محوطه آکادمی ممنوع است"
+                        },
+                        new
+                        {
+                            Id = 109,
+                            Category = "SiteRule",
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4116),
+                            Key = "RespectFacilities",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "رعایت نظافت و احترام به امکانات آکادمی الزامی است"
                         });
                 });
 
@@ -534,7 +656,7 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<int>("TypeId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Url")
@@ -581,7 +703,7 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<int>("TicketId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -626,7 +748,7 @@ namespace MTA.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -662,7 +784,7 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<int>("RemainingTickets")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -694,7 +816,7 @@ namespace MTA.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -708,44 +830,50 @@ namespace MTA.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(3187),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4367),
                             Description = "Can manage user accounts",
-                            Title = "ManageUsers"
+                            Title = "ManageUsers",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(3189),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4404),
                             Description = "Can manage courses",
-                            Title = "ManageCourses"
+                            Title = "ManageCourses",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(3190),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4405),
                             Description = "Can manage roles",
-                            Title = "ManageRoles"
+                            Title = "ManageRoles",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(3191),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4406),
                             Description = "Can view analytics",
-                            Title = "ViewAnalytics"
+                            Title = "ViewAnalytics",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(3192),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4407),
                             Description = "Can create course content",
-                            Title = "CreateContent"
+                            Title = "CreateContent",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(3193),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4408),
                             Description = "Can enroll in courses",
-                            Title = "EnrollCourses"
+                            Title = "EnrollCourses",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -766,7 +894,7 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -805,7 +933,7 @@ namespace MTA.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -813,6 +941,40 @@ namespace MTA.Infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("QuestionFAQs");
+                });
+
+            modelBuilder.Entity("MTA.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Role", b =>
@@ -831,7 +993,7 @@ namespace MTA.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -845,20 +1007,23 @@ namespace MTA.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(3119),
-                            Title = "Admin"
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4289),
+                            Title = "Admin",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(3120),
-                            Title = "Coach"
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4291),
+                            Title = "Coach",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 8, 23, 7, 54, 47, 191, DateTimeKind.Utc).AddTicks(3121),
-                            Title = "Student"
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4292),
+                            Title = "Student",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -893,7 +1058,7 @@ namespace MTA.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -934,7 +1099,7 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -973,6 +1138,12 @@ namespace MTA.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<bool>("HealthCondition")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("HealthDescription")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -984,7 +1155,7 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<int>("SkillLevelId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -997,6 +1168,37 @@ namespace MTA.Infrastructure.Migrations
                     b.HasIndex("SkillLevelId");
 
                     b.ToTable("UserProfiles");
+                });
+
+            modelBuilder.Entity("MTA.Domain.Entities.VideoContent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Extension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VideoContents");
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Account", b =>
@@ -1156,6 +1358,17 @@ namespace MTA.Infrastructure.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("MTA.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("MTA.Domain.Entities.Account", "Account")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("MTA.Domain.Entities.Ticket", b =>
                 {
                     b.HasOne("MTA.Domain.Entities.Account", "Account")
@@ -1246,6 +1459,8 @@ namespace MTA.Infrastructure.Migrations
                     b.Navigation("Messages");
 
                     b.Navigation("PackageHistory");
+
+                    b.Navigation("RefreshTokens");
 
                     b.Navigation("Tickets");
 

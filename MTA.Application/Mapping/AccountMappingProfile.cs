@@ -47,6 +47,8 @@ public class AccountMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.Experience, opt => opt.MapFrom(src => src.Experience))
             .ForMember(dest => dest.SkillLevelId, opt => opt.MapFrom(src => src.SkillLevelId))
             .ForMember(dest => dest.SkillLevelValue, opt => opt.MapFrom(src => src.SkillLevel.Title))
+            .ForMember(dest => dest.HealthCondition, opt => opt.MapFrom(src => src.HealthCondition))
+            .ForMember(dest => dest.HealthDescription, opt => opt.MapFrom(src => src.HealthDescription))
             // Ignore Account to prevent loop
             .ForAllMembers(opt => opt.Ignore());
 
@@ -57,6 +59,8 @@ public class AccountMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
             .ForMember(dest => dest.Experience, opt => opt.MapFrom(src => src.Experience))
             .ForMember(dest => dest.SkillLevelId, opt => opt.MapFrom(src => src.SkillLevelId))
+            .ForMember(dest => dest.HealthCondition, opt => opt.MapFrom(src => src.HealthCondition))
+            .ForMember(dest => dest.HealthDescription, opt => opt.MapFrom(src => src.HealthDescription))
             .ForAllMembers(opt => opt.Ignore());
 
         // Role -> RoleDto

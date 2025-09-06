@@ -1,3 +1,4 @@
+using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 
 namespace MTA.Application.DTOs.Auth;
@@ -65,4 +66,43 @@ public class RegisterDto
     /// User's role ID (default to student role)
     /// </summary>
     public int RoleId { get; set; } = 1;
+    public bool HealthCondition { get; set; }
+    [StringLength(500, ErrorMessage = "Health Description cannot exceed 100 characters")]
+    public string? HealthDescription { get; set; }
 }
+
+public class RegisterDtoValidator : AbstractValidator<RegisterDto>
+{
+    public RegisterDtoValidator()
+    {
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email is required")
+            .EmailAddress().WithMessage("Invalid email format");
+
+        RuleFor(x => x.Password)
+            .NotEmpty().WithMessage("Password is required")
+            .MinimumLength(6).WithMessage("Password must be at least 6 characters");
+
+        RuleFor(x => x.ConfirmPassword)
+            .Equal(x => x.Password).WithMessage("Passwords do not match");
+
+        RuleFor(x => x.FirstName)
+            .NotEmpty().WithMessage("First name is required")
+            .MaximumLength(100);
+
+        RuleFor(x => x.LastName)
+            .NotEmpty().WithMessage("Last name is required")
+            .MaximumLength(100);
+
+        RuleFor(x => x.DateOfBirth)
+            .LessThan(DateTime.Today).WithMessage("Date of birth cannot be in the future");
+
+        RuleFor(x => x.Experience)
+            .GreaterThanOrEqualTo(0).WithMessage("Experience cannot be negative")
+            .LessThanOrEqualTo(50).WithMessage("Experience cannot exceed 50 years");
+
+        RuleFor(x => x.SkillLevelId)
+            .GreaterThan(0).WithMessage("Skill level must be selected");
+    }
+}
+

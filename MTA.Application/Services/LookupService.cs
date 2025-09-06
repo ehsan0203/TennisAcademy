@@ -37,7 +37,7 @@ public class LookupService : ILookupService
                 Key = l.Key,
                 Value = l.Value,
                 CreatedAt = l.CreatedAt,
-                UpdatedAt = l.UpdatedAt ?? l.CreatedAt
+                UpdatedAt = l.UpdatedAt
             }),
             Page = page,
             PageSize = pageSize,
@@ -57,7 +57,7 @@ public class LookupService : ILookupService
             Key = entity.Key,
             Value = entity.Value,
             CreatedAt = entity.CreatedAt,
-            UpdatedAt = entity.UpdatedAt ?? entity.CreatedAt
+            UpdatedAt = entity.UpdatedAt
         };
     }
 
@@ -73,7 +73,7 @@ public class LookupService : ILookupService
             Key = l.Key,
             Value = l.Value,
             CreatedAt = l.CreatedAt,
-            UpdatedAt = l.UpdatedAt ?? l.CreatedAt
+            UpdatedAt = l.UpdatedAt
         });
     }
 
@@ -90,7 +90,7 @@ public class LookupService : ILookupService
             Key = entity.Key,
             Value = entity.Value,
             CreatedAt = entity.CreatedAt,
-            UpdatedAt = entity.UpdatedAt ?? entity.CreatedAt
+            UpdatedAt = entity.UpdatedAt
         };
     }
 
@@ -120,7 +120,7 @@ public class LookupService : ILookupService
 
         lookupDto.Id = entity.Id;
         lookupDto.CreatedAt = entity.CreatedAt;
-        lookupDto.UpdatedAt = entity.UpdatedAt ?? entity.CreatedAt;
+        lookupDto.UpdatedAt = entity.UpdatedAt;
 
         return lookupDto;
     }
@@ -148,7 +148,7 @@ public class LookupService : ILookupService
             Key = entity.Key,
             Value = entity.Value,
             CreatedAt = entity.CreatedAt,
-            UpdatedAt = entity.UpdatedAt ?? entity.CreatedAt
+            UpdatedAt = entity.UpdatedAt
         };
     }
 
@@ -226,7 +226,7 @@ public class LookupService : ILookupService
             Key = e.Key,
             Value = e.Value,
             CreatedAt = e.CreatedAt,
-            UpdatedAt = e.UpdatedAt ?? e.CreatedAt
+            UpdatedAt = e.UpdatedAt
         });
     }
 }

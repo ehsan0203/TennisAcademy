@@ -1,4 +1,6 @@
-﻿using MTA.Application.Services;
+﻿using FluentValidation;
+using MTA.Application.Services;
+using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
 using MTA.Infrastructure.Repositories;
 
@@ -26,6 +28,8 @@ namespace MTA.Web
             services.AddScoped<IVideoContentService, VideoContentService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<RoleService>();
+            services.AddScoped<IValidator<IEnumerable<Role>>, GetStudentRoleValidator>();
 
             return services;
         }

@@ -11,12 +11,14 @@
         public string LastName { get; set; } = string.Empty;
         public DateTime DateOfBirth { get; set; }
         public int Experience { get; set; }
-        public int SkillLevelId { get; set; }
-        public string? SkillLevelValue { get; set; }
+        public int SkillLevelId { get; set; } = 1;
+        public string? SkillLevelValue { get; set; } = "Beginner";
         public int AccountId { get; set; }
         public string? AvatarUrl { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public bool HealthCondition { get; set; }
+        public string? HealthDescription { get; set; }
     }
 
     // ======================
@@ -30,6 +32,8 @@
         public int Experience { get; set; }
         public int SkillLevelId { get; set; }
         public int AccountId { get; set; }
+        public bool HealthCondition { get; set; }
+        public string? HealthDescription { get; set; }
     }
 
     // ======================
@@ -42,6 +46,8 @@
         public DateTime? DateOfBirth { get; set; }
         public int? Experience { get; set; }
         public int? SkillLevelId { get; set; }
+        public bool HealthCondition { get; set; }
+        public string? HealthDescription { get; set; }
     }
 
     // ======================

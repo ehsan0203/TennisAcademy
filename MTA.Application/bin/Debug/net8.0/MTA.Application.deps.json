@@ -247,6 +247,7 @@
       },
       "MTA.Domain/1.0.0": {
         "dependencies": {
+          "FluentValidation": "11.8.1",
           "Microsoft.EntityFrameworkCore": "8.0.0",
           "Microsoft.EntityFrameworkCore.Abstractions": "8.0.0"
         },

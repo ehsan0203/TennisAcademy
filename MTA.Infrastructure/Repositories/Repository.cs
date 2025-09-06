@@ -76,7 +76,7 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
     /// <returns>Added entity</returns>
     public virtual async Task<T> AddAsync(T entity)
     {
-        entity.CreatedAt = DateTime.UtcNow;
+        entity.CreatedAt = entity.UpdatedAt = DateTime.UtcNow;
         await _dbSet.AddAsync(entity);
         return entity;
     }

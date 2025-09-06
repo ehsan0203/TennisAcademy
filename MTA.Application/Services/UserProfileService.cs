@@ -76,7 +76,7 @@ public class UserProfileService : IUserProfileService
                 DateOfBirth = userProfileDto.DateOfBirth,
                 Experience = userProfileDto.Experience,
                 AccountId = userProfileDto.AccountId,
-                SkillLevelId = userProfileDto.SkillLevelId
+                SkillLevelId = userProfileDto.SkillLevelId 
             };
 
             await _unitOfWork.UserProfiles.AddAsync(userProfile);

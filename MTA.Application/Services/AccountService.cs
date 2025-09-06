@@ -287,7 +287,7 @@ public class AccountService : IAccountService
             StatusId = account.StatusId,
             StatusValue = account.Status?.Value,
             CreatedAt = account.CreatedAt,
-            UpdatedAt = (account.UpdatedAt ?? account.CreatedAt).Date,
+            UpdatedAt = account.UpdatedAt.Date,
             UserProfile = account.UserProfile != null ? new UserProfileDto
             {
                 Id = account.UserProfile.Id,
