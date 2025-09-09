@@ -3,12 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace MTA.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDataBase : Migration
+    public partial class InitialDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,7 +22,7 @@ namespace MTA.Infrastructure.Migrations
                     SortOrder = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,7 +37,7 @@ namespace MTA.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,7 +54,7 @@ namespace MTA.Infrastructure.Migrations
                     Key = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Value = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,7 +70,7 @@ namespace MTA.Infrastructure.Migrations
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -87,11 +85,28 @@ namespace MTA.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VideoContents",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Extension = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VideoContents", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -105,7 +120,7 @@ namespace MTA.Infrastructure.Migrations
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -132,7 +147,7 @@ namespace MTA.Infrastructure.Migrations
                     LevelId = table.Column<int>(type: "int", nullable: false),
                     StatusId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -164,7 +179,7 @@ namespace MTA.Infrastructure.Migrations
                     Duration = table.Column<int>(type: "int", nullable: false),
                     DurationUnitId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -190,7 +205,7 @@ namespace MTA.Infrastructure.Migrations
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     StatusId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -218,7 +233,7 @@ namespace MTA.Infrastructure.Migrations
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     PermissionId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -249,7 +264,7 @@ namespace MTA.Infrastructure.Migrations
                     Order = table.Column<int>(type: "int", nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -274,7 +289,7 @@ namespace MTA.Infrastructure.Migrations
                     PackageId = table.Column<int>(type: "int", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -294,6 +309,30 @@ namespace MTA.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsRevoked = table.Column<bool>(type: "bit", nullable: false),
+                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tickets",
                 columns: table => new
                 {
@@ -306,7 +345,7 @@ namespace MTA.Infrastructure.Migrations
                     AccountId1 = table.Column<int>(type: "int", nullable: true),
                     PackageId1 = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -349,8 +388,10 @@ namespace MTA.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CourseId = table.Column<int>(type: "int", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    EnrolledAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -367,6 +408,12 @@ namespace MTA.Infrastructure.Migrations
                         principalTable: "Courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserCourseHistories_Lookups_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Lookups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -379,11 +426,13 @@ namespace MTA.Infrastructure.Migrations
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Experience = table.Column<int>(type: "int", nullable: false),
+                    HealthCondition = table.Column<bool>(type: "bit", nullable: false),
+                    HealthDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     SkillLevelId = table.Column<int>(type: "int", nullable: false),
                     LevelId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -400,9 +449,9 @@ namespace MTA.Infrastructure.Migrations
                         principalTable: "Levels",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_UserProfiles_Lookups_SkillLevelId",
+                        name: "FK_UserProfiles_Levels_SkillLevelId",
                         column: x => x.SkillLevelId,
-                        principalTable: "Lookups",
+                        principalTable: "Levels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -419,7 +468,7 @@ namespace MTA.Infrastructure.Migrations
                     SenderId = table.Column<int>(type: "int", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -451,11 +500,14 @@ namespace MTA.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Url = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    FileSize = table.Column<long>(type: "bigint", nullable: false),
+                    FileExtension = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TypeId = table.Column<int>(type: "int", nullable: false),
+                    PlacementId = table.Column<int>(type: "int", nullable: true),
                     LessonId = table.Column<int>(type: "int", nullable: true),
                     MessageId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -466,6 +518,11 @@ namespace MTA.Infrastructure.Migrations
                         principalTable: "Lessons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MediaFiles_Lookups_PlacementId",
+                        column: x => x.PlacementId,
+                        principalTable: "Lookups",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_MediaFiles_Lookups_TypeId",
                         column: x => x.TypeId,
@@ -478,72 +535,6 @@ namespace MTA.Infrastructure.Migrations
                         principalTable: "Messages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Levels",
-                columns: new[] { "Id", "CreatedAt", "Title", "UpdatedAt" },
-                values: new object[,]
-                {
-                    { 1, new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7829), "Beginner", null },
-                    { 2, new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7831), "Intermediate", null },
-                    { 3, new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7832), "Advanced", null },
-                    { 4, new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7833), "Professional", null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Lookups",
-                columns: new[] { "Id", "Category", "CreatedAt", "Key", "UpdatedAt", "Value" },
-                values: new object[,]
-                {
-                    { 1, "AccountStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7474), "Active", null, "فعال" },
-                    { 2, "AccountStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7479), "Inactive", null, "غیرفعال" },
-                    { 3, "AccountStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7481), "Suspended", null, "مسدود" },
-                    { 4, "CourseStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7482), "Draft", null, "پیش‌نویس" },
-                    { 5, "CourseStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7483), "Published", null, "منتشر شده" },
-                    { 6, "CourseStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7484), "Archived", null, "بایگانی" },
-                    { 7, "CourseStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7484), "Suspended", null, "معلق" },
-                    { 8, "CourseStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7485), "Retired", null, "منقضی شده" },
-                    { 9, "MediaType", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7486), "Video", null, "ویدئو" },
-                    { 10, "MediaType", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7487), "Document", null, "سند" },
-                    { 11, "MediaType", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7488), "Image", null, "تصویر" },
-                    { 12, "MediaType", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7488), "Audio", null, "صوت" },
-                    { 13, "DurationUnit", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7489), "Day", null, "روز" },
-                    { 14, "DurationUnit", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7490), "Week", null, "هفته" },
-                    { 15, "DurationUnit", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7545), "Month", null, "ماه" },
-                    { 16, "FAQCategory", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7548), "General", null, "عمومی" },
-                    { 17, "FAQCategory", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7549), "Payment", null, "پرداخت" },
-                    { 18, "FAQCategory", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7549), "Technical", null, "فنی" },
-                    { 19, "FAQCategory", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7550), "Course", null, "دوره‌ها" },
-                    { 20, "TicketStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7551), "Open", null, "باز" },
-                    { 21, "TicketStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7552), "Pending", null, "در انتظار" },
-                    { 22, "TicketStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7553), "Closed", null, "بسته شده" },
-                    { 23, "PackageStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7553), "Active", null, "فعال" },
-                    { 24, "PackageStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7554), "Expired", null, "منقضی" },
-                    { 25, "PackageStatus", new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7555), "Pending", null, "در انتظار" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Permissions",
-                columns: new[] { "Id", "CreatedAt", "Description", "Title", "UpdatedAt" },
-                values: new object[,]
-                {
-                    { 1, new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7862), "Can manage user accounts", "ManageUsers", null },
-                    { 2, new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7865), "Can manage courses", "ManageCourses", null },
-                    { 3, new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7866), "Can manage roles", "ManageRoles", null },
-                    { 4, new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7867), "Can view analytics", "ViewAnalytics", null },
-                    { 5, new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7868), "Can create course content", "CreateContent", null },
-                    { 6, new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7869), "Can enroll in courses", "EnrollCourses", null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Roles",
-                columns: new[] { "Id", "CreatedAt", "Title", "UpdatedAt" },
-                values: new object[,]
-                {
-                    { 1, new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7793), "Admin", null },
-                    { 2, new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7795), "Coach", null },
-                    { 3, new DateTime(2025, 8, 22, 22, 37, 1, 401, DateTimeKind.Utc).AddTicks(7796), "Student", null }
                 });
 
             migrationBuilder.CreateIndex(
@@ -598,6 +589,11 @@ namespace MTA.Infrastructure.Migrations
                 name: "IX_MediaFiles_MessageId",
                 table: "MediaFiles",
                 column: "MessageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediaFiles_PlacementId",
+                table: "MediaFiles",
+                column: "PlacementId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MediaFiles_TypeId",
@@ -656,6 +652,11 @@ namespace MTA.Infrastructure.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_AccountId",
+                table: "RefreshTokens",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Roles_Title",
                 table: "Roles",
                 column: "Title",
@@ -697,6 +698,11 @@ namespace MTA.Infrastructure.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserCourseHistories_StatusId",
+                table: "UserCourseHistories",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserProfiles_AccountId",
                 table: "UserProfiles",
                 column: "AccountId",
@@ -729,10 +735,16 @@ namespace MTA.Infrastructure.Migrations
                 name: "QuestionFAQs");
 
             migrationBuilder.DropTable(
+                name: "RefreshTokens");
+
+            migrationBuilder.DropTable(
                 name: "UserCourseHistories");
 
             migrationBuilder.DropTable(
                 name: "UserProfiles");
+
+            migrationBuilder.DropTable(
+                name: "VideoContents");
 
             migrationBuilder.DropTable(
                 name: "Lessons");

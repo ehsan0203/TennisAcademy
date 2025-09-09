@@ -1836,7 +1836,7 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.MediaFileController",
-    "Method": "GetMediaFiles",
+    "Method": "GetAll",
     "RelativePath": "api/MediaFile",
     "HttpMethod": "GET",
     "IsController": true,
@@ -1875,65 +1875,15 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "MTA.Application.Services.PaginatedResult\u00601[[MTA.Application.DTOs.MediaFileDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
+        "Type": "System.Void",
+        "MediaTypes": [],
         "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
       }
     ]
   },
   {
     "ContainingType": "MTA.Web.Controllers.MediaFileController",
-    "Method": "CreateMediaFile",
-    "RelativePath": "api/MediaFile",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "mediaFileDto",
-        "Type": "MTA.Application.DTOs.MediaFileDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.MediaFileDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 201
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.MediaFileController",
-    "Method": "GetMediaFile",
+    "Method": "GetById",
     "RelativePath": "api/MediaFile/{id}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -1947,10 +1897,8 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "MTA.Application.DTOs.MediaFileDto",
-        "MediaTypes": [
-          "application/json"
-        ],
+        "Type": "System.Void",
+        "MediaTypes": [],
         "StatusCode": 200
       },
       {
@@ -1959,17 +1907,12 @@
           "application/json"
         ],
         "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
       }
     ]
   },
   {
     "ContainingType": "MTA.Web.Controllers.MediaFileController",
-    "Method": "UpdateMediaFile",
+    "Method": "Update",
     "RelativePath": "api/MediaFile/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -1981,17 +1924,75 @@
         "IsRequired": true
       },
       {
-        "Name": "mediaFileDto",
-        "Type": "MTA.Application.DTOs.MediaFileDto",
-        "IsRequired": true
+        "Name": "ContentType",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentDisposition",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Headers",
+        "Type": "Microsoft.AspNetCore.Http.IHeaderDictionary",
+        "IsRequired": false
+      },
+      {
+        "Name": "Length",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FileName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Title",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "MediaType",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "PlacementId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "PlacementName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "LessonId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "LessonTitle",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "MessageId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "MTA.Application.DTOs.MediaFileDto",
-        "MediaTypes": [
-          "application/json"
-        ],
+        "Type": "System.Void",
+        "MediaTypes": [],
         "StatusCode": 200
       },
       {
@@ -1999,14 +2000,14 @@
         "MediaTypes": [
           "application/json"
         ],
-        "StatusCode": 400
+        "StatusCode": 404
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
         "MediaTypes": [
           "application/json"
         ],
-        "StatusCode": 404
+        "StatusCode": 400
       },
       {
         "Type": "System.Void",
@@ -2017,7 +2018,7 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.MediaFileController",
-    "Method": "DeleteMediaFile",
+    "Method": "Delete",
     "RelativePath": "api/MediaFile/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
@@ -2041,19 +2042,14 @@
           "application/json"
         ],
         "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
       }
     ]
   },
   {
     "ContainingType": "MTA.Web.Controllers.MediaFileController",
-    "Method": "UpdateMediaFileType",
-    "RelativePath": "api/MediaFile/{id}/type",
-    "HttpMethod": "PATCH",
+    "Method": "Download",
+    "RelativePath": "api/MediaFile/{id}/download",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -2061,19 +2057,12 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
-      },
-      {
-        "Name": "typeId",
-        "Type": "System.Int32",
-        "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "MTA.Application.DTOs.MediaFileDto",
-        "MediaTypes": [
-          "application/json"
-        ],
+        "Type": "System.Void",
+        "MediaTypes": [],
         "StatusCode": 200
       },
       {
@@ -2082,81 +2071,88 @@
           "application/json"
         ],
         "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
       }
     ]
   },
   {
     "ContainingType": "MTA.Web.Controllers.MediaFileController",
-    "Method": "UpdateMediaFileUrl",
-    "RelativePath": "api/MediaFile/{id}/url",
-    "HttpMethod": "PATCH",
+    "Method": "Upload",
+    "RelativePath": "api/MediaFile/upload",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "url",
+        "Name": "ContentType",
         "Type": "System.String",
-        "IsRequired": true
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentDisposition",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Headers",
+        "Type": "Microsoft.AspNetCore.Http.IHeaderDictionary",
+        "IsRequired": false
+      },
+      {
+        "Name": "Length",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FileName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Title",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "MediaType",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "PlacementId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "PlacementName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "LessonId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "LessonTitle",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "MessageId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.MediaFileDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
       {
         "Type": "System.Void",
         "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.MediaFileController",
-    "Method": "GetMediaFilesByDateRange",
-    "RelativePath": "api/MediaFile/date-range",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "startDate",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "endDate",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.MediaFileDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
+        "StatusCode": 201
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
@@ -2164,134 +2160,6 @@
           "application/json"
         ],
         "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.MediaFileController",
-    "Method": "GetMediaFilesByLesson",
-    "RelativePath": "api/MediaFile/lesson/{lessonId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "lessonId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.MediaFileDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.MediaFileController",
-    "Method": "GetMediaFilesByMessage",
-    "RelativePath": "api/MediaFile/message/{messageId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "messageId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.MediaFileDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.MediaFileController",
-    "Method": "GetMediaFilesBySizeRange",
-    "RelativePath": "api/MediaFile/size-range",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "minSize",
-        "Type": "System.Int64",
-        "IsRequired": false
-      },
-      {
-        "Name": "maxSize",
-        "Type": "System.Int64",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.MediaFileDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.MediaFileController",
-    "Method": "GetMediaFilesByType",
-    "RelativePath": "api/MediaFile/type/{typeId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "typeId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.MediaFileDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
       },
       {
         "Type": "System.Void",

@@ -19,6 +19,7 @@ namespace MTA.Web
             services.AddScoped<ILookupService, LookupService>();
             services.AddScoped<IMappingService, MappingService>();
             services.AddScoped<IMediaFileService, MediaFileService>();
+            services.AddScoped<IFileStorageService, FileStorageService>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IPackageHistoryService, PackageHistoryService>();
             services.AddScoped<IPackageService, PackageService>();

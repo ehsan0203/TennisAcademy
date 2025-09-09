@@ -84,7 +84,17 @@ namespace MTA.Domain.Entities
                 new Lookup { Id = 106, Category = "SiteRule", Key = "EquipmentCare", Value = "رعایت اصول نگهداری و مراقبت از تجهیزات الزامی است" },
                 new Lookup { Id = 107, Category = "SiteRule", Key = "Attendance", Value = "حضور به موقع در کلاس‌ها ضروری است" },
                 new Lookup { Id = 108, Category = "SiteRule", Key = "NoSmoking", Value = "سیگار کشیدن در محوطه آکادمی ممنوع است" },
-                new Lookup { Id = 109, Category = "SiteRule", Key = "RespectFacilities", Value = "رعایت نظافت و احترام به امکانات آکادمی الزامی است" }
+                new Lookup { Id = 109, Category = "SiteRule", Key = "RespectFacilities", Value = "رعایت نظافت و احترام به امکانات آکادمی الزامی است" },
+
+                // =========================
+                // Media Placement (200-204)
+                // =========================
+                new Lookup { Id = 200, Category = "MediaPlacement", Key = "WelcomeVideo", Value = "ویدئوی خوشامدگویی" },
+                new Lookup { Id = 201, Category = "MediaPlacement", Key = "PromoVideo", Value = "ویدئوی تبلیغاتی" },
+                new Lookup { Id = 202, Category = "MediaPlacement", Key = "SliderVideo", Value = "ویدئو اسلایدر" },
+                new Lookup { Id = 203, Category = "MediaPlacement", Key = "TrainingPage", Value = "ویدئو صفحه آموزش" },
+                new Lookup { Id = 204, Category = "MediaPlacement", Key = "CoursePage", Value = "ویدئو صفحه دوره" }
+
             );
         }
     }

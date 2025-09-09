@@ -1,0 +1,30 @@
+course 
+id - title - description - image Icon - Poster - status - level Id - price - created at - updated at 
+
+Lesson
+id - title - description - IsFree - fileId -created at - updated at 
+
+file
+id - title - url - size - time - type - created at - updated at
+
+level
+id - title  
+
+Package
+id - title - price - Ticket Count - message Count - Duration - created at - updated at 
+
+Ticket
+id - topic - status - Package Id - created at - updated at 
+
+message
+id - text - seen - file Id - ticket Id - Sender Id - Recivered Id - created at
+
+account
+id - first name - last name - date of birth - experience - skill level - email - pass - status - IsActive - image - age - created at
+
+HistoryPackage 
+id - packageId - Account id - created at
+
+UserCourse
+Id - CourseId - account Id - created at 
+

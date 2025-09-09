@@ -1,4 +1,7 @@
-using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MTA.Application.DTOs;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
@@ -6,54 +9,59 @@ using MTA.Domain.Interfaces;
 namespace MTA.Application.Services;
 
 /// <summary>
-/// Service implementation for MediaFile operations
+/// Service implementation for MediaFile operations (handles file storage)
 /// </summary>
 public class MediaFileService : IMediaFileService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IFileStorageService _fileStorageService;
+    private readonly ILogger<MediaFileService> _logger;
 
-    public MediaFileService(IUnitOfWork unitOfWork, IMapper mapper)
+    public MediaFileService(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IFileStorageService fileStorageService,
+        ILogger<MediaFileService> logger)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _fileStorageService = fileStorageService;
+        _logger = logger;
     }
 
-    /// <summary>
-    /// Get all media files with optional filtering
-    /// </summary>
-    public async Task<PaginatedResult<MediaFileDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? typeId = null, int? lessonId = null, int? messageId = null)
+    public async Task<PaginatedResult<MediaFileDto>> GetAllAsync(
+        int page = 1,
+        int pageSize = 10,
+        string? searchTerm = null,
+        int? typeId = null,
+        int? lessonId = null,
+        int? messageId = null)
     {
-        var query = _unitOfWork.Repository<MediaFile>().GetQueryable();
+        IQueryable<MediaFile> query = _unitOfWork.Repository<MediaFile>().GetQueryable()
+            .Include(m => m.Type)
+            .Include(m => m.Lesson)
+            .Include(m => m.Message);
 
-        // Apply filters
         if (!string.IsNullOrEmpty(searchTerm))
-        {
             query = query.Where(m => m.Title.Contains(searchTerm));
-        }
 
         if (typeId.HasValue)
-        {
             query = query.Where(m => m.TypeId == typeId.Value);
-        }
 
         if (lessonId.HasValue)
-        {
             query = query.Where(m => m.LessonId == lessonId.Value);
-        }
 
         if (messageId.HasValue)
-        {
             query = query.Where(m => m.MessageId == messageId.Value);
-        }
 
-        // Get total count
-        var totalCount = await _unitOfWork.Repository<MediaFile>().CountAsync(query);
+        var totalCount = await query.CountAsync();
+        var mediaFiles = await query
+            .OrderByDescending(m => m.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
-        // Apply pagination
-        var mediaFiles = await _unitOfWork.Repository<MediaFile>().GetPagedAsync(query, page, pageSize);
-
-        // Map to DTOs with additional data
         var mediaFileDtos = mediaFiles.Select(m => _mapper.Map<MediaFileDto>(m)).ToList();
 
         return new PaginatedResult<MediaFileDto>
@@ -61,151 +69,205 @@ public class MediaFileService : IMediaFileService
             Data = mediaFileDtos,
             TotalCount = totalCount,
             Page = page,
-            PageSize = pageSize,
+            PageSize = pageSize
         };
     }
 
-    /// <summary>
-    /// Get media file by ID
-    /// </summary>
     public async Task<MediaFileDto?> GetByIdAsync(int id)
     {
-        var mediaFile = await _unitOfWork.Repository<MediaFile>().GetByIdAsync(id);
+        var mediaFile = await _unitOfWork.Repository<MediaFile>().GetQueryable()
+            .Include(m => m.Type)
+            .Include(m => m.Placement)
+            .Include(m => m.Lesson)
+            .Include(m => m.Message)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
         return mediaFile != null ? _mapper.Map<MediaFileDto>(mediaFile) : null;
     }
 
-    /// <summary>
-    /// Get media files by type ID
-    /// </summary>
-    public async Task<IEnumerable<MediaFileDto>> GetByTypeAsync(int typeId)
+    public async Task<MediaFileDto> CreateAsync(IFormFile file, MediaFileUploadDto mediaFileDto)
     {
-        var mediaFiles = await _unitOfWork.Repository<MediaFile>().GetAllAsync(m => m.TypeId == typeId);
-        return mediaFiles.Select(m => _mapper.Map<MediaFileDto>(m));
-    }
+        if (file == null || file.Length == 0)
+            throw new ArgumentException("File is required");
 
-    /// <summary>
-    /// Get media files by lesson ID
-    /// </summary>
-    public async Task<IEnumerable<MediaFileDto>> GetByLessonAsync(int lessonId)
-    {
-        var mediaFiles = await _unitOfWork.Repository<MediaFile>().GetAllAsync(m => m.LessonId == lessonId);
-        return mediaFiles.Select(m => _mapper.Map<MediaFileDto>(m));
-    }
+        // گرفتن TypeId از جدول Lookup
+        var typeEntity = await _unitOfWork.Repository<Lookup>()
+            .GetQueryable()
+            .FirstOrDefaultAsync(l => l.Category == "MediaType" && l.Key == mediaFileDto.MediaType);
 
-    /// <summary>
-    /// Get media files by message ID
-    /// </summary>
-    public async Task<IEnumerable<MediaFileDto>> GetByMessageAsync(int messageId)
-    {
-        var mediaFiles = await _unitOfWork.Repository<MediaFile>().GetAllAsync(m => m.MessageId == messageId);
-        return mediaFiles.Select(m => _mapper.Map<MediaFileDto>(m));
-    }
+        if (typeEntity == null)
+            throw new ArgumentException($"Invalid MediaType: {mediaFileDto.MediaType}");
 
-    /// <summary>
-    /// Create new media file
-    /// </summary>
-    public async Task<MediaFileDto> CreateAsync(MediaFileDto mediaFileDto)
-    {
+        // گرفتن PlacementId از جدول Lookup
+        Lookup placementEntity = null;
+        if (!string.IsNullOrEmpty(mediaFileDto.PlacementName))
+        {
+            placementEntity = await _unitOfWork.Repository<Lookup>()
+                .GetQueryable()
+                .FirstOrDefaultAsync(l => l.Category == "MediaPlacement" && l.Key == mediaFileDto.PlacementName);
+
+            if (placementEntity == null)
+                throw new ArgumentException($"Invalid MediaPlacement: {mediaFileDto.PlacementName}");
+        }
+
+        // گرفتن Lesson در صورت وجود
+        Lesson lessonEntity = null;
+        if (mediaFileDto.LessonId.HasValue)
+        {
+            lessonEntity = await _unitOfWork.Repository<Lesson>()
+                .GetQueryable()
+                .FirstOrDefaultAsync(l => l.Id == mediaFileDto.LessonId.Value);
+
+            if (lessonEntity == null)
+                throw new ArgumentException($"Invalid LessonId: {mediaFileDto.LessonId}");
+        }
+
+        // گرفتن Message در صورت وجود
+        Message messageEntity = null;
+        if (mediaFileDto.MessageId.HasValue)
+        {
+            messageEntity = await _unitOfWork.Repository<Message>()
+                .GetQueryable()
+                .FirstOrDefaultAsync(m => m.Id == mediaFileDto.MessageId.Value);
+
+            if (messageEntity == null)
+                throw new ArgumentException($"Invalid MessageId: {mediaFileDto.MessageId}");
+        }
+
+        // Map و پر کردن فیلدهای ضروری
         var mediaFile = _mapper.Map<MediaFile>(mediaFileDto);
+        mediaFile.TypeId = typeEntity.Id;
+
+        if (placementEntity != null)
+        {
+            mediaFile.PlacementId = placementEntity.Id;
+        }
+
+        if (lessonEntity != null)
+        {
+            mediaFile.LessonId = lessonEntity.Id;
+        }
+
+        if (messageEntity != null)
+        {
+            mediaFile.MessageId = messageEntity.Id;
+        }
+
+        mediaFile.Url = await _fileStorageService.SaveFileAsync(file, mediaFileDto.MediaType, mediaFileDto.PlacementName);
+        mediaFile.FileSize = file.Length;
+        mediaFile.FileExtension = Path.GetExtension(file.FileName);
         mediaFile.CreatedAt = DateTime.UtcNow;
-        
-        var createdMediaFile = await _unitOfWork.Repository<MediaFile>().AddAsync(mediaFile);
+        mediaFile.UpdatedAt = DateTime.UtcNow;
+
+        var created = await _unitOfWork.Repository<MediaFile>().AddAsync(mediaFile);
         await _unitOfWork.SaveChangesAsync();
-        
-        return _mapper.Map<MediaFileDto>(createdMediaFile);
+
+        return _mapper.Map<MediaFileDto>(created);
     }
 
-    /// <summary>
-    /// Update existing media file
-    /// </summary>
-    public async Task<MediaFileDto> UpdateAsync(int id, MediaFileDto mediaFileDto)
+
+
+    public async Task<MediaFileDto> UpdateAsync(int id, IFormFile? file, MediaFileUploadDto mediaFileDto)
     {
-        var existingMediaFile = await _unitOfWork.Repository<MediaFile>().GetByIdAsync(id);
-        if (existingMediaFile == null)
+        var existing = await _unitOfWork.Repository<MediaFile>().GetByIdAsync(id);
+        if (existing == null)
             throw new ArgumentException($"Media file with ID {id} not found");
 
-        // Update only allowed fields
-        existingMediaFile.Title = mediaFileDto.Title;
-        existingMediaFile.Url = mediaFileDto.Url;
-        existingMediaFile.TypeId = mediaFileDto.TypeId;
-        existingMediaFile.LessonId = mediaFileDto.LessonId;
-        existingMediaFile.MessageId = mediaFileDto.MessageId;
-        existingMediaFile.UpdatedAt = DateTime.UtcNow;
+        // -------------------------------
+        // اعتبارسنجی MediaType
+        // -------------------------------
+        var typeEntity = await _unitOfWork.Repository<Lookup>()
+            .GetQueryable()
+            .FirstOrDefaultAsync(l => l.Category == "MediaType" && l.Key == mediaFileDto.MediaType);
 
-        var updatedMediaFile = await _unitOfWork.Repository<MediaFile>().UpdateAsync(existingMediaFile);
+        if (typeEntity == null)
+            throw new ArgumentException($"Invalid MediaType: {mediaFileDto.MediaType}");
+
+        // -------------------------------
+        // اعتبارسنجی Placement
+        // -------------------------------
+        Lookup? placementEntity = null;
+        if (!string.IsNullOrEmpty(mediaFileDto.PlacementName))
+        {
+            placementEntity = await _unitOfWork.Repository<Lookup>()
+                .GetQueryable()
+                .FirstOrDefaultAsync(l => l.Category == "MediaPlacement" && l.Key == mediaFileDto.PlacementName);
+
+            if (placementEntity == null)
+                throw new ArgumentException($"Invalid MediaPlacement: {mediaFileDto.PlacementName}");
+        }
+
+        // -------------------------------
+        // اعتبارسنجی Lesson
+        // -------------------------------
+        Lesson? lessonEntity = null;
+        if (mediaFileDto.LessonId.HasValue)
+        {
+            lessonEntity = await _unitOfWork.Repository<Lesson>()
+                .GetQueryable()
+                .FirstOrDefaultAsync(l => l.Id == mediaFileDto.LessonId.Value);
+
+            if (lessonEntity == null)
+                throw new ArgumentException($"Invalid LessonId: {mediaFileDto.LessonId}");
+        }
+
+        // -------------------------------
+        // اعتبارسنجی Message
+        // -------------------------------
+        Message? messageEntity = null;
+        if (mediaFileDto.MessageId.HasValue)
+        {
+            messageEntity = await _unitOfWork.Repository<Message>()
+                .GetQueryable()
+                .FirstOrDefaultAsync(m => m.Id == mediaFileDto.MessageId.Value);
+
+            if (messageEntity == null)
+                throw new ArgumentException($"Invalid MessageId: {mediaFileDto.MessageId}");
+        }
+
+        // -------------------------------
+        // به‌روزرسانی فایل در صورت ارسال
+        // -------------------------------
+        if (file != null && file.Length > 0)
+        {
+            if (!string.IsNullOrEmpty(existing.Url))
+                await _fileStorageService.DeleteFileAsync(existing.Url);
+
+            var relativePath = await _fileStorageService.SaveFileAsync(file, mediaFileDto.MediaType, mediaFileDto.PlacementName);
+            existing.Url = relativePath;
+            existing.FileSize = file.Length;
+            existing.FileExtension = Path.GetExtension(file.FileName);
+        }
+
+        // -------------------------------
+        // به‌روزرسانی فیلدها
+        // -------------------------------
+        existing.Title = mediaFileDto.Title;
+        existing.TypeId = typeEntity.Id;
+        existing.PlacementId = placementEntity?.Id;
+        existing.LessonId = lessonEntity?.Id;
+        existing.MessageId = messageEntity?.Id;
+        existing.UpdatedAt = DateTime.UtcNow;
+
+        var updated = await _unitOfWork.Repository<MediaFile>().UpdateAsync(existing);
         await _unitOfWork.SaveChangesAsync();
-        
-        return _mapper.Map<MediaFileDto>(updatedMediaFile);
+
+        return _mapper.Map<MediaFileDto>(updated);
     }
 
-    /// <summary>
-    /// Delete media file
-    /// </summary>
+
     public async Task<bool> DeleteAsync(int id)
     {
-        var mediaFile = await _unitOfWork.Repository<MediaFile>().GetByIdAsync(id);
-        if (mediaFile == null)
+        var existing = await _unitOfWork.Repository<MediaFile>().GetByIdAsync(id);
+        if (existing == null)
             return false;
 
-        await _unitOfWork.Repository<MediaFile>().DeleteAsync(mediaFile.Id);
+        if (!string.IsNullOrEmpty(existing.Url))
+            await _fileStorageService.DeleteFileAsync(existing.Url);
+
+        await _unitOfWork.Repository<MediaFile>().DeleteAsync(id);
         await _unitOfWork.SaveChangesAsync();
-        
+
         return true;
-    }
-
-    /// <summary>
-    /// Update media file type
-    /// </summary>
-    public async Task<MediaFileDto> UpdateTypeAsync(int id, int typeId)
-    {
-        var mediaFile = await _unitOfWork.Repository<MediaFile>().GetByIdAsync(id);
-        if (mediaFile == null)
-            throw new ArgumentException($"Media file with ID {id} not found");
-
-        mediaFile.TypeId = typeId;
-        mediaFile.UpdatedAt = DateTime.UtcNow;
-
-        var updatedMediaFile = await _unitOfWork.Repository<MediaFile>().UpdateAsync(mediaFile);
-        await _unitOfWork.SaveChangesAsync();
-        
-        return _mapper.Map<MediaFileDto>(updatedMediaFile);
-    }
-
-    /// <summary>
-    /// Update media file URL
-    /// </summary>
-    public async Task<MediaFileDto> UpdateUrlAsync(int id, string url)
-    {
-        var mediaFile = await _unitOfWork.Repository<MediaFile>().GetByIdAsync(id);
-        if (mediaFile == null)
-            throw new ArgumentException($"Media file with ID {id} not found");
-
-        mediaFile.Url = url;
-        mediaFile.UpdatedAt = DateTime.UtcNow;
-
-        var updatedMediaFile = await _unitOfWork.Repository<MediaFile>().UpdateAsync(mediaFile);
-        await _unitOfWork.SaveChangesAsync();
-        
-        return _mapper.Map<MediaFileDto>(updatedMediaFile);
-    }
-
-    /// <summary>
-    /// Get media files by date range
-    /// </summary>
-    public async Task<IEnumerable<MediaFileDto>> GetByDateRangeAsync(DateTime startDate, DateTime endDate)
-    {
-        var mediaFiles = await _unitOfWork.Repository<MediaFile>().GetAllAsync(m => m.CreatedAt >= startDate && m.CreatedAt <= endDate);
-        return mediaFiles.Select(m => _mapper.Map<MediaFileDto>(m));
-    }
-
-    /// <summary>
-    /// Get media files by file size range
-    /// </summary>
-    public async Task<IEnumerable<MediaFileDto>> GetByFileSizeRangeAsync(long minSize, long maxSize)
-    {
-        // This would need actual file size storage in the database
-        // For now, returning empty list as placeholder
-        var mediaFiles = await _unitOfWork.Repository<MediaFile>().GetAllAsync();
-        return mediaFiles.Select(m => _mapper.Map<MediaFileDto>(m));
     }
 }

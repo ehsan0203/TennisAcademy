@@ -63,31 +63,5 @@ public class PackageMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.RemainingMessages, opt => opt.MapFrom(src => src.RemainingMessages))
             .ForMember(dest => dest.Account, opt => opt.Ignore())
             .ForMember(dest => dest.Package, opt => opt.Ignore());
-
-
-        // MediaFile mappings
-        CreateMap<MediaFile, MediaFileDto>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
-            .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Url))
-            .ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.TypeId))
-            .ForMember(dest => dest.TypeValue, opt => opt.MapFrom(src => src.Type.Value)) 
-            .ForMember(dest => dest.LessonId, opt => opt.MapFrom(src => src.LessonId))
-            .ForMember(dest => dest.LessonTitle, opt => opt.MapFrom(src => src.Lesson.Title))
-            .ForMember(dest => dest.MessageId, opt => opt.MapFrom(src => src.MessageId))
-            .ForMember(dest => dest.FileSize, opt => opt.Ignore()) 
-            .ForMember(dest => dest.FileExtension, opt => opt.Ignore()); 
-
-        CreateMap<MediaFileDto, MediaFile>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
-            .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Url))
-            .ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.TypeId))
-            .ForMember(dest => dest.LessonId, opt => opt.MapFrom(src => src.LessonId))
-            .ForMember(dest => dest.MessageId, opt => opt.MapFrom(src => src.MessageId))
-            .ForMember(dest => dest.Type, opt => opt.Ignore())   
-            .ForMember(dest => dest.Lesson, opt => opt.Ignore()) 
-            .ForMember(dest => dest.Message, opt => opt.Ignore()); 
-
     }
 }

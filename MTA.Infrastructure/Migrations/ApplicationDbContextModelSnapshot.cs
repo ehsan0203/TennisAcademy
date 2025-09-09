@@ -223,28 +223,28 @@ namespace MTA.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4330),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5840),
                             Title = "Beginner",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4331),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5842),
                             Title = "Intermediate",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4332),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5843),
                             Title = "Advanced",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4333),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5843),
                             Title = "Professional",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
@@ -291,7 +291,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 1,
                             Category = "AccountStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4084),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5536),
                             Key = "Active",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "فعال"
@@ -300,7 +300,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 2,
                             Category = "AccountStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4088),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5540),
                             Key = "Inactive",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "غیرفعال"
@@ -309,7 +309,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 3,
                             Category = "AccountStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4088),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5541),
                             Key = "Suspended",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "مسدود"
@@ -318,7 +318,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 4,
                             Category = "CourseStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4089),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5542),
                             Key = "Draft",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "پیش‌نویس"
@@ -327,7 +327,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 5,
                             Category = "CourseStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4090),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5543),
                             Key = "Published",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "منتشر شده"
@@ -336,7 +336,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 6,
                             Category = "CourseStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4091),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5544),
                             Key = "Archived",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "بایگانی"
@@ -345,7 +345,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 7,
                             Category = "CourseStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4092),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5545),
                             Key = "Suspended",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "معلق"
@@ -354,7 +354,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 8,
                             Category = "CourseStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4093),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5545),
                             Key = "Retired",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "منقضی شده"
@@ -363,7 +363,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 9,
                             Category = "MediaType",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4093),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5546),
                             Key = "Video",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "ویدئو"
@@ -372,7 +372,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 10,
                             Category = "MediaType",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4094),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5547),
                             Key = "Document",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "سند"
@@ -381,7 +381,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 11,
                             Category = "MediaType",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4095),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5548),
                             Key = "Image",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "تصویر"
@@ -390,7 +390,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 12,
                             Category = "MediaType",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4096),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5548),
                             Key = "Audio",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "صوت"
@@ -399,7 +399,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 13,
                             Category = "DurationUnit",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4096),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5549),
                             Key = "Day",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "روز"
@@ -408,7 +408,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 14,
                             Category = "DurationUnit",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4097),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5550),
                             Key = "Week",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "هفته"
@@ -417,7 +417,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 15,
                             Category = "DurationUnit",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4098),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5551),
                             Key = "Month",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "ماه"
@@ -426,7 +426,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 16,
                             Category = "FAQCategory",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4099),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5551),
                             Key = "General",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "عمومی"
@@ -435,7 +435,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 17,
                             Category = "FAQCategory",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4099),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5552),
                             Key = "Payment",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "پرداخت"
@@ -444,7 +444,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 18,
                             Category = "FAQCategory",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4100),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5553),
                             Key = "Technical",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "فنی"
@@ -453,7 +453,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 19,
                             Category = "FAQCategory",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4101),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5554),
                             Key = "Course",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "دوره‌ها"
@@ -462,7 +462,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 20,
                             Category = "TicketStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4102),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5555),
                             Key = "Open",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "باز"
@@ -471,7 +471,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 21,
                             Category = "TicketStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4103),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5555),
                             Key = "Pending",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "در انتظار"
@@ -480,7 +480,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 22,
                             Category = "TicketStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4103),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5556),
                             Key = "Closed",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "بسته شده"
@@ -489,7 +489,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 23,
                             Category = "PackageStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4104),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5557),
                             Key = "Active",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "فعال"
@@ -498,7 +498,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 24,
                             Category = "PackageStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4105),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5558),
                             Key = "Expired",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "منقضی"
@@ -507,7 +507,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 25,
                             Category = "PackageStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4106),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5558),
                             Key = "Pending",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "در انتظار"
@@ -516,7 +516,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 26,
                             Category = "UserCourseStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4107),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5559),
                             Key = "Active",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "فعال"
@@ -525,7 +525,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 27,
                             Category = "UserCourseStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4107),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5560),
                             Key = "Completed",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "تکمیل شده"
@@ -534,7 +534,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 28,
                             Category = "UserCourseStatus",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4108),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5561),
                             Key = "Cancelled",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "لغو شده"
@@ -543,7 +543,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 100,
                             Category = "SiteRule",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4109),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5562),
                             Key = "RespectOthers",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "کاربران باید با احترام با یکدیگر رفتار کنند"
@@ -552,7 +552,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 101,
                             Category = "SiteRule",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4110),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5562),
                             Key = "NoSpam",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "ارسال پیام‌های تبلیغاتی یا اسپم مجاز نیست"
@@ -561,7 +561,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 102,
                             Category = "SiteRule",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4111),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5563),
                             Key = "FairPlay",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "رعایت اصول بازی جوانمردانه الزامی است"
@@ -570,7 +570,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 103,
                             Category = "SiteRule",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4111),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5564),
                             Key = "ProperContent",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "انتشار محتوای نامناسب یا توهین‌آمیز ممنوع است"
@@ -579,7 +579,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 104,
                             Category = "SiteRule",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4112),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5565),
                             Key = "FollowCoach",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "پیروی از دستورالعمل‌های مربی در طول تمرینات ضروری است"
@@ -588,7 +588,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 105,
                             Category = "SiteRule",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4113),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5565),
                             Key = "NoCheating",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "هرگونه تقلب یا رفتار غیر ورزشی ممنوع است"
@@ -597,7 +597,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 106,
                             Category = "SiteRule",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4114),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5566),
                             Key = "EquipmentCare",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "رعایت اصول نگهداری و مراقبت از تجهیزات الزامی است"
@@ -606,7 +606,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 107,
                             Category = "SiteRule",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4114),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5567),
                             Key = "Attendance",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "حضور به موقع در کلاس‌ها ضروری است"
@@ -615,7 +615,7 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 108,
                             Category = "SiteRule",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4115),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5568),
                             Key = "NoSmoking",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "سیگار کشیدن در محوطه آکادمی ممنوع است"
@@ -624,10 +624,55 @@ namespace MTA.Infrastructure.Migrations
                         {
                             Id = 109,
                             Category = "SiteRule",
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4116),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5568),
                             Key = "RespectFacilities",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Value = "رعایت نظافت و احترام به امکانات آکادمی الزامی است"
+                        },
+                        new
+                        {
+                            Id = 200,
+                            Category = "MediaPlacement",
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5569),
+                            Key = "WelcomeVideo",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "ویدئوی خوشامدگویی"
+                        },
+                        new
+                        {
+                            Id = 201,
+                            Category = "MediaPlacement",
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5570),
+                            Key = "PromoVideo",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "ویدئوی تبلیغاتی"
+                        },
+                        new
+                        {
+                            Id = 202,
+                            Category = "MediaPlacement",
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5571),
+                            Key = "SliderVideo",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "ویدئو اسلایدر"
+                        },
+                        new
+                        {
+                            Id = 203,
+                            Category = "MediaPlacement",
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5571),
+                            Key = "TrainingPage",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "ویدئو صفحه آموزش"
+                        },
+                        new
+                        {
+                            Id = 204,
+                            Category = "MediaPlacement",
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5572),
+                            Key = "CoursePage",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Value = "ویدئو صفحه دوره"
                         });
                 });
 
@@ -642,10 +687,20 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("bigint");
+
                     b.Property<int?>("LessonId")
                         .HasColumnType("int");
 
                     b.Property<int?>("MessageId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PlacementId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -669,6 +724,8 @@ namespace MTA.Infrastructure.Migrations
                     b.HasIndex("LessonId");
 
                     b.HasIndex("MessageId");
+
+                    b.HasIndex("PlacementId");
 
                     b.HasIndex("TypeId");
 
@@ -830,7 +887,7 @@ namespace MTA.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4367),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5868),
                             Description = "Can manage user accounts",
                             Title = "ManageUsers",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -838,7 +895,7 @@ namespace MTA.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4404),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5870),
                             Description = "Can manage courses",
                             Title = "ManageCourses",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -846,7 +903,7 @@ namespace MTA.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4405),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5871),
                             Description = "Can manage roles",
                             Title = "ManageRoles",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -854,7 +911,7 @@ namespace MTA.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4406),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5872),
                             Description = "Can view analytics",
                             Title = "ViewAnalytics",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -862,7 +919,7 @@ namespace MTA.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4407),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5873),
                             Description = "Can create course content",
                             Title = "CreateContent",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -870,7 +927,7 @@ namespace MTA.Infrastructure.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4408),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5874),
                             Description = "Can enroll in courses",
                             Title = "EnrollCourses",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -1007,21 +1064,21 @@ namespace MTA.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4289),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5801),
                             Title = "Admin",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4291),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5803),
                             Title = "Coach",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 9, 6, 19, 45, 17, 331, DateTimeKind.Utc).AddTicks(4292),
+                            CreatedAt = new DateTime(2025, 9, 9, 11, 12, 58, 571, DateTimeKind.Utc).AddTicks(5804),
                             Title = "Student",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
@@ -1262,6 +1319,10 @@ namespace MTA.Infrastructure.Migrations
                         .HasForeignKey("MessageId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("MTA.Domain.Entities.Lookup", "Placement")
+                        .WithMany()
+                        .HasForeignKey("PlacementId");
+
                     b.HasOne("MTA.Domain.Entities.Lookup", "Type")
                         .WithMany()
                         .HasForeignKey("TypeId")
@@ -1271,6 +1332,8 @@ namespace MTA.Infrastructure.Migrations
                     b.Navigation("Lesson");
 
                     b.Navigation("Message");
+
+                    b.Navigation("Placement");
 
                     b.Navigation("Type");
                 });

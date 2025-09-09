@@ -63,6 +63,9 @@ builder.Services.AddSwaggerGen(c =>
     {
         c.IncludeXmlComments(xmlPath);
     }
+
+    c.OperationFilter<FileUploadOperation>();
+
 });
 
 // Configure DbContext

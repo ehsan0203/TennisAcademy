@@ -2599,6 +2599,111 @@
         }
       }
     },
+    "/api/MediaFile/upload": {
+      "post": {
+        "tags": [
+          "MediaFile"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Title": {
+                    "type": "string"
+                  },
+                  "MediaType": {
+                    "type": "string"
+                  },
+                  "PlacementId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PlacementName": {
+                    "type": "string"
+                  },
+                  "LessonId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "LessonTitle": {
+                    "type": "string"
+                  },
+                  "MessageId": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "encoding": {
+                "ContentType": {
+                  "style": "form"
+                },
+                "ContentDisposition": {
+                  "style": "form"
+                },
+                "Headers": {
+                  "style": "form"
+                },
+                "Length": {
+                  "style": "form"
+                },
+                "Name": {
+                  "style": "form"
+                },
+                "FileName": {
+                  "style": "form"
+                },
+                "Title": {
+                  "style": "form"
+                },
+                "MediaType": {
+                  "style": "form"
+                },
+                "PlacementId": {
+                  "style": "form"
+                },
+                "PlacementName": {
+                  "style": "form"
+                },
+                "LessonId": {
+                  "style": "form"
+                },
+                "LessonTitle": {
+                  "style": "form"
+                },
+                "MessageId": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
     "/api/MediaFile": {
       "get": {
         "tags": [
@@ -2663,76 +2768,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MediaFileDtoPaginatedResult"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "MediaFile"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MediaFileDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MediaFileDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/MediaFileDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MediaFileDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error"
+            "description": "Success"
           }
         }
       }
@@ -2756,14 +2792,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MediaFileDto"
-                }
-              }
-            }
+            "description": "Success"
           },
           "404": {
             "description": "Not Found",
@@ -2774,9 +2803,6 @@
                 }
               }
             }
-          },
-          "500": {
-            "description": "Server Error"
           }
         }
       },
@@ -2798,36 +2824,93 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/MediaFileDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MediaFileDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/MediaFileDto"
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "int32"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Title": {
+                    "type": "string"
+                  },
+                  "MediaType": {
+                    "type": "string"
+                  },
+                  "PlacementId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PlacementName": {
+                    "type": "string"
+                  },
+                  "LessonId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "LessonTitle": {
+                    "type": "string"
+                  },
+                  "MessageId": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "encoding": {
+                "ContentType": {
+                  "style": "form"
+                },
+                "ContentDisposition": {
+                  "style": "form"
+                },
+                "Headers": {
+                  "style": "form"
+                },
+                "Length": {
+                  "style": "form"
+                },
+                "Name": {
+                  "style": "form"
+                },
+                "FileName": {
+                  "style": "form"
+                },
+                "Title": {
+                  "style": "form"
+                },
+                "MediaType": {
+                  "style": "form"
+                },
+                "PlacementId": {
+                  "style": "form"
+                },
+                "PlacementName": {
+                  "style": "form"
+                },
+                "LessonId": {
+                  "style": "form"
+                },
+                "LessonTitle": {
+                  "style": "form"
+                },
+                "MessageId": {
+                  "style": "form"
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MediaFileDto"
-                }
-              }
-            }
+            "description": "Success"
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/json": {
                 "schema": {
@@ -2836,8 +2919,8 @@
               }
             }
           },
-          "404": {
-            "description": "Not Found",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
@@ -2880,15 +2963,12 @@
                 }
               }
             }
-          },
-          "500": {
-            "description": "Server Error"
           }
         }
       }
     },
-    "/api/MediaFile/{id}/type": {
-      "patch": {
+    "/api/MediaFile/{id}/download": {
+      "get": {
         "tags": [
           "MediaFile"
         ],
@@ -2904,38 +2984,9 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "integer",
-                "format": "int32"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "integer",
-                "format": "int32"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MediaFileDto"
-                }
-              }
-            }
+            "description": "Success"
           },
           "404": {
             "description": "Not Found",
@@ -2946,293 +2997,6 @@
                 }
               }
             }
-          },
-          "500": {
-            "description": "Server Error"
-          }
-        }
-      }
-    },
-    "/api/MediaFile/{id}/url": {
-      "patch": {
-        "tags": [
-          "MediaFile"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "style": "simple",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MediaFileDto"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error"
-          }
-        }
-      }
-    },
-    "/api/MediaFile/type/{typeId}": {
-      "get": {
-        "tags": [
-          "MediaFile"
-        ],
-        "parameters": [
-          {
-            "name": "typeId",
-            "in": "path",
-            "required": true,
-            "style": "simple",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MediaFileDto"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error"
-          }
-        }
-      }
-    },
-    "/api/MediaFile/lesson/{lessonId}": {
-      "get": {
-        "tags": [
-          "MediaFile"
-        ],
-        "parameters": [
-          {
-            "name": "lessonId",
-            "in": "path",
-            "required": true,
-            "style": "simple",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MediaFileDto"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error"
-          }
-        }
-      }
-    },
-    "/api/MediaFile/message/{messageId}": {
-      "get": {
-        "tags": [
-          "MediaFile"
-        ],
-        "parameters": [
-          {
-            "name": "messageId",
-            "in": "path",
-            "required": true,
-            "style": "simple",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MediaFileDto"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error"
-          }
-        }
-      }
-    },
-    "/api/MediaFile/date-range": {
-      "get": {
-        "tags": [
-          "MediaFile"
-        ],
-        "parameters": [
-          {
-            "name": "startDate",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "endDate",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MediaFileDto"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error"
-          }
-        }
-      }
-    },
-    "/api/MediaFile/size-range": {
-      "get": {
-        "tags": [
-          "MediaFile"
-        ],
-        "parameters": [
-          {
-            "name": "minSize",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "maxSize",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MediaFileDto"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error"
           }
         }
       }
@@ -8890,105 +8654,6 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "MediaFileDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "url": {
-            "type": "string",
-            "nullable": true
-          },
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "typeId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "typeValue": {
-            "type": "string",
-            "nullable": true
-          },
-          "lessonId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "lessonTitle": {
-            "type": "string",
-            "nullable": true
-          },
-          "messageId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "fileSize": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "fileExtension": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "MediaFileDtoPaginatedResult": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MediaFileDto"
-            },
-            "nullable": true
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "hasPreviousPage": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "hasNextPage": {
-            "type": "boolean",
-            "readOnly": true
           }
         },
         "additionalProperties": false
