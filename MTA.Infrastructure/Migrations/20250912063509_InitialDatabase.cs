@@ -93,23 +93,6 @@ namespace MTA.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "VideoContents",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Extension = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_VideoContents", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "QuestionFAQs",
                 columns: table => new
                 {
@@ -742,9 +725,6 @@ namespace MTA.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserProfiles");
-
-            migrationBuilder.DropTable(
-                name: "VideoContents");
 
             migrationBuilder.DropTable(
                 name: "Lessons");

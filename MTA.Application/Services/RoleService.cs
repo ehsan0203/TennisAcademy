@@ -29,21 +29,20 @@ namespace MTA.Application.Services
         {
             var roles = await _unitOfWork.Repository<Role>().GetAllAsync() ?? new List<Role>();
 
-            var validationResult = _studentRoleValidator.Validate(roles);
-            if (!validationResult.IsValid)
-                throw new ValidationException(validationResult.Errors);
+            var role = roles.FirstOrDefault(r => !string.IsNullOrWhiteSpace(r.Title) && r.Title.ToLower() == "student");
 
-            var studentRoles = roles
-                .Where(r => !string.IsNullOrWhiteSpace(r.Title) && r.Title.ToLower() == "student")
-                .ToList();
+            if (role == null)
+            {
+                role = roles.FirstOrDefault(r => !string.IsNullOrWhiteSpace(r.Title) &&
+                                                 (r.Title.ToLower() == "user" || r.Title.ToLower() == "کاربر"));
+            }
 
-            if (studentRoles.Count == 0)
-                throw new InvalidOperationException("Default role 'student' not found in database.");
+            if (role == null)
+                throw new InvalidOperationException("No suitable default role found (student or user).");
 
-            if (studentRoles.Count > 1)
-                throw new InvalidOperationException("Multiple 'student' roles found in database.");
-
-            return studentRoles.First();
+            return role;
         }
+
+
     }
 }

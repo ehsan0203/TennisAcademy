@@ -97,12 +97,6 @@ public class RegisterDtoValidator : AbstractValidator<RegisterDto>
         RuleFor(x => x.DateOfBirth)
             .LessThan(DateTime.Today).WithMessage("Date of birth cannot be in the future");
 
-        RuleFor(x => x.Experience)
-            .GreaterThanOrEqualTo(0).WithMessage("Experience cannot be negative")
-            .LessThanOrEqualTo(50).WithMessage("Experience cannot exceed 50 years");
-
-        RuleFor(x => x.SkillLevelId)
-            .GreaterThan(0).WithMessage("Skill level must be selected");
     }
 }
 

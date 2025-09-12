@@ -26,7 +26,6 @@ namespace MTA.Web
             services.AddScoped<IPermissionService, PermissionService>();
             services.AddScoped<IRolePermissionService, RolePermissionService>();
             services.AddScoped<IUserCourseHistoryService,UserCourseHistoryService>();
-            services.AddScoped<IVideoContentService, VideoContentService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<RoleService>();

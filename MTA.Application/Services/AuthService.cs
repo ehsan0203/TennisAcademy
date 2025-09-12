@@ -86,8 +86,10 @@ public class AuthService : IAuthService
         var studentRole = await _roleService.GetDefaultStudentRoleAsync();
 
         var skillRepo = _unitOfWork.Repository<Level>();
-        var skillLevel = await skillRepo.GetByIdAsync(registerDto.SkillLevelId)
-                         ?? await skillRepo.GetByIdAsync(1); // پیش‌فرض Beginner
+        var skillLevel = registerDto.SkillLevelId > 0
+            ? await skillRepo.GetByIdAsync(registerDto.SkillLevelId)
+            : await skillRepo.GetByIdAsync(1);
+
         if (skillLevel == null)
             throw new InvalidOperationException("Default skill level not found");
 
@@ -154,7 +156,7 @@ public class AuthService : IAuthService
         if (tokenEntity == null || tokenEntity.IsRevoked || tokenEntity.ExpiresAt < DateTime.UtcNow)
             throw new UnauthorizedAccessException("Invalid or expired refresh token");
 
-        var account = await _unitOfWork.Repository<Account>().GetByIdAsync(tokenEntity.Id);
+        var account = await _unitOfWork.Repository<Account>().GetByIdAsync(tokenEntity.AccountId);
         if (account == null)
             throw new UnauthorizedAccessException("User not found");
 

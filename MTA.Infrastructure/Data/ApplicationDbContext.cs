@@ -28,7 +28,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Lookup> Lookups { get; set; }
     public DbSet<FAQCategory> FAQCategories { get; set; }
     public DbSet<QuestionFAQ> QuestionFAQs { get; set; }
-    public DbSet<VideoContent> VideoContents { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -344,9 +343,9 @@ public class ApplicationDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        LookupSeed.Seed(modelBuilder);
-        RoleSeed.Seed(modelBuilder);
-        LevelSeed.Seed(modelBuilder);
-        PermissionSeed.Seed(modelBuilder);
+        //LookupSeed.Seed(modelBuilder);
+        //RoleSeed.Seed(modelBuilder);
+        //LevelSeed.Seed(modelBuilder);
+        //PermissionSeed.Seed(modelBuilder);
     }
 }

@@ -39,4 +39,5 @@ public class LessonDto : BaseDto
     /// Order of this lesson within the course
     /// </summary>
     public int Order { get; set; }
+    public bool CanDownload { get; set; } = false;
 }

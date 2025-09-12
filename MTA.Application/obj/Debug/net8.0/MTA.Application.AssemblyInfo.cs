@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MTA.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7168d8fc92a8d7d09856da34dc39b821f3aca87a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe3022483d32130daa9d50c22c4e01509511426b")]
 [assembly: System.Reflection.AssemblyProductAttribute("MTA.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MTA.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

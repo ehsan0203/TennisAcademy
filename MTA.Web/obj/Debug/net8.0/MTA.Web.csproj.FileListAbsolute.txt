@@ -155,6 +155,15 @@ C:\Users\ZahraMld\Desktop\MTA Project\MTA\MTA.Web\obj\Debug\net8.0\refint\MTA.We
 C:\Users\ZahraMld\Desktop\MTA Project\MTA\MTA.Web\obj\Debug\net8.0\MTA.Web.pdb
 C:\Users\ZahraMld\Desktop\MTA Project\MTA\MTA.Web\obj\Debug\net8.0\MTA.Web.genruntimeconfig.cache
 C:\Users\ZahraMld\Desktop\MTA Project\MTA\MTA.Web\obj\Debug\net8.0\ref\MTA.Web.dll
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.csproj.AssemblyReference.cache
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.AssemblyInfoInputs.cache
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.AssemblyInfo.cs
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.csproj.CoreCompileInputs.cache
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.sourcelink.json
 C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\bin\Debug\net8.0\appsettings.json
 C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\bin\Debug\net8.0\MTA.Web.staticwebassets.runtime.json
@@ -289,15 +298,6 @@ C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\bin\Debug\net8.0\MTA.Application.pdb
 C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\bin\Debug\net8.0\MTA.Infrastructure.Persistence.pdb
 C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\bin\Debug\net8.0\MTA.Domain.pdb
 C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\bin\Debug\net8.0\MTA.Infrastructure.pdb
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.csproj.AssemblyReference.cache
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\rpswa.dswa.cache.json
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.AssemblyInfoInputs.cache
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.AssemblyInfo.cs
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.csproj.CoreCompileInputs.cache
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\MTA.Web.sourcelink.json
 C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Web\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
