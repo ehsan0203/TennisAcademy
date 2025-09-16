@@ -1643,7 +1643,7 @@
     "Parameters": [
       {
         "Name": "searchDto",
-        "Type": "MTA.Web.Controllers.LessonSearchDto",
+        "Type": "MTA.Application.DTOs.LessonSearchDto",
         "IsRequired": true
       }
     ],
@@ -2800,7 +2800,7 @@
       },
       {
         "Name": "capacityDto",
-        "Type": "MTA.Web.Controllers.UpdateCapacityDto",
+        "Type": "MTA.Application.DTOs.UpdateCapacityDto",
         "IsRequired": true
       }
     ],
@@ -2831,7 +2831,7 @@
       },
       {
         "Name": "durationDto",
-        "Type": "MTA.Web.Controllers.UpdateDurationDto",
+        "Type": "MTA.Application.DTOs.UpdateDurationDto",
         "IsRequired": true
       }
     ],
@@ -2945,7 +2945,7 @@
     "Parameters": [
       {
         "Name": "searchDto",
-        "Type": "MTA.Web.Controllers.PackageSearchDto",
+        "Type": "MTA.Application.DTOs.PackageSearchDto",
         "IsRequired": true
       }
     ],
@@ -3725,7 +3725,7 @@
     "Parameters": [
       {
         "Name": "searchDto",
-        "Type": "MTA.Web.Controllers.PermissionSearchDto",
+        "Type": "MTA.Application.DTOs.PermissionSearchDto",
         "IsRequired": true
       }
     ],
@@ -4598,136 +4598,6 @@
     ]
   },
   {
-    "ContainingType": "MTA.Web.Controllers.TestController",
-    "Method": "Get",
-    "RelativePath": "api/Test",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.String",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.TestController",
-    "Method": "AdminOrModerator",
-    "RelativePath": "api/Test/admin-moderator",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.String",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.TestController",
-    "Method": "AdminOnly",
-    "RelativePath": "api/Test/admin-only",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.String",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.TestController",
-    "Method": "CoachOnly",
-    "RelativePath": "api/Test/coach-only",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.String",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.TestController",
-    "Method": "Health",
-    "RelativePath": "api/Test/health",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.TestController",
-    "Method": "RoleCheck",
-    "RelativePath": "api/Test/role-check",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.TestController",
-    "Method": "StudentOnly",
-    "RelativePath": "api/Test/student-only",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.String",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.TestController",
-    "Method": "GetUserInfo",
-    "RelativePath": "api/Test/user-info",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "MTA.Web.Controllers.TicketsController",
     "Method": "GetTickets",
     "RelativePath": "api/Tickets",
@@ -5539,26 +5409,5 @@
         "StatusCode": 500
       }
     ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.WeatherForecastController",
-    "Method": "Get",
-    "RelativePath": "WeatherForecast",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Web.WeatherForecast, MTA.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ],
-    "EndpointName": "GetWeatherForecast"
   }
 ]

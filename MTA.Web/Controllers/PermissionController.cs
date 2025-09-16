@@ -8,7 +8,7 @@ namespace MTA.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 public class PermissionController : ControllerBase
 {
     private readonly IPermissionService _permissionService;
@@ -254,12 +254,4 @@ public class PermissionController : ControllerBase
     #endregion
 }
 
-/// <summary>
-/// DTO for permission search
-/// </summary>
-public class PermissionSearchDto
-{
-    public int Page { get; set; } = 1;
-    public int PageSize { get; set; } = 10;
-    public string? SearchTerm { get; set; }
-}
+

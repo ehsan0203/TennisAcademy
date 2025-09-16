@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MTA.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe3022483d32130daa9d50c22c4e01509511426b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+75009aa156f36f2279071cc9b0d1e93d686c8c94")]
 [assembly: System.Reflection.AssemblyProductAttribute("MTA.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MTA.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

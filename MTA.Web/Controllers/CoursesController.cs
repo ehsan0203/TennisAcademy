@@ -14,7 +14,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-[Authorize]
+//[Authorize]
 public class CoursesController : ControllerBase
 {
     private readonly ICourseService _courseService;
@@ -107,7 +107,7 @@ public class CoursesController : ControllerBase
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPost]
-    [Authorize(Policy = "RolesAdminCoach")]
+    //[Authorize(Policy = "RolesAdminCoach")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -140,7 +140,7 @@ public class CoursesController : ControllerBase
     /// <response code="404">If the course was not found</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPut("{id}")]
-    [Authorize(Policy = "RolesAdminCoach")]
+    //[Authorize(Policy = "RolesAdminCoach")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -176,7 +176,7 @@ public class CoursesController : ControllerBase
     /// <response code="404">If the course was not found</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpDelete("{id}")]
-    [Authorize(Policy = "RolesAdminCoach")]
+    //[Authorize(Policy = "RolesAdminCoach")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -209,7 +209,7 @@ public class CoursesController : ControllerBase
     /// <response code="400">If the filter parameters are invalid</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPost("filter")]
-    [AllowAnonymous]
+    //[AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -302,7 +302,7 @@ public class CoursesController : ControllerBase
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpGet("statistics")]
-    [Authorize(Policy = "RolesAdminCoach")]
+    //[Authorize(Policy = "RolesAdminCoach")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<CourseStatisticsDto>> GetCourseStatistics()
@@ -354,7 +354,7 @@ public class CoursesController : ControllerBase
     /// <response code="200">Returns the courses with the status</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpGet("status/{statusId}")]
-    [Authorize(Policy = "RolesAdminCoach")]
+    //[Authorize(Policy = "RolesAdminCoach")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<CourseDto>>> GetCoursesByStatus(int statusId)
@@ -433,7 +433,7 @@ public class CoursesController : ControllerBase
     /// <response code="404">If the course was not found</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPatch("{id}/status")]
-    [Authorize(Policy = "RolesAdminCoach")]
+    //[Authorize(Policy = "RolesAdminCoach")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -466,7 +466,7 @@ public class CoursesController : ControllerBase
     /// <response code="404">If the course was not found</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPatch("{id}/level")]
-    [Authorize(Policy = "RolesAdminCoach")]
+    //[Authorize(Policy = "RolesAdminCoach")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -499,7 +499,7 @@ public class CoursesController : ControllerBase
     /// <response code="404">If the course was not found</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPatch("{id}/price")]
-    [Authorize(Policy = "RolesAdminCoach")]
+    //[Authorize(Policy = "RolesAdminCoach")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

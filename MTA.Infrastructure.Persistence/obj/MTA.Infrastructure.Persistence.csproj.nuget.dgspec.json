@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj": {}
+    "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj": {
+    "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Application\\MTA.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj",
+        "projectUniqueName": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Application\\MTA.Application.csproj",
         "projectName": "MTA.Application",
-        "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj",
-        "packagesPath": "C:\\Users\\ZahraMld\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\obj\\",
+        "projectPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Application\\MTA.Application.csproj",
+        "packagesPath": "C:\\Users\\beh30b\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ZahraMld\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\beh30b\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -33,8 +33,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj": {
-                "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj"
+              "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj": {
+                "projectPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj"
               }
             }
           }
@@ -108,24 +108,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj": {
+    "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj",
         "projectName": "MTA.Domain",
-        "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj",
-        "packagesPath": "C:\\Users\\ZahraMld\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Domain\\obj\\",
+        "projectPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj",
+        "packagesPath": "C:\\Users\\beh30b\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ZahraMld\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\beh30b\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -188,24 +188,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj": {
+    "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj",
+        "projectUniqueName": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj",
         "projectName": "MTA.Infrastructure.Persistence",
-        "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj",
-        "packagesPath": "C:\\Users\\ZahraMld\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure.Persistence\\obj\\",
+        "projectPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj",
+        "packagesPath": "C:\\Users\\beh30b\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure.Persistence\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ZahraMld\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\beh30b\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -221,8 +221,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj"
+              "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj"
               }
             }
           }
@@ -276,24 +276,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj": {
+    "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj",
         "projectName": "MTA.Infrastructure",
-        "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\ZahraMld\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\beh30b\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ZahraMld\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\beh30b\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -309,11 +309,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj": {
-                "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj"
+              "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Application\\MTA.Application.csproj": {
+                "projectPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Application\\MTA.Application.csproj"
               },
-              "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj": {
-                "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj"
+              "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj": {
+                "projectPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj"
               }
             }
           }
@@ -371,7 +371,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

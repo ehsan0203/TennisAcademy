@@ -13,7 +13,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-[Authorize(Policy = "RolesAdminCoach")]
+//[Authorize(Policy = "RolesAdminCoach")]
 public class FAQController : ControllerBase
 {
     private readonly IFAQService _faqService;

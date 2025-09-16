@@ -14,7 +14,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 public class RolesController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;

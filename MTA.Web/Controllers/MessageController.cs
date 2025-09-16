@@ -12,7 +12,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-[Authorize]
+//[Authorize]
 public class MessageController : ControllerBase
 {
     private readonly IMessageService _messageService;

@@ -12,7 +12,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 public class RolePermissionController : ControllerBase
 {
     private readonly IRolePermissionService _rolePermissionService;

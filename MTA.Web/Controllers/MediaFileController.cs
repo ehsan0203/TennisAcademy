@@ -10,7 +10,7 @@ namespace MTA.Web.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    [Authorize]
+    //[Authorize]
     public class MediaFileController : ControllerBase
     {
         private readonly IMediaFileService _mediaFileService;

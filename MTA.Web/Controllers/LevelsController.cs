@@ -14,7 +14,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-[Authorize(Policy = "RolesAdminCoach")]
+//[Authorize(Policy = "RolesAdminCoach")]
 public class LevelsController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;

@@ -50,3 +50,34 @@ public class PackageDto : BaseDto
     /// </summary>
     public int UsedMessageCount { get; set; }
 }
+
+/// <summary>
+/// DTO for package search
+/// </summary>
+public class PackageSearchDto
+{
+    public int Page { get; set; } = 1;
+    public int PageSize { get; set; } = 10;
+    public string? SearchTerm { get; set; }
+    public decimal? MinPrice { get; set; }
+    public decimal? MaxPrice { get; set; }
+    public int? DurationUnitId { get; set; }
+}
+
+/// <summary>
+/// DTO for updating package capacity
+/// </summary>
+public class UpdateCapacityDto
+{
+    public int TicketCount { get; set; }
+    public int MessageCount { get; set; }
+}
+
+/// <summary>
+/// DTO for updating package duration
+/// </summary>
+public class UpdateDurationDto
+{
+    public int Duration { get; set; }
+    public int DurationUnitId { get; set; }
+}

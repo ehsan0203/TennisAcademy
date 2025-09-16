@@ -33,7 +33,7 @@ public class UserController : ControllerBase
     /// Get all users with pagination and simple filtering
     /// </summary>
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<ActionResult<PaginatedResult<AccountDto>>> GetUsers(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
@@ -125,7 +125,7 @@ public class UserController : ControllerBase
     /// Delete or deactivate user
     /// </summary>
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<ActionResult> DeleteUser(int id)
     {
         try
@@ -245,7 +245,7 @@ public class UserController : ControllerBase
     /// Search and filter users (Admin only)
     /// </summary>
     [HttpPost("query")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<ActionResult<PagedResult<UserProfileDto>>> QueryUsers([FromBody] UserSearchDto queryDto)
     {
         try
@@ -269,7 +269,7 @@ public class UserController : ControllerBase
     /// Debug endpoint to check JWT claims (remove in production)
     /// </summary>
     [HttpGet("debug/claims")]
-    [Authorize]
+    //[Authorize]
     public ActionResult GetClaims()
     {
         var claims = User.Claims.Select(c => new { Type = c.Type, Value = c.Value }).ToList();

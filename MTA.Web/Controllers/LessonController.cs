@@ -8,7 +8,7 @@ namespace MTA.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+//[Authorize]
 public class LessonController : ControllerBase
 {
     private readonly ILessonService _lessonService;
@@ -88,7 +88,7 @@ public class LessonController : ControllerBase
     /// Create new lesson
     /// </summary>
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<ActionResult<LessonDto>> CreateLesson([FromBody] LessonDto lessonDto)
     {
         try
@@ -114,7 +114,7 @@ public class LessonController : ControllerBase
     /// Update existing lesson
     /// </summary>
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     public async Task<ActionResult<LessonDto>> UpdateLesson(int id, [FromBody] LessonDto lessonDto)
     {
         try
@@ -143,7 +143,7 @@ public class LessonController : ControllerBase
     /// Delete lesson
     /// </summary>
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<ActionResult> DeleteLesson(int id)
     {
         try
@@ -173,7 +173,7 @@ public class LessonController : ControllerBase
     /// Change lesson course
     /// </summary>
     [HttpPatch("{id}/course")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<ActionResult<LessonDto>> ChangeCourse(int id, [FromBody] int courseId)
     {
         try
@@ -196,7 +196,7 @@ public class LessonController : ControllerBase
     /// Update lesson order
     /// </summary>
     [HttpPatch("{id}/order")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<ActionResult<LessonDto>> UpdateOrder(int id, [FromBody] int order)
     {
         try
@@ -249,11 +249,4 @@ public class LessonController : ControllerBase
 /// <summary>
 /// DTO for lesson search
 /// </summary>
-public class LessonSearchDto
-{
-    public int Page { get; set; } = 1;
-    public int PageSize { get; set; } = 10;
-    public string? SearchTerm { get; set; }
-    public int? CourseId { get; set; }
-    public bool? IsFree { get; set; }
-}
+

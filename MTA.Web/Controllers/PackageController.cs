@@ -8,7 +8,7 @@ namespace MTA.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+//[Authorize]
 public class PackageController : ControllerBase
 {
     private readonly IPackageService _packageService;
@@ -109,7 +109,7 @@ public class PackageController : ControllerBase
     /// Create new package
     /// </summary>
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<ActionResult<PackageDto>> CreatePackage([FromBody] PackageDto packageDto)
     {
         try
@@ -135,7 +135,7 @@ public class PackageController : ControllerBase
     /// Update existing package
     /// </summary>
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<ActionResult<PackageDto>> UpdatePackage(int id, [FromBody] PackageDto packageDto)
     {
         try
@@ -164,7 +164,7 @@ public class PackageController : ControllerBase
     /// Delete package
     /// </summary>
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<ActionResult> DeletePackage(int id)
     {
         try
@@ -194,7 +194,7 @@ public class PackageController : ControllerBase
     /// Update package price
     /// </summary>
     [HttpPatch("{id}/price")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<ActionResult<PackageDto>> UpdatePrice(int id, [FromBody] decimal price)
     {
         try
@@ -217,7 +217,7 @@ public class PackageController : ControllerBase
     /// Update package capacity
     /// </summary>
     [HttpPatch("{id}/capacity")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<ActionResult<PackageDto>> UpdateCapacity(int id, [FromBody] UpdateCapacityDto capacityDto)
     {
         try
@@ -240,7 +240,7 @@ public class PackageController : ControllerBase
     /// Update package duration
     /// </summary>
     [HttpPatch("{id}/duration")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<ActionResult<PackageDto>> UpdateDuration(int id, [FromBody] UpdateDurationDto durationDto)
     {
         try
@@ -292,33 +292,4 @@ public class PackageController : ControllerBase
     #endregion
 }
 
-/// <summary>
-/// DTO for package search
-/// </summary>
-public class PackageSearchDto
-{
-    public int Page { get; set; } = 1;
-    public int PageSize { get; set; } = 10;
-    public string? SearchTerm { get; set; }
-    public decimal? MinPrice { get; set; }
-    public decimal? MaxPrice { get; set; }
-    public int? DurationUnitId { get; set; }
-}
 
-/// <summary>
-/// DTO for updating package capacity
-/// </summary>
-public class UpdateCapacityDto
-{
-    public int TicketCount { get; set; }
-    public int MessageCount { get; set; }
-}
-
-/// <summary>
-/// DTO for updating package duration
-/// </summary>
-public class UpdateDurationDto
-{
-    public int Duration { get; set; }
-    public int DurationUnitId { get; set; }
-}

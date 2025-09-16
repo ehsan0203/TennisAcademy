@@ -41,3 +41,13 @@ public class LessonDto : BaseDto
     public int Order { get; set; }
     public bool CanDownload { get; set; } = false;
 }
+
+public class LessonSearchDto
+{
+    public int Page { get; set; } = 1;
+    public int PageSize { get; set; } = 10;
+    public string? SearchTerm { get; set; }
+    public int? CourseId { get; set; }
+    public bool? IsFree { get; set; }
+}
+

@@ -11,7 +11,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-[Authorize]
+//[Authorize]
 public class UserCourseHistoryController : ControllerBase
 {
     private readonly IUserCourseHistoryService _userCourseHistoryService;
