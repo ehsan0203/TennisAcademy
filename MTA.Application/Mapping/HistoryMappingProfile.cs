@@ -16,7 +16,7 @@ public class HistoryMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.CourseId, opt => opt.MapFrom(src => src.CourseId))
             .ForMember(dest => dest.CourseTitle, opt => opt.MapFrom(src => src.Course.Title))
             .ForMember(dest => dest.CourseDescription, opt => opt.MapFrom(src => src.Course.Description))
-            .ForMember(dest => dest.CourseImageIcon, opt => opt.MapFrom(src => src.Course.ImageIcon))
+            .ForMember(dest => dest.CourseImageIcon, opt => opt.MapFrom(src => src.Course.IconMediaFile != null ? src.Course.IconMediaFile.Url : null))
             .ForMember(dest => dest.CoursePrice, opt => opt.MapFrom(src => src.Course.Price))
             .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
             .ForMember(dest => dest.UserFirstName, opt => opt.MapFrom(src => src.Account.UserProfile.FirstName))

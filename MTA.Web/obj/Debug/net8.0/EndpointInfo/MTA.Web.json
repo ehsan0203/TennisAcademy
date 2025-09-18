@@ -374,19 +374,60 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateCourseDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateCourseDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateCourseDto"
+                "type": "object",
+                "properties": {
+                  "Title": {
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "Price": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "LevelId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "StatusId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "IconFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "PosterFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Title": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "Price": {
+                  "style": "form"
+                },
+                "LevelId": {
+                  "style": "form"
+                },
+                "StatusId": {
+                  "style": "form"
+                },
+                "IconFile": {
+                  "style": "form"
+                },
+                "PosterFile": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -717,28 +758,6 @@
                   "items": {
                     "$ref": "#/components/schemas/CourseDto"
                   }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error"
-          }
-        }
-      }
-    },
-    "/api/Courses/statistics": {
-      "get": {
-        "tags": [
-          "Courses"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CourseStatisticsDto"
                 }
               }
             }
@@ -7939,90 +7958,6 @@
         },
         "additionalProperties": false
       },
-      "CourseStatisticsDto": {
-        "type": "object",
-        "properties": {
-          "totalCourses": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "activeCourses": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "draftCourses": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "archivedCourses": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalEnrollments": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "activeEnrollments": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "completedCourses": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalRevenue": {
-            "type": "number",
-            "format": "double"
-          },
-          "completionRate": {
-            "type": "number",
-            "format": "double"
-          },
-          "mostPopularLevel": {
-            "type": "string",
-            "nullable": true
-          },
-          "mostEnrolledCourse": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateCourseDto": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "imageIcon": {
-            "type": "string",
-            "nullable": true
-          },
-          "poster": {
-            "type": "string",
-            "nullable": true
-          },
-          "price": {
-            "type": "number",
-            "format": "double"
-          },
-          "levelId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "statusId": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "FAQCategoryDto": {
         "type": "object",
         "properties": {
@@ -9174,12 +9109,14 @@
             "type": "string",
             "nullable": true
           },
-          "imageIcon": {
-            "type": "string",
+          "iconMediaFileId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
-          "poster": {
-            "type": "string",
+          "posterMediaFileId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "price": {

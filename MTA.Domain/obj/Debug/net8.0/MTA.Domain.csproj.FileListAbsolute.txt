@@ -11,19 +11,6 @@ C:\Users\ZahraMld\Desktop\MTA Project\MTA\MTA.Domain\obj\Debug\net8.0\MTA.Domain
 C:\Users\ZahraMld\Desktop\MTA Project\MTA\MTA.Domain\obj\Debug\net8.0\refint\MTA.Domain.dll
 C:\Users\ZahraMld\Desktop\MTA Project\MTA\MTA.Domain\obj\Debug\net8.0\MTA.Domain.pdb
 C:\Users\ZahraMld\Desktop\MTA Project\MTA\MTA.Domain\obj\Debug\net8.0\ref\MTA.Domain.dll
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\bin\Debug\net8.0\MTA.Domain.deps.json
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\bin\Debug\net8.0\MTA.Domain.dll
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\bin\Debug\net8.0\MTA.Domain.pdb
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.csproj.AssemblyReference.cache
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.AssemblyInfoInputs.cache
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.AssemblyInfo.cs
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.csproj.CoreCompileInputs.cache
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.sourcelink.json
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.dll
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\refint\MTA.Domain.dll
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.pdb
-C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\ref\MTA.Domain.dll
 C:\Users\beh30b\Desktop\MTA\MTA-Aca\MTA.Domain\bin\Debug\net8.0\MTA.Domain.deps.json
 C:\Users\beh30b\Desktop\MTA\MTA-Aca\MTA.Domain\bin\Debug\net8.0\MTA.Domain.dll
 C:\Users\beh30b\Desktop\MTA\MTA-Aca\MTA.Domain\bin\Debug\net8.0\MTA.Domain.pdb
@@ -37,3 +24,16 @@ C:\Users\beh30b\Desktop\MTA\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.dll
 C:\Users\beh30b\Desktop\MTA\MTA-Aca\MTA.Domain\obj\Debug\net8.0\refint\MTA.Domain.dll
 C:\Users\beh30b\Desktop\MTA\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.pdb
 C:\Users\beh30b\Desktop\MTA\MTA-Aca\MTA.Domain\obj\Debug\net8.0\ref\MTA.Domain.dll
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\bin\Debug\net8.0\MTA.Domain.deps.json
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\bin\Debug\net8.0\MTA.Domain.dll
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\bin\Debug\net8.0\MTA.Domain.pdb
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.csproj.AssemblyReference.cache
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.AssemblyInfoInputs.cache
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.AssemblyInfo.cs
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.csproj.CoreCompileInputs.cache
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.sourcelink.json
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.dll
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\refint\MTA.Domain.dll
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\MTA.Domain.pdb
+C:\Users\ZahraMld\Desktop\MTA-Aca\MTA.Domain\obj\Debug\net8.0\ref\MTA.Domain.dll

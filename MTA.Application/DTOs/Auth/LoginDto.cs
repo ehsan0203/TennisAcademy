@@ -1,3 +1,4 @@
+using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 
 namespace MTA.Application.DTOs.Auth;
@@ -21,3 +22,19 @@ public class LoginDto
     [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
     public required string Password { get; set; }
 }
+
+
+public class LoginDtoValidator : AbstractValidator<LoginDto>
+{
+    public LoginDtoValidator()
+    {
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email is required")
+            .EmailAddress().WithMessage("Invalid email format");
+
+        RuleFor(x => x.Password)
+            .NotEmpty().WithMessage("Password is required")
+            .MinimumLength(6).WithMessage("Password must be at least 6 characters");
+    }
+}
+

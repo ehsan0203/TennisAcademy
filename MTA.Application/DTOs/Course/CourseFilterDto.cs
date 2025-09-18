@@ -14,42 +14,42 @@ public class CourseFilterDto
     /// Page size for pagination
     /// </summary>
     public int PageSize { get; set; } = 10;
-    
+
     /// <summary>
     /// Search term for title or description
     /// </summary>
-    public string? SearchTerm { get; set; }
+    public string? SearchTerm { get; set; } = null;
     
     /// <summary>
     /// Filter by level ID
     /// </summary>
-    public int? LevelId { get; set; }
-    
+    public int? LevelId { get; set; } = null;
+
     /// <summary>
     /// Filter by status ID
     /// </summary>
-    public int? StatusId { get; set; }
+    public int? StatusId { get; set; } = null;
     
     /// <summary>
     /// Filter by minimum price
     /// </summary>
-    public decimal? MinPrice { get; set; }
+    public decimal? MinPrice { get; set; } = null;
     
     /// <summary>
     /// Filter by maximum price
     /// </summary>
-    public decimal? MaxPrice { get; set; }
+    public decimal? MaxPrice { get; set; } = null;
     
     /// <summary>
     /// Filter by free courses only
     /// </summary>
-    public bool? FreeOnly { get; set; }
-    
+    public bool? FreeOnly { get; set; } = null;
+
     /// <summary>
     /// Sort by field (Title, Price, CreatedAt, etc.)
     /// </summary>
-    public string? SortBy { get; set; }
-    
+    public string? SortBy { get; set; } = "createdAt";
+
     /// <summary>
     /// Sort direction (asc or desc)
     /// </summary>

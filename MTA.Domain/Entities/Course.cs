@@ -27,16 +27,21 @@ public class Course : BaseEntity
     
     public string? Description { get; set; }
     
-    public string? ImageIcon { get; set; }
-    
-    public string? Poster { get; set; }
-    
     public decimal Price { get; set; }
     
     public int LevelId { get; set; }
-    
+
     [ForeignKey("LevelId")]
     public virtual Level Level { get; set; } = null!;
+
+    public int? PosterMediaFileId { get; set; }
+    [ForeignKey("PosterMediaFileId")]
+    public virtual MediaFile? PosterMediaFile { get; set; }
+
+    public int? IconMediaFileId { get; set; }
+    [ForeignKey("IconMediaFileId")]
+    public virtual MediaFile? IconMediaFile { get; set; }
+
 
     public int StatusId { get; set; }
     [ForeignKey("StatusId")]

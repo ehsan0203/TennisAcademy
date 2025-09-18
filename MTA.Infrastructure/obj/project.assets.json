@@ -4161,23 +4161,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\beh30b\\.nuget\\packages\\": {},
+    "C:\\Users\\ZahraMld\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj",
       "projectName": "MTA.Infrastructure",
-      "projectPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj",
-      "packagesPath": "C:\\Users\\beh30b\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Infrastructure\\obj\\",
+      "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure\\MTA.Infrastructure.csproj",
+      "packagesPath": "C:\\Users\\ZahraMld\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\beh30b\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ZahraMld\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4193,11 +4193,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Application\\MTA.Application.csproj": {
-              "projectPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Application\\MTA.Application.csproj"
+            "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj": {
+              "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj"
             },
-            "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj": {
-              "projectPath": "C:\\Users\\beh30b\\Desktop\\MTA\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj"
+            "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj": {
+              "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Domain\\MTA.Domain.csproj"
             }
           }
         }
@@ -4255,7 +4255,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

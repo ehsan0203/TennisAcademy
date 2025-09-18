@@ -84,19 +84,42 @@ public class RegisterDtoValidator : AbstractValidator<RegisterDto>
             .MinimumLength(6).WithMessage("Password must be at least 6 characters");
 
         RuleFor(x => x.ConfirmPassword)
+            .NotEmpty().WithMessage("Password confirmation is required")
             .Equal(x => x.Password).WithMessage("Passwords do not match");
 
         RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("First name is required")
-            .MaximumLength(100);
+            .MaximumLength(100).WithMessage("First name cannot exceed 100 characters");
 
         RuleFor(x => x.LastName)
             .NotEmpty().WithMessage("Last name is required")
-            .MaximumLength(100);
+            .MaximumLength(100).WithMessage("Last name cannot exceed 100 characters");
 
         RuleFor(x => x.DateOfBirth)
+            .NotEmpty().WithMessage("Date of birth is required")
             .LessThan(DateTime.Today).WithMessage("Date of birth cannot be in the future");
 
+        RuleFor(x => x.DateOfBirth)
+            .Must(d => d <= DateTime.Today.AddYears(-5))
+            .WithMessage("User must be at least 5 years old");
+
+        RuleFor(x => x.Experience)
+            .InclusiveBetween(0, 50).WithMessage("Experience must be between 0 and 50 years");
+
+        RuleFor(x => x.SkillLevelId)
+            .GreaterThanOrEqualTo(0).WithMessage("Invalid skill level");
+
+        When(x => x.HealthCondition, () =>
+        {
+            RuleFor(x => x.HealthDescription)
+                .NotEmpty().WithMessage("Health description is required when HealthCondition is true")
+                .MaximumLength(500).WithMessage("Health description cannot exceed 500 characters");
+        });
+
+        RuleFor(x => x.HealthDescription)
+            .MaximumLength(500).When(x => !string.IsNullOrWhiteSpace(x.HealthDescription))
+            .WithMessage("Health description cannot exceed 500 characters");
     }
 }
+
 

@@ -40,11 +40,6 @@ public class AuthController : ControllerBase
     {
         try
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var response = await _authService.LoginAsync(loginDto);
             return Ok(response);
         }
@@ -76,11 +71,6 @@ public class AuthController : ControllerBase
     {
         try
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var response = await _authService.RegisterAsync(registerDto);
             return CreatedAtAction(nameof(Login), response);
         }

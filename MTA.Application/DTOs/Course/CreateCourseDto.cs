@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace MTA.Application.DTOs.Course;
 
 /// <summary>
@@ -16,20 +18,10 @@ public class CreateCourseDto
     public string? Description { get; set; }
     
     /// <summary>
-    /// URL to the course icon image
-    /// </summary>
-    public string? ImageIcon { get; set; }
-    
-    /// <summary>
-    /// URL to the course poster image
-    /// </summary>
-    public string? Poster { get; set; }
-    
-    /// <summary>
     /// Course price in the system's currency
     /// </summary>
     public decimal Price { get; set; }
-    
+
     /// <summary>
     /// Level ID for this course
     /// </summary>
@@ -38,5 +30,17 @@ public class CreateCourseDto
     /// <summary>
     /// Status ID for this course (default: Draft)
     /// </summary>
-    public int StatusId { get; set; } = 1; // Assuming 1 is Draft status
+    public int StatusId { get; set; } = 1;
+
+    /// <summary>
+    /// URL to the course icon image
+    /// </summary>
+    public IFormFile? IconFile { get; set; }
+    /// <summary>
+    /// URL to the course poster image
+    /// </summary>
+
+    public IFormFile? PosterFile { get; set; }
+
+
 }

@@ -86,16 +86,14 @@ namespace MTA.Infrastructure.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<string>("ImageIcon")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<int?>("IconMediaFileId")
+                        .HasColumnType("int");
 
                     b.Property<int>("LevelId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Poster")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<int?>("PosterMediaFileId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -113,7 +111,11 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IconMediaFileId");
+
                     b.HasIndex("LevelId");
+
+                    b.HasIndex("PosterMediaFileId");
 
                     b.HasIndex("StatusId");
 
@@ -756,11 +758,21 @@ namespace MTA.Infrastructure.Migrations
 
             modelBuilder.Entity("MTA.Domain.Entities.Course", b =>
                 {
+                    b.HasOne("MTA.Domain.Entities.MediaFile", "IconMediaFile")
+                        .WithMany()
+                        .HasForeignKey("IconMediaFileId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MTA.Domain.Entities.Level", "Level")
                         .WithMany("Courses")
                         .HasForeignKey("LevelId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("MTA.Domain.Entities.MediaFile", "PosterMediaFile")
+                        .WithMany()
+                        .HasForeignKey("PosterMediaFileId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("MTA.Domain.Entities.Lookup", "Status")
                         .WithMany()
@@ -768,7 +780,11 @@ namespace MTA.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("IconMediaFile");
+
                     b.Navigation("Level");
+
+                    b.Navigation("PosterMediaFile");
 
                     b.Navigation("Status");
                 });

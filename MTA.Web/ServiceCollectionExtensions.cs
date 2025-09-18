@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MTA.Application.DTOs.Auth;
 using MTA.Application.Services;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
@@ -30,6 +31,9 @@ namespace MTA.Web
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<RoleService>();
             services.AddScoped<IValidator<IEnumerable<Role>>, GetStudentRoleValidator>();
+            services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
+
 
             return services;
         }

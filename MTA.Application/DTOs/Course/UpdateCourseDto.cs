@@ -9,32 +9,32 @@ public class UpdateCourseDto
     /// Title of the course
     /// </summary>
     public string? Title { get; set; }
-    
+
     /// <summary>
     /// Detailed description of the course content
     /// </summary>
     public string? Description { get; set; }
-    
+
     /// <summary>
-    /// URL to the course icon image
+    /// MediaFile ID for the course icon
     /// </summary>
-    public string? ImageIcon { get; set; }
-    
+    public int? IconMediaFileId { get; set; }
+
     /// <summary>
-    /// URL to the course poster image
+    /// MediaFile ID for the course poster
     /// </summary>
-    public string? Poster { get; set; }
-    
+    public int? PosterMediaFileId { get; set; }
+
     /// <summary>
     /// Course price in the system's currency
     /// </summary>
     public decimal? Price { get; set; }
-    
+
     /// <summary>
     /// Level ID for this course
     /// </summary>
     public int? LevelId { get; set; }
-    
+
     /// <summary>
     /// Status ID for this course
     /// </summary>

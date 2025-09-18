@@ -18,8 +18,8 @@ public class CourseMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.StatusValue, opt => opt.MapFrom(src => src.Status.Value))
             .ForMember(dest => dest.LessonCount, opt => opt.MapFrom(src => src.Lessons.Count))
             .ForMember(dest => dest.PurchaseCount, opt => opt.MapFrom(src => src.UserCourseHistory.Count))
-            .ForMember(dest => dest.ImageIcon, opt => opt.MapFrom(src => src.ImageIcon))
-            .ForMember(dest => dest.Poster, opt => opt.MapFrom(src => src.Poster))
+            .ForMember(dest => dest.ImageIcon, opt => opt.MapFrom(src => src.IconMediaFile != null ? src.IconMediaFile.Url : null))
+            .ForMember(dest => dest.Poster, opt => opt.MapFrom(src => src.PosterMediaFile != null ? src.PosterMediaFile.Url : null))
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
@@ -46,12 +46,15 @@ public class CourseMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
             .ForMember(dest => dest.LevelId, opt => opt.MapFrom(src => src.LevelId))
             .ForMember(dest => dest.StatusId, opt => opt.MapFrom(src => src.StatusId))
-            .ForMember(dest => dest.ImageIcon, opt => opt.MapFrom(src => src.ImageIcon))
-            .ForMember(dest => dest.Poster, opt => opt.MapFrom(src => src.Poster))
+            .ForMember(dest => dest.PosterMediaFileId, opt => opt.Ignore()) 
+            .ForMember(dest => dest.IconMediaFileId, opt => opt.Ignore())   
             .ForMember(dest => dest.Lessons, opt => opt.Ignore())
             .ForMember(dest => dest.UserCourseHistory, opt => opt.Ignore())
             .ForMember(dest => dest.Level, opt => opt.Ignore())
-            .ForMember(dest => dest.Status, opt => opt.Ignore());
+            .ForMember(dest => dest.Status, opt => opt.Ignore())
+            .ForMember(dest => dest.PosterMediaFile, opt => opt.Ignore())
+            .ForMember(dest => dest.IconMediaFile, opt => opt.Ignore());
+
 
 
         // Lesson mappings

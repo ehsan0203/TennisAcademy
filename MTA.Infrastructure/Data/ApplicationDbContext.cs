@@ -106,9 +106,19 @@ public class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Description).HasMaxLength(2000);
-            entity.Property(e => e.ImageIcon).HasMaxLength(500);
-            entity.Property(e => e.Poster).HasMaxLength(500);
             entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
+
+            // Icon MediaFile
+            entity.HasOne(e => e.IconMediaFile)
+                  .WithMany()
+                  .HasForeignKey(e => e.IconMediaFileId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            // Poster MediaFile
+            entity.HasOne(e => e.PosterMediaFile)
+                  .WithMany()
+                  .HasForeignKey(e => e.PosterMediaFileId)
+                  .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(e => e.Level)
                 .WithMany(e => e.Courses)

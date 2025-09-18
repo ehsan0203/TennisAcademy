@@ -1,4 +1,5 @@
-using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MTA.Application.DTOs;
 using MTA.Application.DTOs.Course;
 using MTA.Domain.Entities;
@@ -13,11 +14,13 @@ public class CourseService : ICourseService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IMediaFileService _mediaFileService;
 
-    public CourseService(IUnitOfWork unitOfWork, IMapper mapper)
+    public CourseService(IUnitOfWork unitOfWork, IMapper mapper, IMediaFileService mediaFileService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _mediaFileService = mediaFileService;
     }
 
     /// <summary>
@@ -25,7 +28,12 @@ public class CourseService : ICourseService
     /// </summary>
     public async Task<PaginatedResult<CourseDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? levelId = null, int? statusId = null, decimal? minPrice = null, decimal? maxPrice = null)
     {
-        var query = _unitOfWork.Repository<Course>().GetQueryable();
+        var query = _unitOfWork.Repository<Course>().GetQueryable()
+            .Include(c => c.PosterMediaFile)
+            .Include(c => c.IconMediaFile)
+            .Include(c => c.Level)
+            .Include(c => c.Status)
+            .AsQueryable();
 
         // Apply filters
         if (!string.IsNullOrEmpty(searchTerm))
@@ -76,7 +84,12 @@ public class CourseService : ICourseService
     /// </summary>
     public async Task<CourseDto?> GetByIdAsync(int id)
     {
-        var course = await _unitOfWork.Repository<Course>().GetByIdAsync(id);
+        var course = await _unitOfWork.Repository<Course>().GetQueryable()
+            .Include(c => c.PosterMediaFile)
+            .Include(c => c.IconMediaFile)
+            .Include(c => c.Level)
+            .Include(c => c.Status)
+            .FirstOrDefaultAsync(c => c.Id == id);
         return course != null ? _mapper.Map<CourseDto>(course) : null;
     }
 
@@ -104,59 +117,107 @@ public class CourseService : ICourseService
     public async Task<CourseDto> CreateAsync(CreateCourseDto createCourseDto)
     {
         var course = _mapper.Map<Course>(createCourseDto);
+
+        // Poster
+        if (createCourseDto.PosterFile != null)
+        {
+            var posterDto = new MediaFileUploadDto
+            {
+                MediaType = "Course",
+                PlacementName = "Poster",
+                Title = $"{createCourseDto.Title} Poster"
+            };
+
+            var posterMedia = await _mediaFileService.CreateAsync(createCourseDto.PosterFile, posterDto);
+            course.PosterMediaFileId = posterMedia.Id;
+        }
+
+        // Icon
+        if (createCourseDto.IconFile != null)
+        {
+            var iconDto = new MediaFileUploadDto
+            {
+                MediaType = "Course",
+                PlacementName = "Icon",
+                Title = $"{createCourseDto.Title} Icon"
+            };
+
+            var iconMedia = await _mediaFileService.CreateAsync(createCourseDto.IconFile, iconDto);
+            course.IconMediaFileId = iconMedia.Id;
+        }
         var createdCourse = await _unitOfWork.Repository<Course>().AddAsync(course);
         await _unitOfWork.SaveChangesAsync();
         return _mapper.Map<CourseDto>(createdCourse);
     }
 
     /// <summary>
-    /// Update existing course
+    /// Update existing course with media references
     /// </summary>
     public async Task<CourseDto> UpdateAsync(int id, UpdateCourseDto updateCourseDto)
     {
-        var existingCourse = await _unitOfWork.Repository<Course>().GetByIdAsync(id);
+        // Include related media and status to map DTO properly
+        var existingCourse = await _unitOfWork.Repository<Course>()
+            .GetQueryable()
+            .Include(c => c.IconMediaFile)
+            .Include(c => c.PosterMediaFile)
+            .Include(c => c.Level)
+            .Include(c => c.Status)
+            .FirstOrDefaultAsync(c => c.Id == id);
+
         if (existingCourse == null)
             throw new ArgumentException($"Course with ID {id} not found");
 
-        // Only update non-null properties
-        if (updateCourseDto.Title != null)
+        // Update simple properties
+        if (!string.IsNullOrEmpty(updateCourseDto.Title))
             existingCourse.Title = updateCourseDto.Title;
-        if (updateCourseDto.Description != null)
+
+        if (!string.IsNullOrEmpty(updateCourseDto.Description))
             existingCourse.Description = updateCourseDto.Description;
-        if (updateCourseDto.ImageIcon != null)
-            existingCourse.ImageIcon = updateCourseDto.ImageIcon;
-        if (updateCourseDto.Poster != null)
-            existingCourse.Poster = updateCourseDto.Poster;
+
         if (updateCourseDto.Price.HasValue)
             existingCourse.Price = updateCourseDto.Price.Value;
+
         if (updateCourseDto.LevelId.HasValue)
             existingCourse.LevelId = updateCourseDto.LevelId.Value;
+
         if (updateCourseDto.StatusId.HasValue)
             existingCourse.StatusId = updateCourseDto.StatusId.Value;
+
+        // Update media references
+        if (updateCourseDto.IconMediaFileId.HasValue)
+            existingCourse.IconMediaFileId = updateCourseDto.IconMediaFileId;
+
+        if (updateCourseDto.PosterMediaFileId.HasValue)
+            existingCourse.PosterMediaFileId = updateCourseDto.PosterMediaFileId;
 
         existingCourse.UpdatedAt = DateTime.UtcNow;
 
         await _unitOfWork.Repository<Course>().UpdateAsync(existingCourse);
         await _unitOfWork.SaveChangesAsync();
 
+        // Map to DTO
         return _mapper.Map<CourseDto>(existingCourse);
     }
 
     /// <summary>
-    /// Delete course
+    /// Delete course or archive if it has enrollments
     /// </summary>
     public async Task<bool> DeleteAsync(int id)
     {
-        var course = await _unitOfWork.Repository<Course>().GetByIdAsync(id);
+        var course = await _unitOfWork.Repository<Course>()
+            .GetQueryable()
+            .Include(c => c.UserCourseHistory)
+            .FirstOrDefaultAsync(c => c.Id == id);
+
         if (course == null)
             return false;
 
         // Check if course has enrollments
-        var hasEnrollments = await _unitOfWork.Repository<UserCourseHistory>().AnyAsync(uch => uch.CourseId == id);
-        if (hasEnrollments)
+        if (course.UserCourseHistory.Any())
         {
-            // Instead of deleting, set status to archived
-            course.StatusId = 4; // Assuming 4 is Archived status
+            // Archive instead of delete
+            course.StatusId = 4; // Archived
+            course.UpdatedAt = DateTime.UtcNow;
             await _unitOfWork.Repository<Course>().UpdateAsync(course);
         }
         else
@@ -167,6 +228,7 @@ public class CourseService : ICourseService
         await _unitOfWork.SaveChangesAsync();
         return true;
     }
+
 
     /// <summary>
     /// Change course status
@@ -249,61 +311,47 @@ public class CourseService : ICourseService
     /// </summary>
     public async Task<PaginatedResult<CourseDto>> GetFilteredAsync(CourseFilterDto filter)
     {
-        var query = _unitOfWork.Repository<Course>().GetQueryable();
+        var query = _unitOfWork.Repository<Course>().GetQueryable()
+            .Include(c => c.IconMediaFile)
+            .Include(c => c.PosterMediaFile)
+            .Include(c => c.Level)
+            .Include(c => c.Status)
+            .AsQueryable();
 
-        // Status filter
-        if (filter.StatusId.HasValue)
-            query = query.Where(c => c.StatusId == filter.StatusId.Value);
 
         // Search term filter
         if (!string.IsNullOrEmpty(filter.SearchTerm))
             query = query.Where(c => c.Title.Contains(filter.SearchTerm) ||
                                      (c.Description != null && c.Description.Contains(filter.SearchTerm)));
 
-        // Level filter
-        if (filter.LevelId.HasValue)
+        if (filter.LevelId.HasValue && filter.LevelId.Value > 0)
             query = query.Where(c => c.LevelId == filter.LevelId.Value);
 
-        // Price filters
-        if (filter.MinPrice.HasValue)
+        if (filter.StatusId.HasValue && filter.StatusId.Value > 0)
+            query = query.Where(c => c.StatusId == filter.StatusId.Value);
+
+        if (filter.MinPrice.HasValue && filter.MinPrice.Value > 0)
             query = query.Where(c => c.Price >= filter.MinPrice.Value);
 
-        if (filter.MaxPrice.HasValue)
+        if (filter.MaxPrice.HasValue && filter.MaxPrice.Value > 0)
             query = query.Where(c => c.Price <= filter.MaxPrice.Value);
 
-        // Free courses filter (smart handling)
+        // Free courses filter
         if (filter.FreeOnly.HasValue && filter.FreeOnly.Value)
-        {
-            var anyFreeCourses = await _unitOfWork.Repository<Course>()
-                .AnyAsync(c => c.Price == 0 && (!filter.StatusId.HasValue || c.StatusId == filter.StatusId.Value));
-
-            if (anyFreeCourses)
-                query = query.Where(c => c.Price == 0);
-        }
+            query = query.Where(c => c.Price == 0);
 
         // Sorting
-        if (!string.IsNullOrEmpty(filter.SortBy))
+        query = filter.SortBy?.ToLower() switch
         {
-            query = filter.SortBy.ToLower() switch
-            {
-                "title" => filter.SortDirection?.ToLower() == "desc" ? query.OrderByDescending(c => c.Title) : query.OrderBy(c => c.Title),
-                "price" => filter.SortDirection?.ToLower() == "desc" ? query.OrderByDescending(c => c.Price) : query.OrderBy(c => c.Price),
-                "createdat" => filter.SortDirection?.ToLower() == "desc" ? query.OrderByDescending(c => c.CreatedAt) : query.OrderBy(c => c.CreatedAt),
-                _ => query.OrderBy(c => c.CreatedAt)
-            };
-        }
-        else
-        {
-            query = query.OrderBy(c => c.CreatedAt);
-        }
+            "title" => filter.SortDirection?.ToLower() == "desc" ? query.OrderByDescending(c => c.Title) : query.OrderBy(c => c.Title),
+            "price" => filter.SortDirection?.ToLower() == "desc" ? query.OrderByDescending(c => c.Price) : query.OrderBy(c => c.Price),
+            "createdat" => filter.SortDirection?.ToLower() == "desc" ? query.OrderByDescending(c => c.CreatedAt) : query.OrderBy(c => c.CreatedAt),
+            _ => query.OrderBy(c => c.CreatedAt)
+        };
 
-        // Total count
         var totalCount = await _unitOfWork.Repository<Course>().CountAsync(query);
-
-        // Pagination
         var courses = await _unitOfWork.Repository<Course>().GetPagedAsync(query, filter.Page, filter.PageSize);
 
-        // Map to DTOs
         var courseDtos = courses.Select(c => _mapper.Map<CourseDto>(c)).ToList();
 
         return new PaginatedResult<CourseDto>
@@ -320,21 +368,33 @@ public class CourseService : ICourseService
     /// </summary>
     public async Task<PaginatedResult<CourseDto>> SearchAsync(string searchTerm, int page = 1, int pageSize = 10)
     {
-        var query = _unitOfWork.Repository<Course>().GetQueryable();
-        
-        query = query.Where(c => c.Title.Contains(searchTerm) || (c.Description != null && c.Description.Contains(searchTerm)));
-        
+        if (string.IsNullOrWhiteSpace(searchTerm))
+            return new PaginatedResult<CourseDto>
+            {
+                Data = new List<CourseDto>(),
+                TotalCount = 0,
+                Page = page,
+                PageSize = pageSize
+            };
+
+        var query = _unitOfWork.Repository<Course>().GetQueryable()
+            .Include(c => c.IconMediaFile)
+            .Include(c => c.PosterMediaFile)
+            .Include(c => c.Level)
+            .Include(c => c.Status)
+            .Where(c => c.Title.Contains(searchTerm) || (c.Description != null && c.Description.Contains(searchTerm)));
+
         var totalCount = await _unitOfWork.Repository<Course>().CountAsync(query);
         var courses = await _unitOfWork.Repository<Course>().GetPagedAsync(query, page, pageSize);
-        
+
         var courseDtos = courses.Select(c => _mapper.Map<CourseDto>(c)).ToList();
-        
+
         return new PaginatedResult<CourseDto>
         {
             Data = courseDtos,
             TotalCount = totalCount,
             Page = page,
-            PageSize = pageSize,
+            PageSize = pageSize
         };
     }
 
@@ -343,27 +403,48 @@ public class CourseService : ICourseService
     /// </summary>
     public async Task<IEnumerable<CourseDto>> GetRecommendedAsync(int userId, int count = 5)
     {
-        // Get user's enrolled courses to understand their level
-        var userEnrollments = await _unitOfWork.Repository<UserCourseHistory>().GetAllAsync(uch => uch.AccountId == userId);
-        
+        // Get user's enrolled courses with course info
+        var userEnrollments = await _unitOfWork.Repository<UserCourseHistory>()
+            .GetQueryable()
+            .Include(uch => uch.Course)
+                .ThenInclude(c => c.Level)
+            .Include(uch => uch.Course)
+                .ThenInclude(c => c.Status)
+            .Where(uch => uch.AccountId == userId)
+            .ToListAsync();
+
         if (!userEnrollments.Any())
         {
-            // If no enrollments, return beginner courses
-            var beginnerCourses = await _unitOfWork.Repository<Course>().GetAllAsync(c => c.LevelId == 1 && c.StatusId == 2); // Assuming 1=Beginner, 2=Active
+            // No enrollments, return beginner courses
+            var beginnerCourses = await _unitOfWork.Repository<Course>()
+                .GetQueryable()
+                .Include(c => c.IconMediaFile)
+                .Include(c => c.PosterMediaFile)
+                .Include(c => c.Level)
+                .Include(c => c.Status)
+                .Where(c => c.LevelId == 1 && c.StatusId == 2)
+                .ToListAsync();
+
             return beginnerCourses.Take(count).Select(c => _mapper.Map<CourseDto>(c));
         }
 
-        // Get user's preferred level (most enrolled level)
+        // User's most enrolled level
         var userLevel = userEnrollments
             .GroupBy(uch => uch.Course.LevelId)
             .OrderByDescending(g => g.Count())
             .First().Key;
 
-        // Get courses at the same level or one level higher
-        var recommendedCourses = await _unitOfWork.Repository<Course>().GetAllAsync(c => 
-            (c.LevelId == userLevel || c.LevelId == userLevel + 1) && 
-            c.StatusId == 2 && // Active status
-            !userEnrollments.Any(uch => uch.CourseId == c.Id)); // Not already enrolled
+        // Recommended courses: same level or one level higher, not enrolled yet
+        var recommendedCourses = await _unitOfWork.Repository<Course>()
+            .GetQueryable()
+            .Include(c => c.IconMediaFile)
+            .Include(c => c.PosterMediaFile)
+            .Include(c => c.Level)
+            .Include(c => c.Status)
+            .Where(c => (c.LevelId == userLevel || c.LevelId == userLevel + 1)
+                        && c.StatusId == 2
+                        && !userEnrollments.Any(uch => uch.CourseId == c.Id))
+            .ToListAsync();
 
         return recommendedCourses.Take(count).Select(c => _mapper.Map<CourseDto>(c));
     }
@@ -373,43 +454,56 @@ public class CourseService : ICourseService
     /// </summary>
     public async Task<CourseStatisticsDto> GetStatisticsAsync()
     {
-        var allCourses = await _unitOfWork.Repository<Course>().GetAllAsync();
-        var allEnrollments = await _unitOfWork.Repository<UserCourseHistory>().GetAllAsync();
+        var allCourses = await _unitOfWork.Repository<Course>()
+            .GetAllAsync(
+                include: q => q.Include(c => c.Level)
+                               .Include(c => c.Status)
+            );
+
+        var allEnrollments = await _unitOfWork.Repository<UserCourseHistory>()
+            .GetAllAsync(
+                include: q => q.Include(uch => uch.Course)
+                               .ThenInclude(c => c.Level)
+                               .Include(uch => uch.Course)
+                               .ThenInclude(c => c.Status)
+            );
 
         var statistics = new CourseStatisticsDto
         {
             TotalCourses = allCourses.Count(),
-            ActiveCourses = allCourses.Count(c => c.StatusId == 2), 
-            DraftCourses = allCourses.Count(c => c.StatusId == 1), 
-            ArchivedCourses = allCourses.Count(c => c.StatusId == 4), 
+            ActiveCourses = allCourses.Count(c => c.StatusId == 2),
+            DraftCourses = allCourses.Count(c => c.StatusId == 1),
+            ArchivedCourses = allCourses.Count(c => c.StatusId == 4),
             TotalEnrollments = allEnrollments.Count(),
-            ActiveEnrollments = allEnrollments.Count(uch => uch.StatusId == 1), 
-            CompletedCourses = allEnrollments.Count(uch => uch.StatusId == 2), 
+            ActiveEnrollments = allEnrollments.Count(uch => uch.StatusId == 1),
+            CompletedCourses = allEnrollments.Count(uch => uch.StatusId == 2),
             TotalRevenue = allEnrollments.Sum(uch => uch.Course.Price),
-            CompletionRate = allEnrollments.Any() ? (double)allEnrollments.Count(uch => uch.StatusId == 2) / allEnrollments.Count() * 100 : 0
+            CompletionRate = allEnrollments.Any()
+                ? (double)allEnrollments.Count(uch => uch.StatusId == 2) / allEnrollments.Count() * 100
+                : 0
         };
 
-        // Get most popular level
-        var mostPopularLevel = allEnrollments
+        // Most popular level
+        var mostPopularLevelGroup = allEnrollments
             .GroupBy(uch => uch.Course.LevelId)
             .OrderByDescending(g => g.Count())
             .FirstOrDefault();
-        
-        if (mostPopularLevel != null)
+
+        if (mostPopularLevelGroup != null)
         {
-            var level = await _unitOfWork.Repository<Level>().GetByIdAsync(mostPopularLevel.Key);
+            var level = await _unitOfWork.Repository<Level>().GetByIdAsync(mostPopularLevelGroup.Key);
             statistics.MostPopularLevel = level?.Title;
         }
 
-        // Get most enrolled course
-        var mostEnrolledCourse = allEnrollments
+        // Most enrolled course
+        var mostEnrolledCourseGroup = allEnrollments
             .GroupBy(uch => uch.CourseId)
             .OrderByDescending(g => g.Count())
             .FirstOrDefault();
-        
-        if (mostEnrolledCourse != null)
+
+        if (mostEnrolledCourseGroup != null)
         {
-            var course = await _unitOfWork.Repository<Course>().GetByIdAsync(mostEnrolledCourse.Key);
+            var course = await _unitOfWork.Repository<Course>().GetByIdAsync(mostEnrolledCourseGroup.Key);
             statistics.MostEnrolledCourse = course?.Title;
         }
 
@@ -421,11 +515,19 @@ public class CourseService : ICourseService
     /// </summary>
     public async Task<CourseDto> ToggleStatusAsync(int id)
     {
-        var course = await _unitOfWork.Repository<Course>().GetByIdAsync(id);
+        var course = await _unitOfWork.Repository<Course>()
+            .GetQueryable()
+            .Include(c => c.Level)
+            .Include(c => c.Status)
+            .Include(c => c.IconMediaFile)
+            .Include(c => c.PosterMediaFile)
+            .Where(c => c.Id == id)
+            .FirstOrDefaultAsync();
+
         if (course == null)
             throw new ArgumentException($"Course with ID {id} not found");
 
-        // Toggle between Active (2) and Inactive (3) - adjust status IDs as needed
+        // Toggle Active (2) / Inactive (3)
         course.StatusId = course.StatusId == 2 ? 3 : 2;
         course.UpdatedAt = DateTime.UtcNow;
 
@@ -434,4 +536,7 @@ public class CourseService : ICourseService
 
         return _mapper.Map<CourseDto>(course);
     }
+
+
+
 }

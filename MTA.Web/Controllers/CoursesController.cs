@@ -111,7 +111,7 @@ public class CoursesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<CourseDto>> CreateCourse([FromBody] CreateCourseDto createCourseDto)
+    public async Task<ActionResult<CourseDto>> CreateCourse([FromForm] CreateCourseDto createCourseDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -293,30 +293,30 @@ public class CoursesController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Gets course statistics
-    /// </summary>
-    /// <returns>Course statistics</returns>
-    /// <response code="200">Returns the course statistics</response>
-    /// <response code="401">If the user is not authenticated</response>
-    /// <response code="403">If the user doesn't have required role</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpGet("statistics")]
-    //[Authorize(Policy = "RolesAdminCoach")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<CourseStatisticsDto>> GetCourseStatistics()
-    {
-        try
-        {
-            var statistics = await _courseService.GetStatisticsAsync();
-            return Ok(statistics);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    ///// <summary>
+    ///// Gets course statistics
+    ///// </summary>
+    ///// <returns>Course statistics</returns>
+    ///// <response code="200">Returns the course statistics</response>
+    ///// <response code="401">If the user is not authenticated</response>
+    ///// <response code="403">If the user doesn't have required role</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpGet("statistics")]
+    ////[Authorize(Policy = "RolesAdminCoach")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<CourseStatisticsDto>> GetCourseStatistics()
+    //{
+    //    try
+    //    {
+    //        var statistics = await _courseService.GetStatisticsAsync();
+    //        return Ok(statistics);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
     #endregion
 
