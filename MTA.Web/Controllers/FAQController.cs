@@ -110,7 +110,7 @@ public class FAQController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<FAQCategoryDto>> CreateCategory([FromBody] FAQCategoryDto categoryDto)
+    public async Task<ActionResult<FAQCategoryDto>> CreateCategory([FromBody] CreateFAQCategoryDto categoryDto)
     {
         try
         {
@@ -317,7 +317,7 @@ public class FAQController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<QuestionDto>> CreateQuestion([FromBody] QuestionDto questionDto)
+    public async Task<ActionResult<QuestionDto>> CreateQuestion([FromBody] CreateQuestionDto questionDto)
     {
         try
         {

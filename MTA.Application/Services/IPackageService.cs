@@ -46,7 +46,7 @@ public interface IPackageService
     /// </summary>
     /// <param name="packageDto">Package data</param>
     /// <returns>Created package</returns>
-    Task<PackageDto> CreateAsync(PackageDto packageDto);
+    Task<PackageDto> CreateAsync(CreatePackageDto packageDto);
     
     /// <summary>
     /// Update existing package

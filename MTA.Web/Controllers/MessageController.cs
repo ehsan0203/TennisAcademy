@@ -37,28 +37,28 @@ public class MessageController : ControllerBase
     /// <response code="200">Returns the list of messages</response>
     /// <response code="400">If the filter parameters are invalid</response>
     /// <response code="500">If there was an internal server error</response>
-    [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<PaginatedResult<MessageDto>>> GetMessages(
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10,
-        [FromQuery] string? searchTerm = null,
-        [FromQuery] int? ticketId = null,
-        [FromQuery] int? senderId = null,
-        [FromQuery] bool? isRead = null)
-    {
-        try
-        {
-            var result = await _messageService.GetAllAsync(page, pageSize, searchTerm, ticketId, senderId, isRead);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    //[HttpGet]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<PaginatedResult<MessageDto>>> GetMessages(
+    //    [FromQuery] int page = 1,
+    //    [FromQuery] int pageSize = 10,
+    //    [FromQuery] string? searchTerm = null,
+    //    [FromQuery] int? ticketId = null,
+    //    [FromQuery] int? senderId = null,
+    //    [FromQuery] bool? isRead = null)
+    //{
+    //    try
+    //    {
+    //        var result = await _messageService.GetAllAsync(page, pageSize, searchTerm, ticketId, senderId, isRead);
+    //        return Ok(result);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
     /// <summary>
     /// Gets a specific message by ID
@@ -100,7 +100,7 @@ public class MessageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<MessageDto>> CreateMessage([FromBody] MessageDto messageDto)
+    public async Task<ActionResult<MessageDto>> CreateMessage([FromBody] CreateMessageDto messageDto)
     {
         try
         {
@@ -298,21 +298,21 @@ public class MessageController : ControllerBase
     /// <returns>List of messages from the sender</returns>
     /// <response code="200">Returns the list of messages</returns>
     /// <response code="500">If there was an internal server error</response>
-    [HttpGet("sender/{senderId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessagesBySender(int senderId)
-    {
-        try
-        {
-            var messages = await _messageService.GetBySenderAsync(senderId);
-            return Ok(messages);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    //[HttpGet("sender/{senderId}")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessagesBySender(int senderId)
+    //{
+    //    try
+    //    {
+    //        var messages = await _messageService.GetBySenderAsync(senderId);
+    //        return Ok(messages);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
     /// <summary>
     /// Gets all unread messages
@@ -320,21 +320,21 @@ public class MessageController : ControllerBase
     /// <returns>List of unread messages</returns>
     /// <response code="200">Returns the list of unread messages</returns>
     /// <response code="500">If there was an internal server error</response>
-    [HttpGet("unread")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<MessageDto>>> GetUnreadMessages()
-    {
-        try
-        {
-            var messages = await _messageService.GetUnreadMessagesAsync();
-            return Ok(messages);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    //[HttpGet("unread")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<IEnumerable<MessageDto>>> GetUnreadMessages()
+    //{
+    //    try
+    //    {
+    //        var messages = await _messageService.GetUnreadMessagesAsync();
+    //        return Ok(messages);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
     /// <summary>
     /// Gets unread messages by ticket ID
@@ -368,27 +368,27 @@ public class MessageController : ControllerBase
     /// <response code="200">Returns the list of messages</response>
     /// <response code="400">If the date parameters are invalid</response>
     /// <response code="500">If there was an internal server error</response>
-    [HttpGet("date-range")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessagesByDateRange(
-        [FromQuery] DateTime startDate,
-        [FromQuery] DateTime endDate)
-    {
-        try
-        {
-            if (startDate > endDate)
-                return BadRequest("Start date cannot be after end date");
+    //[HttpGet("date-range")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessagesByDateRange(
+    //    [FromQuery] DateTime startDate,
+    //    [FromQuery] DateTime endDate)
+    //{
+    //    try
+    //    {
+    //        if (startDate > endDate)
+    //            return BadRequest("Start date cannot be after end date");
 
-            var messages = await _messageService.GetByDateRangeAsync(startDate, endDate);
-            return Ok(messages);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    //        var messages = await _messageService.GetByDateRangeAsync(startDate, endDate);
+    //        return Ok(messages);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
     #endregion
 

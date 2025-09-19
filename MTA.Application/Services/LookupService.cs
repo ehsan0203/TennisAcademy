@@ -14,7 +14,9 @@ public class LookupService : ILookupService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<PaginatedResult<LookupDto>> GetAllAsync(int page = 1, int pageSize = 10, string? category = null, string? searchTerm = null)
+    public async Task<PaginatedResult<LookupDto>> 
+        
+        GetAllAsync(int page = 1, int pageSize = 10, string? category = null, string? searchTerm = null)
     {
         var repo = _unitOfWork.Repository<Lookup>();
         var query = repo.GetQueryable();
@@ -35,9 +37,7 @@ public class LookupService : ILookupService
                 Id = l.Id,
                 Category = l.Category,
                 Key = l.Key,
-                Value = l.Value,
-                CreatedAt = l.CreatedAt,
-                UpdatedAt = l.UpdatedAt
+                Value = l.Value
             }),
             Page = page,
             PageSize = pageSize,
@@ -55,9 +55,7 @@ public class LookupService : ILookupService
             Id = entity.Id,
             Category = entity.Category,
             Key = entity.Key,
-            Value = entity.Value,
-            CreatedAt = entity.CreatedAt,
-            UpdatedAt = entity.UpdatedAt
+            Value = entity.Value
         };
     }
 
@@ -71,9 +69,7 @@ public class LookupService : ILookupService
             Id = l.Id,
             Category = l.Category,
             Key = l.Key,
-            Value = l.Value,
-            CreatedAt = l.CreatedAt,
-            UpdatedAt = l.UpdatedAt
+            Value = l.Value
         });
     }
 
@@ -88,9 +84,7 @@ public class LookupService : ILookupService
             Id = entity.Id,
             Category = entity.Category,
             Key = entity.Key,
-            Value = entity.Value,
-            CreatedAt = entity.CreatedAt,
-            UpdatedAt = entity.UpdatedAt
+            Value = entity.Value
         };
     }
 
@@ -103,7 +97,7 @@ public class LookupService : ILookupService
         return entity?.Value;
     }
 
-    public async Task<LookupDto> CreateAsync(LookupDto lookupDto)
+    public async Task<LookupDto> CreateAsync(CreateLookupDto lookupDto)
     {
         var repo = _unitOfWork.Repository<Lookup>();
 
@@ -118,11 +112,13 @@ public class LookupService : ILookupService
         await repo.AddAsync(entity);
         await _unitOfWork.SaveChangesAsync();
 
-        lookupDto.Id = entity.Id;
-        lookupDto.CreatedAt = entity.CreatedAt;
-        lookupDto.UpdatedAt = entity.UpdatedAt;
-
-        return lookupDto;
+        return new LookupDto
+        {
+            Id = entity.Id,
+            Category = entity.Category,
+            Key = entity.Key,
+            Value = entity.Value,
+        };
     }
 
     public async Task<LookupDto> UpdateAsync(int id, LookupDto lookupDto)
@@ -146,9 +142,7 @@ public class LookupService : ILookupService
             Id = entity.Id,
             Category = entity.Category,
             Key = entity.Key,
-            Value = entity.Value,
-            CreatedAt = entity.CreatedAt,
-            UpdatedAt = entity.UpdatedAt
+            Value = entity.Value
         };
     }
 
@@ -224,9 +218,9 @@ public class LookupService : ILookupService
             Id = e.Id,
             Category = e.Category,
             Key = e.Key,
-            Value = e.Value,
-            CreatedAt = e.CreatedAt,
-            UpdatedAt = e.UpdatedAt
+            Value = e.Value
         });
     }
+
+
 }

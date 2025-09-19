@@ -150,89 +150,89 @@ public class UserController : ControllerBase
     /// <summary>
     /// Update user avatar
     /// </summary>
-    [HttpPatch("{id}/avatar")]
-    public async Task<ActionResult<UserProfileDto>> UpdateAvatar(int id, [FromBody] string ImageUrl)
-    {
-        try
-        {
-            var userId = GetCurrentUserId();
-            if (userId == null)
-                return Unauthorized();
+    //[HttpPatch("{id}/avatar")]
+    //public async Task<ActionResult<UserProfileDto>> UpdateAvatar(int id, [FromBody] string ImageUrl)
+    //{
+    //    try
+    //    {
+    //        var userId = GetCurrentUserId();
+    //        if (userId == null)
+    //            return Unauthorized();
 
-            // Users can only update their own avatar, admins can update any avatar
-            if (userId.Value != id && !User.IsInRole("Admin"))
-                return Forbid();
+    //        // Users can only update their own avatar, admins can update any avatar
+    //        if (userId.Value != id && !User.IsInRole("Admin"))
+    //            return Forbid();
 
-            var updatedProfile = await _userProfileService.UpdateAvatarAsync(id, ImageUrl);
-            if (updatedProfile == null)
-                return NotFound("User profile not found");
+    //        var updatedProfile = await _userProfileService.UpdateAvatarAsync(id, ImageUrl);
+    //        if (updatedProfile == null)
+    //            return NotFound("User profile not found");
 
-            return Ok(updatedProfile);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error updating avatar for user with ID: {UserId}", id);
-            return StatusCode(500, "Internal server error");
-        }
-    }
+    //        return Ok(updatedProfile);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Error updating avatar for user with ID: {UserId}", id);
+    //        return StatusCode(500, "Internal server error");
+    //    }
+    //}
 
-    /// <summary>
-    /// Update user skill level
-    /// </summary>
-    [HttpPatch("{id}/skill-level")]
-    public async Task<ActionResult<UserProfileDto>> UpdateSkillLevel(int id, [FromBody] int SkillLevelId)
-    {
-        try
-        {
-            var userId = GetCurrentUserId();
-            if (userId == null)
-                return Unauthorized();
+    ///// <summary>
+    ///// Update user skill level
+    ///// </summary>
+    //[HttpPatch("{id}/skill-level")]
+    //public async Task<ActionResult<UserProfileDto>> UpdateSkillLevel(int id, [FromBody] int SkillLevelId)
+    //{
+    //    try
+    //    {
+    //        var userId = GetCurrentUserId();
+    //        if (userId == null)
+    //            return Unauthorized();
 
-            // Users can only update their own skill level, admins can update any skill level
-            if (userId.Value != id && !User.IsInRole("Admin"))
-                return Forbid();
+    //        // Users can only update their own skill level, admins can update any skill level
+    //        if (userId.Value != id && !User.IsInRole("Admin"))
+    //            return Forbid();
 
-            var updatedProfile = await _userProfileService.UpdateSkillLevelAsync(id, SkillLevelId);
-            if (updatedProfile == null)
-                return NotFound("User profile not found");
+    //        var updatedProfile = await _userProfileService.UpdateSkillLevelAsync(id, SkillLevelId);
+    //        if (updatedProfile == null)
+    //            return NotFound("User profile not found");
 
-            return Ok(updatedProfile);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error updating skill level for user with ID: {UserId}", id);
-            return StatusCode(500, "Internal server error");
-        }
-    }
+    //        return Ok(updatedProfile);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Error updating skill level for user with ID: {UserId}", id);
+    //        return StatusCode(500, "Internal server error");
+    //    }
+    //}
 
-    /// <summary>
-    /// Update user experience
-    /// </summary>
-    [HttpPatch("{id}/experience")]
-    public async Task<ActionResult<UserProfileDto>> UpdateExperience(int id, [FromBody] int ExperienceId)
-    {
-        try
-        {
-            var userId = GetCurrentUserId();
-            if (userId == null)
-                return Unauthorized();
+    ///// <summary>
+    ///// Update user experience
+    ///// </summary>
+    //[HttpPatch("{id}/experience")]
+    //public async Task<ActionResult<UserProfileDto>> UpdateExperience(int id, [FromBody] int ExperienceId)
+    //{
+    //    try
+    //    {
+    //        var userId = GetCurrentUserId();
+    //        if (userId == null)
+    //            return Unauthorized();
 
-            // Users can only update their own experience, admins can update any experience
-            if (userId.Value != id && !User.IsInRole("Admin"))
-                return Forbid();
+    //        // Users can only update their own experience, admins can update any experience
+    //        if (userId.Value != id && !User.IsInRole("Admin"))
+    //            return Forbid();
 
-            var updatedProfile = await _userProfileService.UpdateExperienceAsync(id, ExperienceId);
-            if (updatedProfile == null)
-                return NotFound("User profile not found");
+    //        var updatedProfile = await _userProfileService.UpdateExperienceAsync(id, ExperienceId);
+    //        if (updatedProfile == null)
+    //            return NotFound("User profile not found");
 
-            return Ok(updatedProfile);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error updating experience for user with ID: {UserId}", id);
-            return StatusCode(500, "Internal server error");
-        }
-    }
+    //        return Ok(updatedProfile);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Error updating experience for user with ID: {UserId}", id);
+    //        return StatusCode(500, "Internal server error");
+    //    }
+    //}
 
     #endregion
 
@@ -244,9 +244,9 @@ public class UserController : ControllerBase
     /// <summary>
     /// Search and filter users (Admin only)
     /// </summary>
-    [HttpPost("query")]
+    [HttpGet("UserSearch")]
     //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<PagedResult<UserProfileDto>>> QueryUsers([FromBody] UserSearchDto queryDto)
+    public async Task<ActionResult<PagedResult<UserProfileDto>>> QueryUsers([FromQuery] UserSearchDto queryDto)
     {
         try
         {
@@ -259,6 +259,7 @@ public class UserController : ControllerBase
             return StatusCode(500, "Internal server error");
         }
     }
+
 
 
     #endregion

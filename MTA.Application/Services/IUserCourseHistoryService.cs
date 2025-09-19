@@ -15,28 +15,28 @@ public interface IUserCourseHistoryService
     /// <param name="accountId">Filter by account ID</param>
     /// <param name="courseId">Filter by course ID</param>
     /// <returns>Paginated list of user course histories</returns>
-    Task<PaginatedResult<UserCourseHistoryDto>> GetAllAsync(int page = 1, int pageSize = 10, int? accountId = null, int? courseId = null);
+    Task<PaginatedResult<UpdateUserCourseHistoryDto>> GetAllAsync(int page = 1, int pageSize = 10, int? accountId = null, int? courseId = null);
     
     /// <summary>
     /// Get user course history by ID
     /// </summary>
     /// <param name="id">User course history ID</param>
     /// <returns>User course history details</returns>
-    Task<UserCourseHistoryDto?> GetByIdAsync(int id);
+    Task<UpdateUserCourseHistoryDto?> GetByIdAsync(int id);
     
     /// <summary>
     /// Get user course histories by account ID
     /// </summary>
     /// <param name="accountId">Account ID</param>
     /// <returns>List of user course histories</returns>
-    Task<IEnumerable<UserCourseHistoryDto>> GetByAccountAsync(int accountId);
+    Task<IEnumerable<UpdateUserCourseHistoryDto>> GetByAccountAsync(int accountId);
     
     /// <summary>
     /// Get user course histories by course ID
     /// </summary>
     /// <param name="courseId">Course ID</param>
     /// <returns>List of user course histories</returns>
-    Task<IEnumerable<UserCourseHistoryDto>> GetByCourseAsync(int courseId);
+    Task<IEnumerable<UpdateUserCourseHistoryDto>> GetByCourseAsync(int courseId);
     
     /// <summary>
     /// Check if user has purchased course
@@ -51,7 +51,7 @@ public interface IUserCourseHistoryService
     /// </summary>
     /// <param name="userCourseHistoryDto">User course history data</param>
     /// <returns>Created user course history</returns>
-    Task<UserCourseHistoryDto> CreateAsync(UserCourseHistoryDto userCourseHistoryDto);
+    Task<UpdateUserCourseHistoryDto> CreateAsync(CreateUserCourseHistoryDto userCourseHistoryDto);
     
     /// <summary>
     /// Update existing user course history
@@ -59,7 +59,7 @@ public interface IUserCourseHistoryService
     /// <param name="id">User course history ID</param>
     /// <param name="userCourseHistoryDto">Updated user course history data</param>
     /// <returns>Updated user course history</returns>
-    Task<UserCourseHistoryDto> UpdateAsync(int id, UserCourseHistoryDto userCourseHistoryDto);
+    Task<UpdateUserCourseHistoryDto> UpdateAsync(int id, UpdateUserCourseHistoryDto userCourseHistoryDto);
     
     /// <summary>
     /// Delete user course history
@@ -80,7 +80,7 @@ public interface IUserCourseHistoryService
     /// <param name="startDate">Start date</param>
     /// <param name="endDate">End date</param>
     /// <returns>List of user course histories</returns>
-    Task<IEnumerable<UserCourseHistoryDto>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
+    Task<IEnumerable<UpdateUserCourseHistoryDto>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
     
     ///// <summary>
     ///// Get popular courses (by purchase count)

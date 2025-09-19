@@ -267,31 +267,31 @@ public class CoursesController : ControllerBase
 
     #region Course Recommendations and Statistics
 
-    /// <summary>
-    /// Gets recommended courses for a user
-    /// </summary>
-    /// <param name="userId">User ID</param>
-    /// <param name="count">Number of recommendations</param>
-    /// <returns>Recommended courses</returns>
-    /// <response code="200">Returns the recommended courses</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpGet("recommended")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<CourseDto>>> GetRecommendedCourses(
-        [FromQuery] int userId,
-        [FromQuery] int count = 5)
-    {
-        try
-        {
-            var recommendedCourses = await _courseService.GetRecommendedAsync(userId, count);
-            return Ok(recommendedCourses);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    ///// <summary>
+    ///// Gets recommended courses for a user
+    ///// </summary>
+    ///// <param name="userId">User ID</param>
+    ///// <param name="count">Number of recommendations</param>
+    ///// <returns>Recommended courses</returns>
+    ///// <response code="200">Returns the recommended courses</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpGet("recommended")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<IEnumerable<CourseDto>>> GetRecommendedCourses(
+    //    [FromQuery] int userId,
+    //    [FromQuery] int count = 5)
+    //{
+    //    try
+    //    {
+    //        var recommendedCourses = await _courseService.GetRecommendedAsync(userId, count);
+    //        return Ok(recommendedCourses);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
     ///// <summary>
     ///// Gets course statistics
@@ -322,203 +322,203 @@ public class CoursesController : ControllerBase
 
     #region Course Management Operations
 
-    /// <summary>
-    /// Gets courses by level
-    /// </summary>
-    /// <param name="levelId">Level ID</param>
-    /// <returns>Courses for the specified level</returns>
-    /// <response code="200">Returns the courses for the level</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpGet("level/{levelId}")]
-    [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<CourseDto>>> GetCoursesByLevel(int levelId)
-    {
-        try
-        {
-            var courses = await _courseService.GetByLevelAsync(levelId);
-            return Ok(courses);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    ///// <summary>
+    ///// Gets courses by level
+    ///// </summary>
+    ///// <param name="levelId">Level ID</param>
+    ///// <returns>Courses for the specified level</returns>
+    ///// <response code="200">Returns the courses for the level</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpGet("level/{levelId}")]
+    //[AllowAnonymous]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<IEnumerable<CourseDto>>> GetCoursesByLevel(int levelId)
+    //{
+    //    try
+    //    {
+    //        var courses = await _courseService.GetByLevelAsync(levelId);
+    //        return Ok(courses);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
-    /// <summary>
-    /// Gets courses by status
-    /// </summary>
-    /// <param name="statusId">Status ID</param>
-    /// <returns>Courses with the specified status</returns>
-    /// <response code="200">Returns the courses with the status</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpGet("status/{statusId}")]
-    //[Authorize(Policy = "RolesAdminCoach")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<CourseDto>>> GetCoursesByStatus(int statusId)
-    {
-        try
-        {
-            var courses = await _courseService.GetByStatusAsync(statusId);
-            return Ok(courses);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    ///// <summary>
+    ///// Gets courses by status
+    ///// </summary>
+    ///// <param name="statusId">Status ID</param>
+    ///// <returns>Courses with the specified status</returns>
+    ///// <response code="200">Returns the courses with the status</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpGet("status/{statusId}")]
+    ////[Authorize(Policy = "RolesAdminCoach")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<IEnumerable<CourseDto>>> GetCoursesByStatus(int statusId)
+    //{
+    //    try
+    //    {
+    //        var courses = await _courseService.GetByStatusAsync(statusId);
+    //        return Ok(courses);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
-    /// <summary>
-    /// Gets popular courses
-    /// </summary>
-    /// <param name="count">Number of courses to return</param>
-    /// <returns>Popular courses</returns>
-    /// <response code="200">Returns the popular courses</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpGet("popular")]
-    [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<CourseDto>>> GetPopularCourses([FromQuery] int count = 10)
-    {
-        try
-        {
-            var popularCourses = await _courseService.GetPopularCoursesAsync(count);
-            return Ok(popularCourses);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    ///// <summary>
+    ///// Gets popular courses
+    ///// </summary>
+    ///// <param name="count">Number of courses to return</param>
+    ///// <returns>Popular courses</returns>
+    ///// <response code="200">Returns the popular courses</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpGet("popular")]
+    //[AllowAnonymous]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<IEnumerable<CourseDto>>> GetPopularCourses([FromQuery] int count = 10)
+    //{
+    //    try
+    //    {
+    //        var popularCourses = await _courseService.GetPopularCoursesAsync(count);
+    //        return Ok(popularCourses);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
-    /// <summary>
-    /// Gets free courses
-    /// </summary>
-    /// <returns>Free courses</returns>
-    /// <response code="200">Returns the free courses</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpGet("free")]
-    [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<CourseDto>>> GetFreeCourses()
-    {
-        try
-        {
-            var freeCourses = await _courseService.GetFreeCoursesAsync();
-            return Ok(freeCourses);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    ///// <summary>
+    ///// Gets free courses
+    ///// </summary>
+    ///// <returns>Free courses</returns>
+    ///// <response code="200">Returns the free courses</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpGet("free")]
+    //[AllowAnonymous]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<IEnumerable<CourseDto>>> GetFreeCourses()
+    //{
+    //    try
+    //    {
+    //        var freeCourses = await _courseService.GetFreeCoursesAsync();
+    //        return Ok(freeCourses);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
     #endregion
 
     #region Course Status and Level Management
 
-    /// <summary>
-    /// Changes the course status
-    /// </summary>
-    /// <param name="id">Course ID</param>
-    /// <param name="statusId">New status ID</param>
-    /// <returns>The updated course</returns>
-    /// <response code="200">Returns the updated course</response>
-    /// <response code="401">If the user is not authenticated</response>
-    /// <response code="403">If the user doesn't have required role</response>
-    /// <response code="404">If the course was not found</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpPatch("{id}/status")]
-    //[Authorize(Policy = "RolesAdminCoach")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<CourseDto>> ChangeCourseStatus(int id, [FromBody] int statusId)
-    {
-        try
-        {
-            var updatedCourse = await _courseService.ChangeStatusAsync(id, statusId);
-            return Ok(updatedCourse);
-        }
-        catch (ArgumentException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    ///// <summary>
+    ///// Changes the course status
+    ///// </summary>
+    ///// <param name="id">Course ID</param>
+    ///// <param name="statusId">New status ID</param>
+    ///// <returns>The updated course</returns>
+    ///// <response code="200">Returns the updated course</response>
+    ///// <response code="401">If the user is not authenticated</response>
+    ///// <response code="403">If the user doesn't have required role</response>
+    ///// <response code="404">If the course was not found</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpPatch("{id}/status")]
+    ////[Authorize(Policy = "RolesAdminCoach")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status404NotFound)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<CourseDto>> ChangeCourseStatus(int id, [FromBody] int statusId)
+    //{
+    //    try
+    //    {
+    //        var updatedCourse = await _courseService.ChangeStatusAsync(id, statusId);
+    //        return Ok(updatedCourse);
+    //    }
+    //    catch (ArgumentException ex)
+    //    {
+    //        return NotFound(ex.Message);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
-    /// <summary>
-    /// Changes the course level
-    /// </summary>
-    /// <param name="id">Course ID</param>
-    /// <param name="levelId">New level ID</param>
-    /// <returns>The updated course</returns>
-    /// <response code="200">Returns the updated course</response>
-    /// <response code="401">If the user is not authenticated</response>
-    /// <response code="403">If the user doesn't have required role</response>
-    /// <response code="404">If the course was not found</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpPatch("{id}/level")]
-    //[Authorize(Policy = "RolesAdminCoach")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<CourseDto>> ChangeCourseLevel(int id, [FromBody] int levelId)
-    {
-        try
-        {
-            var updatedCourse = await _courseService.ChangeLevelAsync(id, levelId);
-            return Ok(updatedCourse);
-        }
-        catch (ArgumentException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    ///// <summary>
+    ///// Changes the course level
+    ///// </summary>
+    ///// <param name="id">Course ID</param>
+    ///// <param name="levelId">New level ID</param>
+    ///// <returns>The updated course</returns>
+    ///// <response code="200">Returns the updated course</response>
+    ///// <response code="401">If the user is not authenticated</response>
+    ///// <response code="403">If the user doesn't have required role</response>
+    ///// <response code="404">If the course was not found</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpPatch("{id}/level")]
+    ////[Authorize(Policy = "RolesAdminCoach")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status404NotFound)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<CourseDto>> ChangeCourseLevel(int id, [FromBody] int levelId)
+    //{
+    //    try
+    //    {
+    //        var updatedCourse = await _courseService.ChangeLevelAsync(id, levelId);
+    //        return Ok(updatedCourse);
+    //    }
+    //    catch (ArgumentException ex)
+    //    {
+    //        return NotFound(ex.Message);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
-    /// <summary>
-    /// Updates the course price
-    /// </summary>
-    /// <param name="id">Course ID</param>
-    /// <param name="price">New price</param>
-    /// <returns>The updated course</returns>
-    /// <response code="200">Returns the updated course</response>
-    /// <response code="401">If the user is not authenticated</response>
-    /// <response code="403">If the user doesn't have required role</response>
-    /// <response code="404">If the course was not found</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpPatch("{id}/price")]
-    //[Authorize(Policy = "RolesAdminCoach")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<CourseDto>> UpdateCoursePrice(int id, [FromBody] decimal price)
-    {
-        try
-        {
-            var updatedCourse = await _courseService.UpdatePriceAsync(id, price);
-            return Ok(updatedCourse);
-        }
-        catch (ArgumentException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    ///// <summary>
+    ///// Updates the course price
+    ///// </summary>
+    ///// <param name="id">Course ID</param>
+    ///// <param name="price">New price</param>
+    ///// <returns>The updated course</returns>
+    ///// <response code="200">Returns the updated course</response>
+    ///// <response code="401">If the user is not authenticated</response>
+    ///// <response code="403">If the user doesn't have required role</response>
+    ///// <response code="404">If the course was not found</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpPatch("{id}/price")]
+    ////[Authorize(Policy = "RolesAdminCoach")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status404NotFound)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<CourseDto>> UpdateCoursePrice(int id, [FromBody] decimal price)
+    //{
+    //    try
+    //    {
+    //        var updatedCourse = await _courseService.UpdatePriceAsync(id, price);
+    //        return Ok(updatedCourse);
+    //    }
+    //    catch (ArgumentException ex)
+    //    {
+    //        return NotFound(ex.Message);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
     #endregion
 }

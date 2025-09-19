@@ -1,8 +1,9 @@
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MTA.Application.DTOs;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace MTA.Application.Services;
 
@@ -13,11 +14,14 @@ public class LessonService : ILessonService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<LessonService> _logger;
+    private readonly IMapper _mapper;
 
-    public LessonService(IUnitOfWork unitOfWork, ILogger<LessonService> logger)
+
+    public LessonService(IUnitOfWork unitOfWork, ILogger<LessonService> logger, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _mapper = mapper;
     }
 
     /// <summary>
@@ -127,7 +131,7 @@ public class LessonService : ILessonService
     /// <summary>
     /// Create new lesson
     /// </summary>
-    public async Task<LessonDto> CreateAsync(LessonDto lessonDto)
+    public async Task<LessonDto> CreateAsync(CreateLessonDto lessonDto)
     {
         try
         {
@@ -149,21 +153,23 @@ public class LessonService : ILessonService
                 Description = lessonDto.Description,
                 IsFree = lessonDto.IsFree,
                 CourseId = lessonDto.CourseId,
-                Order = maxOrder + 1
+                Order = maxOrder + 1,
+                CreatedAt = DateTime.UtcNow
             };
 
             await _unitOfWork.Repository<Lesson>().AddAsync(lesson);
             await _unitOfWork.SaveChangesAsync();
 
-            // Return the created lesson
-            return await GetByIdAsync(lesson.Id) ?? lessonDto;
+            // Map directly to LessonDto (using AutoMapper or manual mapping)
+            return _mapper.Map<LessonDto>(lesson);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating lesson with title: {Title}", lessonDto.Title);
+            _logger.LogError(ex, "Error creating lesson. Title: {Title}, CourseId: {CourseId}", lessonDto.Title, lessonDto.CourseId);
             throw;
         }
     }
+
 
     /// <summary>
     /// Update existing lesson

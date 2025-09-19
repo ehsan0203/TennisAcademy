@@ -95,7 +95,7 @@ public class RolePermissionService : IRolePermissionService
     /// <summary>
     /// Create new role permission
     /// </summary>
-    public async Task<RolePermissionDto> CreateAsync(RolePermissionDto rolePermissionDto)
+    public async Task<RolePermissionDto> CreateAsync(CreateRolePermissionDto rolePermissionDto)
     {
         // Check if role permission already exists
         var existingRolePermission = await _unitOfWork.Repository<PermissionsRole>().GetAllAsync(rp => 

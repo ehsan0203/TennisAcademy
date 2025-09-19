@@ -13,4 +13,12 @@ namespace MTA.Application.DTOs
         public int SortOrder { get; set; }
         public bool IsActive { get; set; }
     }
+
+    public class CreateFAQCategoryDto 
+    {
+        public required string Title { get; set; }
+        public string? Description { get; set; }
+        public int SortOrder { get; set; }
+        public bool IsActive { get; set; }
+    }
 }

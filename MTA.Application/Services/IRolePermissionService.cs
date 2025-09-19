@@ -51,7 +51,7 @@ public interface IRolePermissionService
     /// </summary>
     /// <param name="rolePermissionDto">Role permission data</param>
     /// <returns>Created role permission</returns>
-    Task<RolePermissionDto> CreateAsync(RolePermissionDto rolePermissionDto);
+    Task<RolePermissionDto> CreateAsync(CreateRolePermissionDto rolePermissionDto);
     
     /// <summary>
     /// Update existing role permission

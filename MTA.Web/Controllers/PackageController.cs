@@ -67,50 +67,50 @@ public class PackageController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get packages by price range
-    /// </summary>
-    [HttpGet("by-price-range")]
-    public async Task<ActionResult<IEnumerable<PackageDto>>> GetPackagesByPriceRange(
-        [FromQuery] decimal minPrice,
-        [FromQuery] decimal maxPrice)
-    {
-        try
-        {
-            var packages = await _packageService.GetByPriceRangeAsync(minPrice, maxPrice);
-            return Ok(packages);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting packages by price range from {MinPrice} to {MaxPrice}", minPrice, maxPrice);
-            return StatusCode(500, "Internal server error");
-        }
-    }
+    ///// <summary>
+    ///// Get packages by price range
+    ///// </summary>
+    //[HttpGet("by-price-range")]
+    //public async Task<ActionResult<IEnumerable<PackageDto>>> GetPackagesByPriceRange(
+    //    [FromQuery] decimal minPrice,
+    //    [FromQuery] decimal maxPrice)
+    //{
+    //    try
+    //    {
+    //        var packages = await _packageService.GetByPriceRangeAsync(minPrice, maxPrice);
+    //        return Ok(packages);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Error getting packages by price range from {MinPrice} to {MaxPrice}", minPrice, maxPrice);
+    //        return StatusCode(500, "Internal server error");
+    //    }
+    //}
 
-    /// <summary>
-    /// Get packages by duration unit
-    /// </summary>
-    [HttpGet("by-duration-unit/{durationUnitId}")]
-    public async Task<ActionResult<IEnumerable<PackageDto>>> GetPackagesByDurationUnit(int durationUnitId)
-    {
-        try
-        {
-            var packages = await _packageService.GetByDurationUnitAsync(durationUnitId);
-            return Ok(packages);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting packages by duration unit ID: {DurationUnitId}", durationUnitId);
-            return StatusCode(500, "Internal server error");
-        }
-    }
+    ///// <summary>
+    ///// Get packages by duration unit
+    ///// </summary>
+    //[HttpGet("by-duration-unit/{durationUnitId}")]
+    //public async Task<ActionResult<IEnumerable<PackageDto>>> GetPackagesByDurationUnit(int durationUnitId)
+    //{
+    //    try
+    //    {
+    //        var packages = await _packageService.GetByDurationUnitAsync(durationUnitId);
+    //        return Ok(packages);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Error getting packages by duration unit ID: {DurationUnitId}", durationUnitId);
+    //        return StatusCode(500, "Internal server error");
+    //    }
+    //}
 
     /// <summary>
     /// Create new package
     /// </summary>
     [HttpPost]
     //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<PackageDto>> CreatePackage([FromBody] PackageDto packageDto)
+    public async Task<ActionResult<PackageDto>> CreatePackage([FromBody] CreatePackageDto packageDto)
     {
         try
         {
@@ -190,74 +190,74 @@ public class PackageController : ControllerBase
 
     #region Advanced Operations
 
-    /// <summary>
-    /// Update package price
-    /// </summary>
-    [HttpPatch("{id}/price")]
-    //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<PackageDto>> UpdatePrice(int id, [FromBody] decimal price)
-    {
-        try
-        {
-            var updatedPackage = await _packageService.UpdatePriceAsync(id, price);
-            return Ok(updatedPackage);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error updating price for package with ID: {PackageId}", id);
-            return StatusCode(500, "Internal server error");
-        }
-    }
+    ///// <summary>
+    ///// Update package price
+    ///// </summary>
+    //[HttpPatch("{id}/price")]
+    ////[Authorize(Roles = "Admin")]
+    //public async Task<ActionResult<PackageDto>> UpdatePrice(int id, [FromBody] decimal price)
+    //{
+    //    try
+    //    {
+    //        var updatedPackage = await _packageService.UpdatePriceAsync(id, price);
+    //        return Ok(updatedPackage);
+    //    }
+    //    catch (InvalidOperationException ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Error updating price for package with ID: {PackageId}", id);
+    //        return StatusCode(500, "Internal server error");
+    //    }
+    //}
 
-    /// <summary>
-    /// Update package capacity
-    /// </summary>
-    [HttpPatch("{id}/capacity")]
-    //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<PackageDto>> UpdateCapacity(int id, [FromBody] UpdateCapacityDto capacityDto)
-    {
-        try
-        {
-            var updatedPackage = await _packageService.UpdateCapacityAsync(id, capacityDto.TicketCount, capacityDto.MessageCount);
-            return Ok(updatedPackage);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error updating capacity for package with ID: {PackageId}", id);
-            return StatusCode(500, "Internal server error");
-        }
-    }
+    ///// <summary>
+    ///// Update package capacity
+    ///// </summary>
+    //[HttpPatch("{id}/capacity")]
+    ////[Authorize(Roles = "Admin")]
+    //public async Task<ActionResult<PackageDto>> UpdateCapacity(int id, [FromBody] UpdateCapacityDto capacityDto)
+    //{
+    //    try
+    //    {
+    //        var updatedPackage = await _packageService.UpdateCapacityAsync(id, capacityDto.TicketCount, capacityDto.MessageCount);
+    //        return Ok(updatedPackage);
+    //    }
+    //    catch (InvalidOperationException ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Error updating capacity for package with ID: {PackageId}", id);
+    //        return StatusCode(500, "Internal server error");
+    //    }
+    //}
 
-    /// <summary>
-    /// Update package duration
-    /// </summary>
-    [HttpPatch("{id}/duration")]
-    //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<PackageDto>> UpdateDuration(int id, [FromBody] UpdateDurationDto durationDto)
-    {
-        try
-        {
-            var updatedPackage = await _packageService.UpdateDurationAsync(id, durationDto.Duration, durationDto.DurationUnitId);
-            return Ok(updatedPackage);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error updating duration for package with ID: {PackageId}", id);
-            return StatusCode(500, "Internal server error");
-        }
-    }
+    ///// <summary>
+    ///// Update package duration
+    ///// </summary>
+    //[HttpPatch("{id}/duration")]
+    ////[Authorize(Roles = "Admin")]
+    //public async Task<ActionResult<PackageDto>> UpdateDuration(int id, [FromBody] UpdateDurationDto durationDto)
+    //{
+    //    try
+    //    {
+    //        var updatedPackage = await _packageService.UpdateDurationAsync(id, durationDto.Duration, durationDto.DurationUnitId);
+    //        return Ok(updatedPackage);
+    //    }
+    //    catch (InvalidOperationException ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Error updating duration for package with ID: {PackageId}", id);
+    //        return StatusCode(500, "Internal server error");
+    //    }
+    //}
 
     #endregion
 

@@ -18,11 +18,27 @@ namespace MTA.Web.Controllers
         }
 
         // GET: api/siterules
-        [HttpGet]
+        [HttpGet("SiteRules")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<LookupDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<LookupDto>>> GetSiteRules([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _lookupService.GetAllAsync(page, pageSize, "SiteRules");
+            var result = await _lookupService.GetAllAsync(page, pageSize, "SiteRule");
+            return Ok(result);
+        }
+
+        [HttpGet("category")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<LookupDto>>> GetCategory([FromQuery] string CategoryName)
+        {
+            var result = await _lookupService.GetByCategoryAsync(CategoryName);
+            return Ok(result);
+        }
+
+        [HttpGet("categories")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<string>>> Categories()
+        {
+            var result = await _lookupService.GetAllCategoriesAsync();
             return Ok(result);
         }
 
@@ -42,7 +58,7 @@ namespace MTA.Web.Controllers
         // POST: api/siterules
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<LookupDto>> Create([FromBody] LookupDto dto)
+        public async Task<ActionResult<LookupDto>> Create([FromBody] CreateLookupDto dto)
         {
             dto.Category = "SiteRules"; // همیشه دسته‌بندی رو SiteRules می‌ذاریم
             var created = await _lookupService.CreateAsync(dto);
@@ -82,6 +98,8 @@ namespace MTA.Web.Controllers
 
             return NoContent();
         }
+
+
     }
 
 }

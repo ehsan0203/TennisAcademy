@@ -20,3 +20,20 @@ public class RoleDto : BaseDto
     /// </summary>
     public int PermissionCount { get; set; }
 }
+public class CreateRoleDto 
+{
+    /// <summary>
+    /// Title of the role
+    /// </summary>
+    public required string Title { get; set; }
+
+    /// <summary>
+    /// Number of accounts with this role
+    /// </summary>
+    public int AccountCount { get; set; }
+
+    /// <summary>
+    /// Number of permissions assigned to this role
+    /// </summary>
+    public int PermissionCount { get; set; }
+}

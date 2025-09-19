@@ -66,7 +66,7 @@ public interface IPackageHistoryService
     /// </summary>
     /// <param name="packageHistoryDto">Package history data</param>
     /// <returns>Created package history</returns>
-    Task<PackageHistoryDto> CreateAsync(PackageHistoryDto packageHistoryDto);
+    Task<PackageHistoryDto> CreateAsync(CreatePackageHistoryDto packageHistoryDto);
     
     /// <summary>
     /// Update existing package history

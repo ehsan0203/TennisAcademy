@@ -52,7 +52,7 @@ public interface ILookupService
     /// </summary>
     /// <param name="lookupDto">Lookup data</param>
     /// <returns>Created lookup</returns>
-    Task<LookupDto> CreateAsync(LookupDto lookupDto);
+    Task<LookupDto> CreateAsync(CreateLookupDto lookupDto);
     
     /// <summary>
     /// Update existing lookup

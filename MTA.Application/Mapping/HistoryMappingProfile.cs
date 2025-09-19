@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using MTA.Domain.Entities;
 using MTA.Application.DTOs;
 
@@ -11,25 +11,24 @@ public class HistoryMappingProfile : BaseMappingProfile
 {
     public HistoryMappingProfile()
     {
-        // UserCourseHistory mappings
-        CreateMap<UserCourseHistory, UserCourseHistoryDto>()
-            .ForMember(dest => dest.CourseId, opt => opt.MapFrom(src => src.CourseId))
-            .ForMember(dest => dest.CourseTitle, opt => opt.MapFrom(src => src.Course.Title))
-            .ForMember(dest => dest.CourseDescription, opt => opt.MapFrom(src => src.Course.Description))
-            .ForMember(dest => dest.CourseImageIcon, opt => opt.MapFrom(src => src.Course.IconMediaFile != null ? src.Course.IconMediaFile.Url : null))
-            .ForMember(dest => dest.CoursePrice, opt => opt.MapFrom(src => src.Course.Price))
-            .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
-            .ForMember(dest => dest.UserFirstName, opt => opt.MapFrom(src => src.Account.UserProfile.FirstName))
-            .ForMember(dest => dest.UserLastName, opt => opt.MapFrom(src => src.Account.UserProfile.LastName))
-            .ForMember(dest => dest.UserEmail, opt => opt.MapFrom(src => src.Account.Email));
-
-        CreateMap<UserCourseHistoryDto, UserCourseHistory>()
-            .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
-            .ForMember(dest => dest.CourseId, opt => opt.MapFrom(src => src.CourseId))
-            .ForMember(dest => dest.Account, opt => opt.Ignore()) 
+        // Mapping برای ایجاد رکورد جدید
+        CreateMap<CreateUserCourseHistoryDto, UserCourseHistory>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.EnrolledAt, opt => opt.Ignore())
+            .ForMember(dest => dest.StatusId, opt => opt.Ignore())
+            .ForMember(dest => dest.Account, opt => opt.Ignore())
             .ForMember(dest => dest.Course, opt => opt.Ignore());
 
+        // Mapping برای آپدیت / بازگرداندن اطلاعات
+        CreateMap<UserCourseHistory, UpdateUserCourseHistoryDto>()
+            .ForMember(dest => dest.CourseId, opt => opt.MapFrom(src => src.CourseId))
+            .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
+            .ForMember(dest => dest.StatusId, opt => opt.MapFrom(src => src.StatusId));
 
-
+        CreateMap<UpdateUserCourseHistoryDto, UserCourseHistory>()
+            .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
+            .ForMember(dest => dest.CourseId, opt => opt.MapFrom(src => src.CourseId))
+            .ForMember(dest => dest.Account, opt => opt.Ignore())
+            .ForMember(dest => dest.Course, opt => opt.Ignore());
     }
 }

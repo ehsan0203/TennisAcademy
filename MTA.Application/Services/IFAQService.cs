@@ -36,7 +36,7 @@ public interface IFAQService
     /// </summary>
     /// <param name="categoryDto">Category data</param>
     /// <returns>Created category</returns>
-    Task<FAQCategoryDto> CreateCategoryAsync(FAQCategoryDto categoryDto);
+    Task<FAQCategoryDto> CreateCategoryAsync(CreateFAQCategoryDto categoryDto);
     
     /// <summary>
     /// Update existing FAQ category
@@ -75,7 +75,7 @@ public interface IFAQService
     /// </summary>
     /// <param name="questionDto">Question data</param>
     /// <returns>Created question</returns>
-    Task<QuestionDto> CreateQuestionAsync(QuestionDto questionDto);
+    Task<QuestionDto> CreateQuestionAsync(CreateQuestionDto questionDto);
     
     /// <summary>
     /// Update existing question

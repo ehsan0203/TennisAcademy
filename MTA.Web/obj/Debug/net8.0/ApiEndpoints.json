@@ -441,129 +441,6 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.CoursesController",
-    "Method": "ChangeCourseLevel",
-    "RelativePath": "api/Courses/{id}/level",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "levelId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.CourseDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.CoursesController",
-    "Method": "UpdateCoursePrice",
-    "RelativePath": "api/Courses/{id}/price",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "price",
-        "Type": "System.Decimal",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.CourseDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.CoursesController",
-    "Method": "ChangeCourseStatus",
-    "RelativePath": "api/Courses/{id}/status",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "statusId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.CourseDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.CoursesController",
     "Method": "GetFilteredCourses",
     "RelativePath": "api/Courses/filter",
     "HttpMethod": "POST",
@@ -590,121 +467,6 @@
           "application/json"
         ],
         "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.CoursesController",
-    "Method": "GetFreeCourses",
-    "RelativePath": "api/Courses/free",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.CourseDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.CoursesController",
-    "Method": "GetCoursesByLevel",
-    "RelativePath": "api/Courses/level/{levelId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "levelId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.CourseDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.CoursesController",
-    "Method": "GetPopularCourses",
-    "RelativePath": "api/Courses/popular",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "count",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.CourseDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.CoursesController",
-    "Method": "GetRecommendedCourses",
-    "RelativePath": "api/Courses/recommended",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "count",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.CourseDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
       },
       {
         "Type": "System.Void",
@@ -751,35 +513,6 @@
           "application/json"
         ],
         "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.CoursesController",
-    "Method": "GetCoursesByStatus",
-    "RelativePath": "api/Courses/status/{statusId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "statusId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.CourseDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
       },
       {
         "Type": "System.Void",
@@ -921,7 +654,7 @@
     "Parameters": [
       {
         "Name": "categoryDto",
-        "Type": "MTA.Application.DTOs.FAQCategoryDto",
+        "Type": "MTA.Application.DTOs.CreateFAQCategoryDto",
         "IsRequired": true
       }
     ],
@@ -971,7 +704,7 @@
     "Parameters": [
       {
         "Name": "questionDto",
-        "Type": "MTA.Application.DTOs.QuestionDto",
+        "Type": "MTA.Application.DTOs.CreateQuestionDto",
         "IsRequired": true
       }
     ],
@@ -1463,7 +1196,7 @@
     "Parameters": [
       {
         "Name": "lessonDto",
-        "Type": "MTA.Application.DTOs.LessonDto",
+        "Type": "MTA.Application.DTOs.CreateLessonDto",
         "IsRequired": true
       }
     ],
@@ -1699,7 +1432,7 @@
     "Parameters": [
       {
         "Name": "levelDto",
-        "Type": "MTA.Application.DTOs.LevelDto",
+        "Type": "MTA.Application.DTOs.CreateLevelDto",
         "IsRequired": true
       }
     ],
@@ -2177,67 +1910,6 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.MessageController",
-    "Method": "GetMessages",
-    "RelativePath": "api/Message",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "pageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "searchTerm",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ticketId",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "senderId",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "isRead",
-        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.Services.PaginatedResult\u00601[[MTA.Application.DTOs.MessageDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.MessageController",
     "Method": "CreateMessage",
     "RelativePath": "api/Message",
     "HttpMethod": "POST",
@@ -2246,7 +1918,7 @@
     "Parameters": [
       {
         "Name": "messageDto",
-        "Type": "MTA.Application.DTOs.MessageDto",
+        "Type": "MTA.Application.DTOs.CreateMessageDto",
         "IsRequired": true
       }
     ],
@@ -2464,76 +2136,6 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.MessageController",
-    "Method": "GetMessagesByDateRange",
-    "RelativePath": "api/Message/date-range",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "startDate",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "endDate",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.MessageDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.MessageController",
-    "Method": "GetMessagesBySender",
-    "RelativePath": "api/Message/sender/{senderId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "senderId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.MessageDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.MessageController",
     "Method": "GetMessagesByTicket",
     "RelativePath": "api/Message/ticket/{ticketId}",
     "HttpMethod": "GET",
@@ -2620,29 +2222,6 @@
     ]
   },
   {
-    "ContainingType": "MTA.Web.Controllers.MessageController",
-    "Method": "GetUnreadMessages",
-    "RelativePath": "api/Message/unread",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.MessageDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
     "ContainingType": "MTA.Web.Controllers.PackageController",
     "Method": "GetPackages",
     "RelativePath": "api/Package",
@@ -2703,7 +2282,7 @@
     "Parameters": [
       {
         "Name": "packageDto",
-        "Type": "MTA.Application.DTOs.PackageDto",
+        "Type": "MTA.Application.DTOs.CreatePackageDto",
         "IsRequired": true
       }
     ],
@@ -2791,156 +2370,6 @@
       }
     ],
     "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.PackageController",
-    "Method": "UpdateCapacity",
-    "RelativePath": "api/Package/{id}/capacity",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "capacityDto",
-        "Type": "MTA.Application.DTOs.UpdateCapacityDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.PackageDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.PackageController",
-    "Method": "UpdateDuration",
-    "RelativePath": "api/Package/{id}/duration",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "durationDto",
-        "Type": "MTA.Application.DTOs.UpdateDurationDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.PackageDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.PackageController",
-    "Method": "UpdatePrice",
-    "RelativePath": "api/Package/{id}/price",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "price",
-        "Type": "System.Decimal",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.PackageDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.PackageController",
-    "Method": "GetPackagesByDurationUnit",
-    "RelativePath": "api/Package/by-duration-unit/{durationUnitId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "durationUnitId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.PackageDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.PackageController",
-    "Method": "GetPackagesByPriceRange",
-    "RelativePath": "api/Package/by-price-range",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "minPrice",
-        "Type": "System.Decimal",
-        "IsRequired": false
-      },
-      {
-        "Name": "maxPrice",
-        "Type": "System.Decimal",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.PackageDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
   },
   {
     "ContainingType": "MTA.Web.Controllers.PackageController",
@@ -3034,7 +2463,7 @@
     "Parameters": [
       {
         "Name": "packageHistoryDto",
-        "Type": "MTA.Application.DTOs.PackageHistoryDto",
+        "Type": "MTA.Application.DTOs.CreatePackageHistoryDto",
         "IsRequired": true
       }
     ],
@@ -3180,136 +2609,6 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.PackageHistoryController",
-    "Method": "ExtendExpiration",
-    "RelativePath": "api/PackageHistory/{id}/extend-expiration",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "newExpiryDate",
-        "Type": "System.DateTime",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.PackageHistoryDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.PackageHistoryController",
-    "Method": "UpdateRemainingMessages",
-    "RelativePath": "api/PackageHistory/{id}/remaining-messages",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "remainingMessages",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.PackageHistoryDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.PackageHistoryController",
-    "Method": "UpdateRemainingTickets",
-    "RelativePath": "api/PackageHistory/{id}/remaining-tickets",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "remainingTickets",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.PackageHistoryDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.PackageHistoryController",
     "Method": "GetPackageHistoriesByAccount",
     "RelativePath": "api/PackageHistory/account/{accountId}",
     "HttpMethod": "GET",
@@ -3397,146 +2696,6 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.PackageHistoryController",
-    "Method": "GetUserPackageUsageSummary",
-    "RelativePath": "api/PackageHistory/account/{accountId}/usage-summary",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "accountId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.Services.UserPackageUsageSummaryDto",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.PackageHistoryController",
-    "Method": "CheckUserHasActivePackage",
-    "RelativePath": "api/PackageHistory/check-active",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "accountId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "packageId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Boolean",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.PackageHistoryController",
-    "Method": "GetPackageHistoriesByDateRange",
-    "RelativePath": "api/PackageHistory/date-range",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "startDate",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "endDate",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.PackageHistoryDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.PackageHistoryController",
-    "Method": "GetExpiringPackages",
-    "RelativePath": "api/PackageHistory/expiring",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "days",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.PackageHistoryDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.PackageHistoryController",
     "Method": "GetPackageHistoriesByPackage",
     "RelativePath": "api/PackageHistory/package/{packageId}",
     "HttpMethod": "GET",
@@ -3552,29 +2711,6 @@
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.PackageHistoryDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.PackageHistoryController",
-    "Method": "GetPackageHistoryStatistics",
-    "RelativePath": "api/PackageHistory/statistics",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.Services.PackageHistoryStatisticsDto",
         "MediaTypes": [
           "application/json"
         ],
@@ -3633,7 +2769,7 @@
     "Parameters": [
       {
         "Name": "permissionDto",
-        "Type": "MTA.Application.DTOs.PermissionDto",
+        "Type": "MTA.Application.DTOs.CreatePermissionDto",
         "IsRequired": true
       }
     ],
@@ -3809,7 +2945,7 @@
     "Parameters": [
       {
         "Name": "rolePermissionDto",
-        "Type": "MTA.Application.DTOs.RolePermissionDto",
+        "Type": "MTA.Application.DTOs.CreateRolePermissionDto",
         "IsRequired": true
       }
     ],
@@ -3996,120 +3132,6 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.RolePermissionController",
-    "Method": "BulkAssignPermissionsToRole",
-    "RelativePath": "api/RolePermission/bulk-assign",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "roleId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "permissionIds",
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.RolePermissionDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 201
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.RolePermissionController",
-    "Method": "BulkRemovePermissionsFromRole",
-    "RelativePath": "api/RolePermission/bulk-remove",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "roleId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "permissionIds",
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 204
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.RolePermissionController",
-    "Method": "CheckRoleHasPermission",
-    "RelativePath": "api/RolePermission/check",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "roleId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "permissionId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Boolean",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.RolePermissionController",
     "Method": "GetRolePermissionsByPermission",
     "RelativePath": "api/RolePermission/permission/{permissionId}",
     "HttpMethod": "GET",
@@ -4252,7 +3274,7 @@
     "Parameters": [
       {
         "Name": "roleDto",
-        "Type": "MTA.Application.DTOs.RoleDto",
+        "Type": "MTA.Application.DTOs.CreateRoleDto",
         "IsRequired": true
       }
     ],
@@ -4447,37 +3469,6 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.SiteRulesController",
-    "Method": "GetAll",
-    "RelativePath": "api/SiteRules",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "pageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.LookupDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.SiteRulesController",
     "Method": "Create",
     "RelativePath": "api/SiteRules",
     "HttpMethod": "POST",
@@ -4486,7 +3477,7 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "MTA.Application.DTOs.LookupDto",
+        "Type": "MTA.Application.DTOs.CreateLookupDto",
         "IsRequired": true
       }
     ],
@@ -4605,6 +3596,83 @@
     ]
   },
   {
+    "ContainingType": "MTA.Web.Controllers.SiteRulesController",
+    "Method": "Categories",
+    "RelativePath": "api/SiteRules/categories",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.SiteRulesController",
+    "Method": "GetCategory",
+    "RelativePath": "api/SiteRules/category",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "CategoryName",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.LookupDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MTA.Web.Controllers.SiteRulesController",
+    "Method": "GetSiteRules",
+    "RelativePath": "api/SiteRules/SiteRules",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.LookupDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "MTA.Web.Controllers.TicketsController",
     "Method": "GetTickets",
     "RelativePath": "api/Tickets",
@@ -4637,7 +3705,7 @@
     "Parameters": [
       {
         "Name": "ticketDto",
-        "Type": "MTA.Application.DTOs.TicketDto",
+        "Type": "MTA.Application.DTOs.CreateTicketDto",
         "IsRequired": true
       }
     ],
@@ -4929,99 +3997,6 @@
   },
   {
     "ContainingType": "MTA.Web.Controllers.UserController",
-    "Method": "UpdateAvatar",
-    "RelativePath": "api/User/{id}/avatar",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "ImageUrl",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.User.UserProfileDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.UserController",
-    "Method": "UpdateExperience",
-    "RelativePath": "api/User/{id}/experience",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "ExperienceId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.User.UserProfileDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.UserController",
-    "Method": "UpdateSkillLevel",
-    "RelativePath": "api/User/{id}/skill-level",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "SkillLevelId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.DTOs.User.UserProfileDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.UserController",
     "Method": "GetClaims",
     "RelativePath": "api/User/debug/claims",
     "HttpMethod": "GET",
@@ -5033,15 +4008,45 @@
   {
     "ContainingType": "MTA.Web.Controllers.UserController",
     "Method": "QueryUsers",
-    "RelativePath": "api/User/query",
-    "HttpMethod": "POST",
+    "RelativePath": "api/User/UserSearch",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "queryDto",
-        "Type": "MTA.Application.DTOs.User.UserSearchDto",
-        "IsRequired": true
+        "Name": "SearchTerm",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "RoleId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "SkillLevelId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "IsActive",
+        "Type": "System.Nullable\u00601[[System.Boolean, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "Experience",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "Page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -5087,7 +4092,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "MTA.Application.Services.PaginatedResult\u00601[[MTA.Application.DTOs.UserCourseHistoryDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "MTA.Application.Services.PaginatedResult\u00601[[MTA.Application.DTOs.UpdateUserCourseHistoryDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -5117,13 +4122,13 @@
     "Parameters": [
       {
         "Name": "userCourseHistoryDto",
-        "Type": "MTA.Application.DTOs.UserCourseHistoryDto",
+        "Type": "MTA.Application.DTOs.CreateUserCourseHistoryDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "MTA.Application.DTOs.UserCourseHistoryDto",
+        "Type": "MTA.Application.DTOs.UpdateUserCourseHistoryDto",
         "MediaTypes": [
           "application/json"
         ],
@@ -5159,7 +4164,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "MTA.Application.DTOs.UserCourseHistoryDto",
+        "Type": "MTA.Application.DTOs.UpdateUserCourseHistoryDto",
         "MediaTypes": [
           "application/json"
         ],
@@ -5194,13 +4199,13 @@
       },
       {
         "Name": "userCourseHistoryDto",
-        "Type": "MTA.Application.DTOs.UserCourseHistoryDto",
+        "Type": "MTA.Application.DTOs.UpdateUserCourseHistoryDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "MTA.Application.DTOs.UserCourseHistoryDto",
+        "Type": "MTA.Application.DTOs.UpdateUserCourseHistoryDto",
         "MediaTypes": [
           "application/json"
         ],
@@ -5277,41 +4282,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.UserCourseHistoryDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.UserCourseHistoryController",
-    "Method": "CheckUserHasPurchasedCourse",
-    "RelativePath": "api/UserCourseHistory/check-purchase",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "accountId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "courseId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Boolean",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.UpdateUserCourseHistoryDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -5340,71 +4311,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.UserCourseHistoryDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.UserCourseHistoryController",
-    "Method": "GetUserCourseHistoriesByDateRange",
-    "RelativePath": "api/UserCourseHistory/date-range",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "startDate",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "endDate",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.UserCourseHistoryDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "MTA.Web.Controllers.UserCourseHistoryController",
-    "Method": "GetUserCourseHistoryStatistics",
-    "RelativePath": "api/UserCourseHistory/statistics",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "MTA.Application.Services.UserCourseHistoryStatisticsDto",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[MTA.Application.DTOs.UpdateUserCourseHistoryDto, MTA.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "application/json"
         ],

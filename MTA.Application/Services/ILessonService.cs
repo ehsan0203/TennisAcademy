@@ -37,7 +37,7 @@ public interface ILessonService
     /// </summary>
     /// <param name="lessonDto">Lesson data</param>
     /// <returns>Created lesson</returns>
-    Task<LessonDto> CreateAsync(LessonDto lessonDto);
+    Task<LessonDto> CreateAsync(CreateLessonDto lessonDto);
     
     /// <summary>
     /// Update existing lesson

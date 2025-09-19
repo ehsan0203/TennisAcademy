@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using MTA.Domain.Entities;
 using MTA.Application.DTOs;
 
@@ -42,5 +42,22 @@ public class PackageHistoryMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt))
             .ForMember(dest => dest.Package, opt => opt.Ignore())
             .ForMember(dest => dest.Account, opt => opt.Ignore());
+
+        CreateMap<CreatePackageHistoryDto, PackageHistory>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.ExpiredDate, opt => opt.Ignore()) // مقداردهی دستی در Service
+            .ForMember(dest => dest.RemainingTickets, opt => opt.Ignore())
+            .ForMember(dest => dest.RemainingMessages, opt => opt.Ignore())
+            .ForMember(dest => dest.Package, opt => opt.Ignore())
+            .ForMember(dest => dest.Account, opt => opt.Ignore());
+
+        CreateMap<PackageHistory, PackageHistoryDto>()
+            .ForMember(dest => dest.PackageTitle, opt => opt.MapFrom(src => src.Package.Title))
+            .ForMember(dest => dest.PackagePrice, opt => opt.MapFrom(src => src.Package.Price))
+            .ForMember(dest => dest.UserFirstName, opt => opt.MapFrom(src => src.Account.UserProfile.FirstName))
+            .ForMember(dest => dest.UserLastName, opt => opt.MapFrom(src => src.Account.UserProfile.LastName))
+            .ForMember(dest => dest.UserEmail, opt => opt.MapFrom(src => src.Account.Email))
+            .ForMember(dest => dest.IsExpired, opt => opt.MapFrom(src => src.ExpiredDate < DateTime.UtcNow));
+
     }
 }

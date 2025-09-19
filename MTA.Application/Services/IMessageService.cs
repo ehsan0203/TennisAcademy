@@ -58,7 +58,7 @@ public interface IMessageService
     /// </summary>
     /// <param name="messageDto">Message data</param>
     /// <returns>Created message</returns>
-    Task<MessageDto> CreateAsync(MessageDto messageDto);
+    Task<MessageDto> CreateAsync(CreateMessageDto messageDto);
     
     /// <summary>
     /// Update existing message

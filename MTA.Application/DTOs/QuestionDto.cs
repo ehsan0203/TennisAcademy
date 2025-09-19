@@ -18,3 +18,20 @@ public class QuestionDto : BaseDto
     public int CategoryId { get; set; }
     public string? CategoryTitle { get; set; }
 }
+
+public class CreateQuestionDto 
+{
+    /// <summary>
+    /// The question text
+    /// </summary>
+    public required string QuestionText { get; set; }
+
+    /// <summary>
+    /// The answer text
+    /// </summary>
+    public required string AnswerText { get; set; }
+    public bool IsActive { get; set; }
+    public int CategoryId { get; set; }
+    public string? CategoryTitle { get; set; }
+}
+

@@ -112,7 +112,7 @@ public class RolesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<RoleDto>> CreateRole([FromBody] RoleDto roleDto)
+    public async Task<ActionResult<RoleDto>> CreateRole([FromBody] CreateRoleDto roleDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

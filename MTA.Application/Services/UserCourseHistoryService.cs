@@ -1,4 +1,4 @@
-using MTA.Application.DTOs;
+﻿using MTA.Application.DTOs;
 using MTA.Application.Services;
 using MTA.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -16,15 +16,17 @@ public class UserCourseHistoryService : IUserCourseHistoryService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ILogger<UserCourseHistoryService> _logger;
+    private readonly ILookupService _lookupService;
 
-    public UserCourseHistoryService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<UserCourseHistoryService> logger)
+    public UserCourseHistoryService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<UserCourseHistoryService> logger, ILookupService lookupService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _logger = logger;
+        _lookupService = lookupService;
     }
 
-    public async Task<PaginatedResult<UserCourseHistoryDto>> GetAllAsync(int page = 1, int pageSize = 10, int? accountId = null, int? courseId = null)
+    public async Task<PaginatedResult<UpdateUserCourseHistoryDto>> GetAllAsync(int page = 1, int pageSize = 10, int? accountId = null, int? courseId = null)
     {
         try
         {
@@ -51,9 +53,9 @@ public class UserCourseHistoryService : IUserCourseHistoryService
                 .Take(pageSize)
                 .ToListAsync();
 
-            var dtos = _mapper.Map<IEnumerable<UserCourseHistoryDto>>(items);
+            var dtos = _mapper.Map<IEnumerable<UpdateUserCourseHistoryDto>>(items);
 
-            return new PaginatedResult<UserCourseHistoryDto>
+            return new PaginatedResult<UpdateUserCourseHistoryDto>
             {
                 Data = dtos,
                 TotalCount = totalCount,
@@ -68,7 +70,7 @@ public class UserCourseHistoryService : IUserCourseHistoryService
         }
     }
 
-    public async Task<UserCourseHistoryDto?> GetByIdAsync(int id)
+    public async Task<UpdateUserCourseHistoryDto?> GetByIdAsync(int id)
     {
         try
         {
@@ -79,7 +81,7 @@ public class UserCourseHistoryService : IUserCourseHistoryService
                 .Include(uch => uch.Status)
                 .FirstOrDefaultAsync(uch => uch.Id == id);
 
-            return userCourseHistory != null ? _mapper.Map<UserCourseHistoryDto>(userCourseHistory) : null;
+            return userCourseHistory != null ? _mapper.Map<UpdateUserCourseHistoryDto>(userCourseHistory) : null;
         }
         catch (Exception ex)
         {
@@ -88,7 +90,7 @@ public class UserCourseHistoryService : IUserCourseHistoryService
         }
     }
 
-    public async Task<IEnumerable<UserCourseHistoryDto>> GetByAccountAsync(int accountId)
+    public async Task<IEnumerable<UpdateUserCourseHistoryDto>> GetByAccountAsync(int accountId)
     {
         try
         {
@@ -101,7 +103,7 @@ public class UserCourseHistoryService : IUserCourseHistoryService
                 .OrderByDescending(uch => uch.EnrolledAt)
                 .ToListAsync();
 
-            return _mapper.Map<IEnumerable<UserCourseHistoryDto>>(userCourseHistories);
+            return _mapper.Map<IEnumerable<UpdateUserCourseHistoryDto>>(userCourseHistories);
         }
         catch (Exception ex)
         {
@@ -110,7 +112,7 @@ public class UserCourseHistoryService : IUserCourseHistoryService
         }
     }
 
-    public async Task<IEnumerable<UserCourseHistoryDto>> GetByCourseAsync(int courseId)
+    public async Task<IEnumerable<UpdateUserCourseHistoryDto>> GetByCourseAsync(int courseId)
     {
         try
         {
@@ -123,7 +125,7 @@ public class UserCourseHistoryService : IUserCourseHistoryService
                 .OrderByDescending(uch => uch.EnrolledAt)
                 .ToListAsync();
 
-            return _mapper.Map<IEnumerable<UserCourseHistoryDto>>(userCourseHistories);
+            return _mapper.Map<IEnumerable<UpdateUserCourseHistoryDto>>(userCourseHistories);
         }
         catch (Exception ex)
         {
@@ -146,25 +148,36 @@ public class UserCourseHistoryService : IUserCourseHistoryService
         }
     }
 
-    public async Task<UserCourseHistoryDto> CreateAsync(UserCourseHistoryDto userCourseHistoryDto)
+    public async Task<UpdateUserCourseHistoryDto> CreateAsync(CreateUserCourseHistoryDto userCourseHistoryDto)
     {
         try
         {
-            // Check if user already has this course
-            var existing = await _unitOfWork.Repository<UserCourseHistory>().GetQueryable()
+            // بررسی اینکه کاربر قبلاً این دوره را خریده است
+            var existing = await _unitOfWork.Repository<UserCourseHistory>()
+                .GetQueryable()
                 .AnyAsync(uch => uch.AccountId == userCourseHistoryDto.AccountId && uch.CourseId == userCourseHistoryDto.CourseId);
 
             if (existing)
                 throw new InvalidOperationException("User has already purchased this course");
 
-            var userCourseHistory = _mapper.Map<UserCourseHistory>(userCourseHistoryDto);
-            userCourseHistory.EnrolledAt = DateTime.UtcNow;
-            userCourseHistory.StatusId = 1; // Assuming 1 is "Active" status
+            // دریافت StatusId از جدول Lookups
+            var activeStatusLookup = await _lookupService.GetByCategoryAndKeyAsync("UserCourseStatus", "Active");
+            if (activeStatusLookup == null)
+                throw new InvalidOperationException("Active status not found in Lookups");
+
+            var userCourseHistory = new UserCourseHistory
+            {
+                AccountId = userCourseHistoryDto.AccountId,
+                CourseId = userCourseHistoryDto.CourseId,
+                EnrolledAt = DateTime.UtcNow,
+                StatusId = activeStatusLookup.Id // مقدار پویا
+            };
 
             var created = await _unitOfWork.Repository<UserCourseHistory>().AddAsync(userCourseHistory);
             await _unitOfWork.SaveChangesAsync();
 
-            return await GetByIdAsync(created.Id) ?? throw new InvalidOperationException("Failed to retrieve created user course history");
+            return await GetByIdAsync(created.Id) ??
+                   throw new InvalidOperationException("Failed to retrieve created user course history");
         }
         catch (Exception ex)
         {
@@ -173,7 +186,8 @@ public class UserCourseHistoryService : IUserCourseHistoryService
         }
     }
 
-    public async Task<UserCourseHistoryDto> UpdateAsync(int id, UserCourseHistoryDto userCourseHistoryDto)
+
+    public async Task<UpdateUserCourseHistoryDto> UpdateAsync(int id, UpdateUserCourseHistoryDto userCourseHistoryDto)
     {
         try
         {
@@ -260,7 +274,7 @@ public class UserCourseHistoryService : IUserCourseHistoryService
         }
     }
 
-    public async Task<IEnumerable<UserCourseHistoryDto>> GetByDateRangeAsync(DateTime startDate, DateTime endDate)
+    public async Task<IEnumerable<UpdateUserCourseHistoryDto>> GetByDateRangeAsync(DateTime startDate, DateTime endDate)
     {
         try
         {
@@ -273,7 +287,7 @@ public class UserCourseHistoryService : IUserCourseHistoryService
                 .OrderByDescending(uch => uch.EnrolledAt)
                 .ToListAsync();
 
-            return _mapper.Map<IEnumerable<UserCourseHistoryDto>>(userCourseHistories);
+            return _mapper.Map<IEnumerable<UpdateUserCourseHistoryDto>>(userCourseHistories);
         }
         catch (Exception ex)
         {

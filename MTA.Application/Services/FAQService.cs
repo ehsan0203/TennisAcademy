@@ -67,7 +67,7 @@ public class FAQService : IFAQService
         return _mapper.Map<FAQCategoryDto>(category);
     }
 
-    public async Task<FAQCategoryDto> CreateCategoryAsync(FAQCategoryDto categoryDto)
+    public async Task<FAQCategoryDto> CreateCategoryAsync(CreateFAQCategoryDto categoryDto)
     {
         var category = _mapper.Map<FAQCategory>(categoryDto);
         category.CreatedAt = DateTime.UtcNow;
@@ -174,15 +174,21 @@ public class FAQService : IFAQService
         };
     }
 
-    public async Task<QuestionDto> CreateQuestionAsync(QuestionDto questionDto)
+    public async Task<QuestionDto> CreateQuestionAsync(CreateQuestionDto questionDto)
     {
         var question = _mapper.Map<QuestionFAQ>(questionDto);
         question.CreatedAt = DateTime.UtcNow;
         
         await _unitOfWork.Repository<QuestionFAQ>().AddAsync(question);
         await _unitOfWork.SaveChangesAsync();
-        
-        return await GetQuestionByIdAsync(question.Id) ?? questionDto;
+
+        var result = await GetQuestionByIdAsync(question.Id);
+        if (result == null)
+        {
+            throw new InvalidOperationException("Failed to retrieve created question.");
+        }
+
+        return result;
     }
 
     public async Task<QuestionDto> UpdateQuestionAsync(int id, QuestionDto questionDto)

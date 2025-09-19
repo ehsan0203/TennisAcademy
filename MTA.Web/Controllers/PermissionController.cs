@@ -90,7 +90,7 @@ public class PermissionController : ControllerBase
     /// Create new permission
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<PermissionDto>> CreatePermission([FromBody] PermissionDto permissionDto)
+    public async Task<ActionResult<PermissionDto>> CreatePermission([FromBody] CreatePermissionDto permissionDto)
     {
         try
         {

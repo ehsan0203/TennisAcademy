@@ -1,4 +1,5 @@
-using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MTA.Application.DTOs;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
@@ -133,16 +134,73 @@ public class PackageHistoryService : IPackageHistoryService
     /// <summary>
     /// Create new package history
     /// </summary>
-    public async Task<PackageHistoryDto> CreateAsync(PackageHistoryDto packageHistoryDto)
+    //public async Task<PackageHistoryDto> CreateAsync(CreatePackageHistoryDto packageHistoryDto)
+    //{
+    //    var packageHistory = _mapper.Map<PackageHistory>(packageHistoryDto);
+    //    packageHistory.CreatedAt = DateTime.UtcNow;
+
+    //    var createdPackageHistory = await _unitOfWork.Repository<PackageHistory>().AddAsync(packageHistory);
+    //    await _unitOfWork.SaveChangesAsync();
+
+    //    return _mapper.Map<PackageHistoryDto>(createdPackageHistory);
+    //}
+
+    public async Task<PackageHistoryDto> CreateAsync(CreatePackageHistoryDto dto)
     {
-        var packageHistory = _mapper.Map<PackageHistory>(packageHistoryDto);
-        packageHistory.CreatedAt = DateTime.UtcNow;
-        
-        var createdPackageHistory = await _unitOfWork.Repository<PackageHistory>().AddAsync(packageHistory);
+        // پیدا کردن پکیج
+        var package = await _unitOfWork.Repository<Package>()
+            .GetQueryable()
+            .FirstOrDefaultAsync(p => p.Id == dto.PackageId);
+
+        if (package == null)
+            throw new KeyNotFoundException("Package not found");
+
+        // پیدا کردن اکانت
+        var account = await _unitOfWork.Repository<Account>()
+            .GetQueryable()
+            .Include(a => a.UserProfile) // فرض می‌کنیم UserProfile حاوی FirstName و LastName است
+            .FirstOrDefaultAsync(a => a.Id == dto.AccountId);
+
+        if (account == null)
+            throw new KeyNotFoundException("Account not found");
+
+        // ایجاد PackageHistory
+        var packageHistory = new PackageHistory
+        {
+            PackageId = package.Id,
+            AccountId = account.Id,
+            Package = package,
+            Account = account,
+            CreatedAt = DateTime.UtcNow,
+            ExpiredDate = DateTime.UtcNow.AddMonths(package.Duration), // مثال: Duration ماه
+            RemainingTickets = package.TicketCount,
+            RemainingMessages = package.MessageCount
+        };
+
+        // ذخیره در دیتابیس
+        var created = await _unitOfWork.Repository<PackageHistory>().AddAsync(packageHistory);
         await _unitOfWork.SaveChangesAsync();
-        
-        return _mapper.Map<PackageHistoryDto>(createdPackageHistory);
+
+        // تبدیل به DTO
+        var result = new PackageHistoryDto
+        {
+            Id = created.Id,
+            PackageId = package.Id,
+            PackageTitle = package.Title,
+            PackagePrice = package.Price,
+            RemainingTickets = created.RemainingTickets,
+            RemainingMessages = created.RemainingMessages,
+            ExpiredDate = created.ExpiredDate,
+            AccountId = account.Id,
+            UserFirstName = account.UserProfile?.FirstName,
+            UserLastName = account.UserProfile?.LastName,
+            UserEmail = account.Email,
+            IsExpired = created.ExpiredDate < DateTime.UtcNow
+        };
+
+        return result;
     }
+
 
     /// <summary>
     /// Update existing package history

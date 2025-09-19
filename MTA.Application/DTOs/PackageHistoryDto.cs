@@ -70,3 +70,22 @@ public class PackageHistoryDto : BaseDto
     /// </summary>
     public bool IsExpired { get; set; }
 }
+
+
+public class CreatePackageHistoryDto 
+{
+       /// <summary>
+    /// Package ID
+    /// </summary>
+    public int PackageId { get; set; }
+
+    /// <summary>
+    /// Account ID
+    /// </summary>
+    public int AccountId { get; set; }
+
+    /// <summary>
+    /// Whether the package is expired
+    /// </summary>
+    public bool IsExpired { get; set; }
+}

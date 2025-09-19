@@ -38,7 +38,7 @@ public class UserCourseHistoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<PaginatedResult<UserCourseHistoryDto>>> GetUserCourseHistories(
+    public async Task<ActionResult<PaginatedResult<UpdateUserCourseHistoryDto>>> GetUserCourseHistories(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
         [FromQuery] int? accountId = null,
@@ -67,7 +67,7 @@ public class UserCourseHistoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<UserCourseHistoryDto>> GetUserCourseHistory(int id)
+    public async Task<ActionResult<UpdateUserCourseHistoryDto>> GetUserCourseHistory(int id)
     {
         try
         {
@@ -95,7 +95,7 @@ public class UserCourseHistoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<UserCourseHistoryDto>> CreateUserCourseHistory([FromBody] UserCourseHistoryDto userCourseHistoryDto)
+    public async Task<ActionResult<UpdateUserCourseHistoryDto>> CreateUserCourseHistory([FromBody] CreateUserCourseHistoryDto userCourseHistoryDto)
     {
         try
         {
@@ -130,7 +130,7 @@ public class UserCourseHistoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<UserCourseHistoryDto>> UpdateUserCourseHistory(int id, [FromBody] UserCourseHistoryDto userCourseHistoryDto)
+    public async Task<ActionResult<UpdateUserCourseHistoryDto>> UpdateUserCourseHistory(int id, [FromBody] UpdateUserCourseHistoryDto userCourseHistoryDto)
     {
         try
         {
@@ -192,7 +192,7 @@ public class UserCourseHistoryController : ControllerBase
     [HttpGet("account/{accountId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<UserCourseHistoryDto>>> GetUserCourseHistoriesByAccount(int accountId)
+    public async Task<ActionResult<IEnumerable<UpdateUserCourseHistoryDto>>> GetUserCourseHistoriesByAccount(int accountId)
     {
         try
         {
@@ -215,7 +215,7 @@ public class UserCourseHistoryController : ControllerBase
     [HttpGet("course/{courseId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<UserCourseHistoryDto>>> GetUserCourseHistoriesByCourse(int courseId)
+    public async Task<ActionResult<IEnumerable<UpdateUserCourseHistoryDto>>> GetUserCourseHistoriesByCourse(int courseId)
     {
         try
         {
@@ -228,88 +228,88 @@ public class UserCourseHistoryController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Checks if a user has purchased a specific course
-    /// </summary>
-    /// <param name="accountId">The ID of the account</param>
-    /// <param name="courseId">The ID of the course</param>
-    /// <returns>True if user has purchased the course</returns>
-    /// <response code="200">Returns the result</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpGet("check-purchase")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<bool>> CheckUserHasPurchasedCourse(
-        [FromQuery] int accountId,
-        [FromQuery] int courseId)
-    {
-        try
-        {
-            var hasPurchased = await _userCourseHistoryService.UserHasPurchasedCourseAsync(accountId, courseId);
-            return Ok(hasPurchased);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    ///// <summary>
+    ///// Checks if a user has purchased a specific course
+    ///// </summary>
+    ///// <param name="accountId">The ID of the account</param>
+    ///// <param name="courseId">The ID of the course</param>
+    ///// <returns>True if user has purchased the course</returns>
+    ///// <response code="200">Returns the result</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpGet("check-purchase")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<bool>> CheckUserHasPurchasedCourse(
+    //    [FromQuery] int accountId,
+    //    [FromQuery] int courseId)
+    //{
+    //    try
+    //    {
+    //        var hasPurchased = await _userCourseHistoryService.UserHasPurchasedCourseAsync(accountId, courseId);
+    //        return Ok(hasPurchased);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
     #endregion
 
     #region UserCourseHistory Analytics and Reports
 
-    /// <summary>
-    /// Gets user course history statistics
-    /// </summary>
-    /// <returns>User course history statistics</returns>
-    /// <response code="200">Returns the user course history statistics</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpGet("statistics")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<UserCourseHistoryStatisticsDto>> GetUserCourseHistoryStatistics()
-    {
-        try
-        {
-            var statistics = await _userCourseHistoryService.GetStatisticsAsync();
-            return Ok(statistics);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    ///// <summary>
+    ///// Gets user course history statistics
+    ///// </summary>
+    ///// <returns>User course history statistics</returns>
+    ///// <response code="200">Returns the user course history statistics</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpGet("statistics")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<UserCourseHistoryStatisticsDto>> GetUserCourseHistoryStatistics()
+    //{
+    //    try
+    //    {
+    //        var statistics = await _userCourseHistoryService.GetStatisticsAsync();
+    //        return Ok(statistics);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
-    /// <summary>
-    /// Gets user course histories by date range
-    /// </summary>
-    /// <param name="startDate">Start date</param>
-    /// <param name="endDate">End date</param>
-    /// <returns>List of user course histories within the date range</returns>
-    /// <response code="200">Returns the list of user course histories</response>
-    /// <response code="400">If the date parameters are invalid</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpGet("date-range")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<UserCourseHistoryDto>>> GetUserCourseHistoriesByDateRange(
-        [FromQuery] DateTime startDate,
-        [FromQuery] DateTime endDate)
-    {
-        try
-        {
-            if (startDate > endDate)
-                return BadRequest("Start date cannot be after end date");
+    ///// <summary>
+    ///// Gets user course histories by date range
+    ///// </summary>
+    ///// <param name="startDate">Start date</param>
+    ///// <param name="endDate">End date</param>
+    ///// <returns>List of user course histories within the date range</returns>
+    ///// <response code="200">Returns the list of user course histories</response>
+    ///// <response code="400">If the date parameters are invalid</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpGet("date-range")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<IEnumerable<UserCourseHistoryDto>>> GetUserCourseHistoriesByDateRange(
+    //    [FromQuery] DateTime startDate,
+    //    [FromQuery] DateTime endDate)
+    //{
+    //    try
+    //    {
+    //        if (startDate > endDate)
+    //            return BadRequest("Start date cannot be after end date");
 
-            var userCourseHistories = await _userCourseHistoryService.GetByDateRangeAsync(startDate, endDate);
-            return Ok(userCourseHistories);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    //        var userCourseHistories = await _userCourseHistoryService.GetByDateRangeAsync(startDate, endDate);
+    //        return Ok(userCourseHistories);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
     ///// <summary>
     ///// Gets popular courses by purchase count

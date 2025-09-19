@@ -96,7 +96,7 @@ public class RolePermissionController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<RolePermissionDto>> CreateRolePermission([FromBody] RolePermissionDto rolePermissionDto)
+    public async Task<ActionResult<RolePermissionDto>> CreateRolePermission([FromBody] CreateRolePermissionDto rolePermissionDto)
     {
         try
         {
@@ -241,23 +241,23 @@ public class RolePermissionController : ControllerBase
     /// <returns>True if role has permission</returns>
     /// <response code="200">Returns the result</response>
     /// <response code="500">If there was an internal server error</response>
-    [HttpGet("check")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<bool>> CheckRoleHasPermission(
-        [FromQuery] int roleId,
-        [FromQuery] int permissionId)
-    {
-        try
-        {
-            var hasPermission = await _rolePermissionService.RoleHasPermissionAsync(roleId, permissionId);
-            return Ok(hasPermission);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    //[HttpGet("check")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<bool>> CheckRoleHasPermission(
+    //    [FromQuery] int roleId,
+    //    [FromQuery] int permissionId)
+    //{
+    //    try
+    //    {
+    //        var hasPermission = await _rolePermissionService.RoleHasPermissionAsync(roleId, permissionId);
+    //        return Ok(hasPermission);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
     #endregion
 
@@ -326,70 +326,70 @@ public class RolePermissionController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Bulk assigns multiple permissions to a role
-    /// </summary>
-    /// <param name="roleId">The ID of the role</param>
-    /// <param name="permissionIds">List of permission IDs to assign</param>
-    /// <returns>List of created role permissions</returns>
-    /// <response code="201">Returns the newly created role permissions</response>
-    /// <response code="400">If the request data is invalid</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpPost("bulk-assign")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<RolePermissionDto>>> BulkAssignPermissionsToRole(
-        [FromQuery] int roleId,
-        [FromBody] IEnumerable<int> permissionIds)
-    {
-        try
-        {
-            if (permissionIds == null || !permissionIds.Any())
-                return BadRequest("Permission IDs list cannot be empty");
+    ///// <summary>
+    ///// Bulk assigns multiple permissions to a role
+    ///// </summary>
+    ///// <param name="roleId">The ID of the role</param>
+    ///// <param name="permissionIds">List of permission IDs to assign</param>
+    ///// <returns>List of created role permissions</returns>
+    ///// <response code="201">Returns the newly created role permissions</response>
+    ///// <response code="400">If the request data is invalid</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpPost("bulk-assign")]
+    //[ProducesResponseType(StatusCodes.Status201Created)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<IEnumerable<RolePermissionDto>>> BulkAssignPermissionsToRole(
+    //    [FromQuery] int roleId,
+    //    [FromBody] IEnumerable<int> permissionIds)
+    //{
+    //    try
+    //    {
+    //        if (permissionIds == null || !permissionIds.Any())
+    //            return BadRequest("Permission IDs list cannot be empty");
 
-            var createdRolePermissions = await _rolePermissionService.BulkAssignPermissionsToRoleAsync(roleId, permissionIds);
-            return CreatedAtAction(nameof(GetRolePermissionsByRole), new { roleId }, createdRolePermissions);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    //        var createdRolePermissions = await _rolePermissionService.BulkAssignPermissionsToRoleAsync(roleId, permissionIds);
+    //        return CreatedAtAction(nameof(GetRolePermissionsByRole), new { roleId }, createdRolePermissions);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
-    /// <summary>
-    /// Bulk removes multiple permissions from a role
-    /// </summary>
-    /// <param name="roleId">The ID of the role</param>
-    /// <param name="permissionIds">List of permission IDs to remove</param>
-    /// <returns>No content if successful</returns>
-    /// <response code="204">If the permissions were removed successfully</response>
-    /// <response code="400">If the request data is invalid</response>
-    /// <response code="500">If there was an internal server error</response>
-    [HttpDelete("bulk-remove")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> BulkRemovePermissionsFromRole(
-        [FromQuery] int roleId,
-        [FromBody] IEnumerable<int> permissionIds)
-    {
-        try
-        {
-            if (permissionIds == null || !permissionIds.Any())
-                return BadRequest("Permission IDs list cannot be empty");
+    ///// <summary>
+    ///// Bulk removes multiple permissions from a role
+    ///// </summary>
+    ///// <param name="roleId">The ID of the role</param>
+    ///// <param name="permissionIds">List of permission IDs to remove</param>
+    ///// <returns>No content if successful</returns>
+    ///// <response code="204">If the permissions were removed successfully</response>
+    ///// <response code="400">If the request data is invalid</response>
+    ///// <response code="500">If there was an internal server error</response>
+    //[HttpDelete("bulk-remove")]
+    //[ProducesResponseType(StatusCodes.Status204NoContent)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<IActionResult> BulkRemovePermissionsFromRole(
+    //    [FromQuery] int roleId,
+    //    [FromBody] IEnumerable<int> permissionIds)
+    //{
+    //    try
+    //    {
+    //        if (permissionIds == null || !permissionIds.Any())
+    //            return BadRequest("Permission IDs list cannot be empty");
 
-            var removed = await _rolePermissionService.BulkRemovePermissionsFromRoleAsync(roleId, permissionIds);
-            if (!removed)
-                return NotFound($"No permissions were found to remove for role {roleId}");
+    //        var removed = await _rolePermissionService.BulkRemovePermissionsFromRoleAsync(roleId, permissionIds);
+    //        if (!removed)
+    //            return NotFound($"No permissions were found to remove for role {roleId}");
 
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+    //        return NoContent();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, $"Internal server error: {ex.Message}");
+    //    }
+    //}
 
     #endregion
 

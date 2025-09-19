@@ -89,7 +89,7 @@ public class LessonController : ControllerBase
     /// </summary>
     [HttpPost]
     //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<LessonDto>> CreateLesson([FromBody] LessonDto lessonDto)
+    public async Task<ActionResult<LessonDto>> CreateLesson([FromBody] CreateLessonDto lessonDto)
     {
         try
         {

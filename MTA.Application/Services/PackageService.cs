@@ -156,7 +156,7 @@ public class PackageService : IPackageService
     /// <summary>
     /// Create new package
     /// </summary>
-    public async Task<PackageDto> CreateAsync(PackageDto packageDto)
+    public async Task<PackageDto> CreateAsync(CreatePackageDto packageDto)
     {
         try
         {
@@ -181,7 +181,19 @@ public class PackageService : IPackageService
             await _unitOfWork.SaveChangesAsync();
 
             // Return the created package
-            return await GetByIdAsync(package.Id) ?? packageDto;
+            return await GetByIdAsync(package.Id)
+                   ?? new PackageDto
+                   {
+                       Id = package.Id,
+                       Title = package.Title,
+                       Price = package.Price,
+                       TicketCount = package.TicketCount,
+                       MessageCount = package.MessageCount,
+                       Duration = package.Duration,
+                       DurationUnitId = package.DurationUnitId
+                   };
+
+
         }
         catch (Exception ex)
         {

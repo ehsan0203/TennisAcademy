@@ -113,7 +113,7 @@ public class MessageService : IMessageService
     /// <summary>
     /// Create new message
     /// </summary>
-    public async Task<MessageDto> CreateAsync(MessageDto messageDto)
+    public async Task<MessageDto> CreateAsync(CreateMessageDto messageDto)
     {
         var message = _mapper.Map<Message>(messageDto);
         message.CreatedAt = DateTime.UtcNow;

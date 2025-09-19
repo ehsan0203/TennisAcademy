@@ -109,7 +109,7 @@ public class PermissionService : IPermissionService
     /// <summary>
     /// Create new permission
     /// </summary>
-    public async Task<PermissionDto> CreateAsync(PermissionDto permissionDto)
+    public async Task<PermissionDto> CreateAsync(CreatePermissionDto permissionDto)
     {
         try
         {
@@ -130,7 +130,14 @@ public class PermissionService : IPermissionService
             await _unitOfWork.SaveChangesAsync();
 
             // Return the created permission
-            return await GetByIdAsync(permission.Id) ?? permissionDto;
+            return await GetByIdAsync(permission.Id) ??  new PermissionDto
+            {
+                Id = permission.Id,
+                Title = permission.Title,
+                Description = permission.Description,
+                CreatedAt = permission.CreatedAt,
+                UpdatedAt = permission.UpdatedAt
+            }; 
         }
         catch (Exception ex)
         {
@@ -280,7 +287,7 @@ public class PermissionService : IPermissionService
     /// <summary>
     /// Bulk create permissions
     /// </summary>
-    public async Task<IEnumerable<PermissionDto>> BulkCreateAsync(IEnumerable<PermissionDto> permissionDtos)
+    public async Task<IEnumerable<PermissionDto>> BulkCreateAsync(IEnumerable<CreatePermissionDto> permissionDtos)
     {
         try
         {

@@ -35,7 +35,7 @@ public interface IPermissionService
     /// </summary>
     /// <param name="permissionDto">Permission data</param>
     /// <returns>Created permission</returns>
-    Task<PermissionDto> CreateAsync(PermissionDto permissionDto);
+    Task<PermissionDto> CreateAsync(CreatePermissionDto permissionDto);
     
     /// <summary>
     /// Update existing permission
@@ -69,7 +69,7 @@ public interface IPermissionService
     /// </summary>
     /// <param name="permissionDtos">List of permission data</param>
     /// <returns>List of created permissions</returns>
-    Task<IEnumerable<PermissionDto>> BulkCreateAsync(IEnumerable<PermissionDto> permissionDtos);
+    Task<IEnumerable<PermissionDto>> BulkCreateAsync(IEnumerable<CreatePermissionDto> permissionDtos);
 }
 
 /// <summary>
