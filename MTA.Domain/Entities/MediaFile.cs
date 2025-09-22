@@ -19,13 +19,5 @@ public class MediaFile : BaseEntity
     public int? PlacementId { get; set; }
     [ForeignKey("PlacementId")]
     public virtual Lookup Placement { get; set; }
-
-    public int? LessonId { get; set; }
-    [ForeignKey("LessonId")]
-    public virtual Lesson Lesson { get; set; }
-
-    public int? MessageId { get; set; }
-    [ForeignKey("MessageId")]
-    public virtual Message Message { get; set; }
 }
 

@@ -520,19 +520,77 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateCourseDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCourseDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCourseDto"
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "int32"
+                  },
+                  "Title": {
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "IconMediaFileId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PosterMediaFileId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Price": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "LevelId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "StatusId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "NewPoster": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "NewIcon": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Title": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "IconMediaFileId": {
+                  "style": "form"
+                },
+                "PosterMediaFileId": {
+                  "style": "form"
+                },
+                "Price": {
+                  "style": "form"
+                },
+                "LevelId": {
+                  "style": "form"
+                },
+                "StatusId": {
+                  "style": "form"
+                },
+                "NewPoster": {
+                  "style": "form"
+                },
+                "NewIcon": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -1635,19 +1693,51 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateLessonDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateLessonDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateLessonDto"
+                "type": "object",
+                "properties": {
+                  "Title": {
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "IsFree": {
+                    "type": "boolean"
+                  },
+                  "CourseId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "CourseTitle": {
+                    "type": "string"
+                  },
+                  "MediaFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Title": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "IsFree": {
+                  "style": "form"
+                },
+                "CourseId": {
+                  "style": "form"
+                },
+                "CourseTitle": {
+                  "style": "form"
+                },
+                "MediaFile": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -1734,19 +1824,82 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/LessonDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LessonDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LessonDto"
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "int32"
+                  },
+                  "Title": {
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "IsFree": {
+                    "type": "boolean"
+                  },
+                  "CourseId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "CourseTitle": {
+                    "type": "string"
+                  },
+                  "MediaFileId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "NewMediaFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Id": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "CreatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "UpdatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              },
+              "encoding": {
+                "Title": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "IsFree": {
+                  "style": "form"
+                },
+                "CourseId": {
+                  "style": "form"
+                },
+                "CourseTitle": {
+                  "style": "form"
+                },
+                "MediaFileId": {
+                  "style": "form"
+                },
+                "NewMediaFile": {
+                  "style": "form"
+                },
+                "Id": {
+                  "style": "form"
+                },
+                "CreatedAt": {
+                  "style": "form"
+                },
+                "UpdatedAt": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -2701,19 +2854,101 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/MessageDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MessageDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/MessageDto"
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "int32"
+                  },
+                  "Text": {
+                    "type": "string"
+                  },
+                  "IsRead": {
+                    "type": "boolean"
+                  },
+                  "TicketId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "TicketTopic": {
+                    "type": "string"
+                  },
+                  "SenderId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "SenderFirstName": {
+                    "type": "string"
+                  },
+                  "SenderLastName": {
+                    "type": "string"
+                  },
+                  "SenderImage": {
+                    "type": "string"
+                  },
+                  "MediaFileId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "NewMediaFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Id": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "CreatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "UpdatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              },
+              "encoding": {
+                "Text": {
+                  "style": "form"
+                },
+                "IsRead": {
+                  "style": "form"
+                },
+                "TicketId": {
+                  "style": "form"
+                },
+                "TicketTopic": {
+                  "style": "form"
+                },
+                "SenderId": {
+                  "style": "form"
+                },
+                "SenderFirstName": {
+                  "style": "form"
+                },
+                "SenderLastName": {
+                  "style": "form"
+                },
+                "SenderImage": {
+                  "style": "form"
+                },
+                "MediaFileId": {
+                  "style": "form"
+                },
+                "NewMediaFile": {
+                  "style": "form"
+                },
+                "Id": {
+                  "style": "form"
+                },
+                "CreatedAt": {
+                  "style": "form"
+                },
+                "UpdatedAt": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -2797,19 +3032,64 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateMessageDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateMessageDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateMessageDto"
+                "type": "object",
+                "properties": {
+                  "Text": {
+                    "type": "string"
+                  },
+                  "IsRead": {
+                    "type": "boolean"
+                  },
+                  "TicketId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "TicketTopic": {
+                    "type": "string"
+                  },
+                  "SenderId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "SenderFirstName": {
+                    "type": "string"
+                  },
+                  "SenderLastName": {
+                    "type": "string"
+                  },
+                  "MediaFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Text": {
+                  "style": "form"
+                },
+                "IsRead": {
+                  "style": "form"
+                },
+                "TicketId": {
+                  "style": "form"
+                },
+                "TicketTopic": {
+                  "style": "form"
+                },
+                "SenderId": {
+                  "style": "form"
+                },
+                "SenderFirstName": {
+                  "style": "form"
+                },
+                "SenderLastName": {
+                  "style": "form"
+                },
+                "MediaFile": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -6101,6 +6381,15 @@
             "format": "date-time",
             "nullable": true
           },
+          "mediaFileId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "mediaFileUrl": {
+            "type": "string",
+            "nullable": true
+          },
           "userProfile": {
             "$ref": "#/components/schemas/UserProfileDto"
           }
@@ -6338,42 +6627,6 @@
         },
         "additionalProperties": false
       },
-      "CreateLessonDto": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFree": {
-            "type": "boolean"
-          },
-          "courseId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "courseTitle": {
-            "type": "string",
-            "nullable": true
-          },
-          "mediaFileCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "order": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "canDownload": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
       "CreateLevelDto": {
         "type": "object",
         "properties": {
@@ -6410,47 +6663,6 @@
           "value": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateMessageDto": {
-        "type": "object",
-        "properties": {
-          "text": {
-            "type": "string",
-            "nullable": true
-          },
-          "isRead": {
-            "type": "boolean"
-          },
-          "ticketId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ticketTopic": {
-            "type": "string",
-            "nullable": true
-          },
-          "senderId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "senderFirstName": {
-            "type": "string",
-            "nullable": true
-          },
-          "senderLastName": {
-            "type": "string",
-            "nullable": true
-          },
-          "senderImage": {
-            "type": "string",
-            "nullable": true
-          },
-          "mediaFileCount": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -6764,16 +6976,14 @@
             "type": "string",
             "nullable": true
           },
-          "mediaFileCount": {
+          "mediaFileId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
-          "order": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "canDownload": {
-            "type": "boolean"
+          "mediaFileUrl": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -6962,9 +7172,14 @@
             "type": "string",
             "nullable": true
           },
-          "mediaFileCount": {
+          "mediaFileId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
+          },
+          "mediaFileUrl": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -7618,45 +7833,6 @@
           "messageCount": {
             "type": "integer",
             "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateCourseDto": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "iconMediaFileId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "posterMediaFileId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "price": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "levelId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "statusId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
           }
         },
         "additionalProperties": false

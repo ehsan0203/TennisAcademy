@@ -100,7 +100,7 @@ public class MessageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<MessageDto>> CreateMessage([FromBody] CreateMessageDto messageDto)
+    public async Task<ActionResult<MessageDto>> CreateMessage([FromForm] CreateMessageDto messageDto)
     {
         try
         {
@@ -131,7 +131,7 @@ public class MessageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<MessageDto>> UpdateMessage(int id, [FromBody] MessageDto messageDto)
+    public async Task<ActionResult<MessageDto>> UpdateMessage(int id, [FromForm] UpdateMessageDto messageDto)
     {
         try
         {

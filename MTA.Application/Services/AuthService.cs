@@ -64,7 +64,7 @@ public class AuthService : IAuthService
                 RoleId = account.RoleId,
                 RoleTitle = account.Role?.Title ?? "",
                 SkillLevelValue = profile?.SkillLevel?.Title ?? "",
-                ImageUrl = account.Image
+                ImageUrl = account.MediaFile.Url
             }
         };
     }
@@ -142,7 +142,7 @@ public class AuthService : IAuthService
                 LastName = registerDto.LastName,
                 RoleTitle = studentRole?.Title ?? "",
                 SkillLevelValue = skillLevel?.Title ?? "",
-                ImageUrl = account.Image
+                ImageUrl = account.MediaFile.Url
             }
         };
     }
@@ -184,7 +184,7 @@ public class AuthService : IAuthService
                 LastName = account.UserProfile?.LastName ?? "",
                 RoleTitle = account.Role?.Title ?? "",
                 SkillLevelValue = account.UserProfile?.SkillLevel?.Title ?? "",
-                ImageUrl = account.Image
+                ImageUrl = account.MediaFile.Url
             }
         };
     }
@@ -230,11 +230,7 @@ public class AuthService : IAuthService
             new("UserId", account.Id.ToString()),
             new("RoleId", account.RoleId.ToString()),
             new("UserFullName", $"{account.UserProfile?.FirstName ?? ""} {account.UserProfile?.LastName ?? ""}".Trim()),
-            new("AccountStatus", account.IsActive.ToString()),
-            new("StatusId", account.StatusId.ToString()),
-            new("ImageUrl", account.Image ?? ""),
-            new("SkillLevel", account.UserProfile?.SkillLevel?.Title ?? ""),
-            new("Experience", (account.UserProfile?.Experience ?? 0).ToString())
+            new("AccountStatus", account.IsActive.ToString())
         };
 
         return claims;

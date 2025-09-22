@@ -20,13 +20,14 @@ public class Lesson : BaseEntity
     public string? Description { get; set; }
 
     public bool IsFree { get; set; } = false;
-    public int Order { get; set; }
 
     public int CourseId { get; set; }
 
-    [ForeignKey("CourseId")]
+    [ForeignKey(nameof(CourseId))]
     public virtual Course Course { get; set; } = null!;
-    
-    public virtual ICollection<MediaFile> MediaFiles { get; set; } = new List<MediaFile>();
+
+    public int? MediaFileId { get; set; }
+    [ForeignKey(nameof(MediaFileId))]
+    public virtual MediaFile? MediaFile { get; set; }
 }
 

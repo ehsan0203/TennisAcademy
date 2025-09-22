@@ -15,10 +15,12 @@ public class Message : BaseEntity
     public virtual Ticket Ticket { get; set; } = null!;
     
     public int SenderId { get; set; }
-    [ForeignKey("SenderId")]
+    [ForeignKey(nameof(SenderId))]
     public virtual Account Sender { get; set; } = null!;
 
-    public virtual ICollection<MediaFile> MediaFiles { get; set; } = new List<MediaFile>();
+    public int? MediaFileId { get; set; }
+    [ForeignKey(nameof(MediaFileId))]
+    public virtual MediaFile? MediaFile { get; set; }
 
 }
 

@@ -4703,23 +4703,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ZahraMld\\.nuget\\packages\\": {},
+    "C:\\Users\\XMART\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Web\\MTA.Web.csproj",
+      "projectUniqueName": "C:\\Users\\XMART\\Desktop\\MTA\\MTA.Web\\MTA.Web.csproj",
       "projectName": "MTA.Web",
-      "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Web\\MTA.Web.csproj",
-      "packagesPath": "C:\\Users\\ZahraMld\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Web\\obj\\",
+      "projectPath": "C:\\Users\\XMART\\Desktop\\MTA\\MTA.Web\\MTA.Web.csproj",
+      "packagesPath": "C:\\Users\\XMART\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\XMART\\Desktop\\MTA\\MTA.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\ZahraMld\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\XMART\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4735,11 +4735,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj": {
-              "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Application\\MTA.Application.csproj"
+            "C:\\Users\\XMART\\Desktop\\MTA\\MTA.Application\\MTA.Application.csproj": {
+              "projectPath": "C:\\Users\\XMART\\Desktop\\MTA\\MTA.Application\\MTA.Application.csproj"
             },
-            "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj": {
-              "projectPath": "C:\\Users\\ZahraMld\\Desktop\\MTA-Aca\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj"
+            "C:\\Users\\XMART\\Desktop\\MTA\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj": {
+              "projectPath": "C:\\Users\\XMART\\Desktop\\MTA\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj"
             }
           }
         }
@@ -4798,7 +4798,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

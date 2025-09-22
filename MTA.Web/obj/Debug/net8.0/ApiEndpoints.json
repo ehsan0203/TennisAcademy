@@ -371,9 +371,49 @@
         "IsRequired": true
       },
       {
-        "Name": "updateCourseDto",
-        "Type": "MTA.Application.DTOs.Course.UpdateCourseDto",
-        "IsRequired": true
+        "Name": "Title",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Description",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "IconMediaFileId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "PosterMediaFileId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "Price",
+        "Type": "System.Nullable\u00601[[System.Decimal, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "LevelId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "StatusId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "NewPoster",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "NewIcon",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -1195,9 +1235,34 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "lessonDto",
-        "Type": "MTA.Application.DTOs.CreateLessonDto",
-        "IsRequired": true
+        "Name": "Title",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Description",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "IsFree",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "CourseId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "CourseTitle",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "MediaFile",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -1252,9 +1317,54 @@
         "IsRequired": true
       },
       {
-        "Name": "lessonDto",
-        "Type": "MTA.Application.DTOs.LessonDto",
-        "IsRequired": true
+        "Name": "Title",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Description",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "IsFree",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "CourseId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "CourseTitle",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "MediaFileId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "NewMediaFile",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "Id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "CreatedAt",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "UpdatedAt",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -1917,9 +2027,44 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "messageDto",
-        "Type": "MTA.Application.DTOs.CreateMessageDto",
-        "IsRequired": true
+        "Name": "Text",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "IsRead",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "TicketId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "TicketTopic",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "SenderId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "SenderFirstName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "SenderLastName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "MediaFile",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -1994,9 +2139,69 @@
         "IsRequired": true
       },
       {
-        "Name": "messageDto",
-        "Type": "MTA.Application.DTOs.MessageDto",
-        "IsRequired": true
+        "Name": "Text",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "IsRead",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "TicketId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "TicketTopic",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "SenderId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "SenderFirstName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "SenderLastName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "SenderImage",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "MediaFileId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "NewMediaFile",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "Id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "CreatedAt",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "UpdatedAt",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [

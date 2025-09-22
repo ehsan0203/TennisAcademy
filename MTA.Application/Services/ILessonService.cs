@@ -45,7 +45,7 @@ public interface ILessonService
     /// <param name="id">Lesson ID</param>
     /// <param name="lessonDto">Updated lesson data</param>
     /// <returns>Updated lesson</returns>
-    Task<LessonDto> UpdateAsync(int id, LessonDto lessonDto);
+    Task<LessonDto> UpdateAsync(int id, UpdateLessonDto lessonDto);
     
     /// <summary>
     /// Delete lesson

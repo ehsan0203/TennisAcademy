@@ -11,17 +11,19 @@ public class Account : BaseEntity
     public required string Password { get; set; }
     
     public bool IsActive { get; set; } = true;
-    
-    public string? Image { get; set; }
+
+    public int? MediaFileId { get; set; }
+    [ForeignKey(nameof(MediaFileId))]
+    public virtual MediaFile? MediaFile { get; set; }
 
     public int RoleId { get; set; }
 
-    [ForeignKey("RoleId")]
+    [ForeignKey(nameof(RoleId))]
     public virtual Role Role { get; set; } = null!;
 
     public int StatusId { get; set; }
     
-    [ForeignKey("StatusId")]
+    [ForeignKey(nameof(StatusId))]
     public virtual Lookup Status { get; set; } = null!;
 
     public virtual UserProfile? UserProfile { get; set; }

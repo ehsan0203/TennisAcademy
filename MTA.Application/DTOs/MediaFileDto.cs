@@ -15,15 +15,10 @@ public class MediaFileDto : BaseDto
     public string? Url { get; set; }
     public long? FileSize { get; set; }
     public string? FileExtension { get; set; }
-    
-
     public int TypeId { get; set; }
     public string MediaType { get; set; }
     public int? PlacementId { get; set; }
     public string? PlacementName { get; set; }
-    public int? LessonId { get; set; }
-    public string? LessonTitle { get; set; }
-    public int? MessageId { get; set; }
 }
 
 public class MediaFileUploadDto

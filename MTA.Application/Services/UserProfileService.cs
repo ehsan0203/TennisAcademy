@@ -144,7 +144,7 @@ public class UserProfileService : IUserProfileService
     }
 
 
-    public async Task<UserProfileDto?> UpdateAsync(int id, UserProfileDto updateDto)
+    public async Task<UserProfileDto?> UpdateAsync(int id, UpdateUserProfileDto updateDto)
     {
         try
         {
@@ -213,7 +213,7 @@ public class UserProfileService : IUserProfileService
             var account = await _unitOfWork.Accounts.GetByIdAsync(userProfile.AccountId);
             if (account != null)
             {
-                account.Image = imageUrl;
+                account.MediaFile.Url = imageUrl;
                 account.UpdatedAt = DateTime.UtcNow;
                 _unitOfWork.Accounts.UpdateAsync(account);
             }

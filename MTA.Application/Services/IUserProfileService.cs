@@ -12,7 +12,7 @@ public interface IUserProfileService
     Task<UserProfileDto?> GetByIdAsync(int id);               
     Task<UserProfileDto?> GetByAccountIdAsync(int accountId);  
     Task<UserProfileDto> CreateAsync(UserProfileDto userProfileDto); 
-    Task<UserProfileDto?> UpdateAsync(int id, UserProfileDto updateDto); 
+    Task<UserProfileDto?> UpdateAsync(int id, UpdateUserProfileDto updateDto); 
     Task<bool> DeleteAsync(int id);                              
 
     #endregion

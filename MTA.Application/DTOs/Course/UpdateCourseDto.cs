@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace MTA.Application.DTOs.Course;
 
 /// <summary>
@@ -39,4 +41,8 @@ public class UpdateCourseDto
     /// Status ID for this course
     /// </summary>
     public int? StatusId { get; set; }
+
+    public IFormFile? NewPoster { get; set; }
+
+    public IFormFile? NewIcon { get; set; }
 }

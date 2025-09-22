@@ -66,7 +66,7 @@ public interface IMessageService
     /// <param name="id">Message ID</param>
     /// <param name="messageDto">Updated message data</param>
     /// <returns>Updated message</returns>
-    Task<MessageDto> UpdateAsync(int id, MessageDto messageDto);
+    Task<MessageDto> UpdateAsync(int id, UpdateMessageDto messageDto);
     
     /// <summary>
     /// Delete message

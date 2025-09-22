@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace MTA.Application.DTOs;
 
 /// <summary>
@@ -5,53 +7,97 @@ namespace MTA.Application.DTOs;
 /// </summary>
 public class MessageDto : BaseDto
 {
-    /// <summary>
-    /// Text content of the message
-    /// </summary>
-    public required string Text { get; set; }
-    
-    /// <summary>
-    /// Whether the message has been read
-    /// </summary>
-    public bool IsRead { get; set; }
-    
-    /// <summary>
-    /// Ticket ID that this message belongs to
-    /// </summary>
-    public int TicketId { get; set; }
-    
-    /// <summary>
-    /// Ticket topic
-    /// </summary>
-    public string? TicketTopic { get; set; }
-    
-    /// <summary>
-    /// Sender ID of the message
-    /// </summary>
-    public int SenderId { get; set; }
-    
-    /// <summary>
-    /// Sender's first name
-    /// </summary>
-    public string? SenderFirstName { get; set; }
-    
-    /// <summary>
-    /// Sender's last name
-    /// </summary>
-    public string? SenderLastName { get; set; }
-    
-    /// <summary>
-    /// Sender's profile image
-    /// </summary>
-    public string? SenderImage { get; set; }
-    
-    /// <summary>
-    /// Number of media files attached to this message
-    /// </summary>
-    public int MediaFileCount { get; set; }
+	/// <summary>
+	/// Text content of the message
+	/// </summary>
+	public required string Text { get; set; }
+	
+	/// <summary>
+	/// Whether the message has been read
+	/// </summary>
+	public bool IsRead { get; set; }
+	
+	/// <summary>
+	/// Ticket ID that this message belongs to
+	/// </summary>
+	public int TicketId { get; set; }
+	
+	/// <summary>
+	/// Ticket topic
+	/// </summary>
+	public string? TicketTopic { get; set; }
+	
+	/// <summary>
+	/// Sender ID of the message
+	/// </summary>
+	public int SenderId { get; set; }
+	
+	/// <summary>
+	/// Sender's first name
+	/// </summary>
+	public string? SenderFirstName { get; set; }
+	
+	/// <summary>
+	/// Sender's last name
+	/// </summary>
+	public string? SenderLastName { get; set; }
+	
+	/// <summary>
+	/// Sender's profile image
+	/// </summary>
+	public string? SenderImage { get; set; }
+	
+	/// <summary>
+	/// Single media file reference for this message
+	/// </summary>
+	public int? MediaFileId { get; set; }
+	public string? MediaFileUrl { get; set; }
 }
 
 public class CreateMessageDto 
+{
+	/// <summary>
+	/// Text content of the message
+	/// </summary>
+	public required string Text { get; set; }
+
+	/// <summary>
+	/// Whether the message has been read
+	/// </summary>
+	public bool IsRead { get; set; }
+
+	/// <summary>
+	/// Ticket ID that this message belongs to
+	/// </summary>
+	public int TicketId { get; set; }
+
+	/// <summary>
+	/// Ticket topic
+	/// </summary>
+	public string? TicketTopic { get; set; }
+
+	/// <summary>
+	/// Sender ID of the message
+	/// </summary>
+	public int SenderId { get; set; }
+
+	/// <summary>
+	/// Sender's first name
+	/// </summary>
+	public string? SenderFirstName { get; set; }
+
+	/// <summary>
+	/// Sender's last name
+	/// </summary>
+	public string? SenderLastName { get; set; }
+
+	/// <summary>
+	/// Single media file reference for this message
+	/// </summary>
+	public IFormFile? MediaFile { get; set; }
+}
+
+public class UpdateMessageDto : BaseDto
 {
     /// <summary>
     /// Text content of the message
@@ -94,8 +140,10 @@ public class CreateMessageDto
     public string? SenderImage { get; set; }
 
     /// <summary>
-    /// Number of media files attached to this message
+    /// Single media file reference for this message
     /// </summary>
-    public int MediaFileCount { get; set; }
+    public int? MediaFileId { get; set; }
+    public IFormFile? NewMediaFile { get; set; }
 }
+
 

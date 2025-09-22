@@ -96,7 +96,7 @@ public class UserController : ControllerBase
     /// Update user
     /// </summary>
     [HttpPut("{id}")]
-    public async Task<ActionResult<UserProfileDto>> UpdateUser(int id, [FromBody] UserProfileDto updateDto)
+    public async Task<ActionResult<UserProfileDto>> UpdateUser(int id, [FromForm] UpdateUserProfileDto updateDto)
     {
         try
         {

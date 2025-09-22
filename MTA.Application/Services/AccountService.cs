@@ -1,11 +1,12 @@
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MTA.Application.DTOs;
+using MTA.Application.DTOs.User;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using MTA.Application.DTOs.User;
 
 namespace MTA.Application.Services;
 
@@ -14,13 +15,17 @@ namespace MTA.Application.Services;
 /// </summary>
 public class AccountService : IAccountService
 {
+    private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<AccountService> _logger;
+    private readonly IMediaFileService _mediaFileService;
 
-    public AccountService(IUnitOfWork unitOfWork, ILogger<AccountService> logger)
+    public AccountService(IUnitOfWork unitOfWork, ILogger<AccountService> logger, IMediaFileService mediaFileService, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _mediaFileService = mediaFileService;
+        _mapper = mapper;
     }
 
     public async Task<PaginatedResult<AccountDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? roleId = null, bool? isActive = null)
@@ -30,6 +35,7 @@ public class AccountService : IAccountService
             var query = _unitOfWork.Accounts.GetQueryable()
                 .Include(a => a.Role)
                 .Include(a => a.Status)
+                .Include(a => a.MediaFile)
                 .Include(a => a.UserProfile)
                 .ThenInclude(up => up.SkillLevel)
                 .AsQueryable();
@@ -75,6 +81,7 @@ public class AccountService : IAccountService
             var account = await _unitOfWork.Accounts.GetQueryable()
                 .Include(a => a.Role)
                 .Include(a => a.Status)
+                .Include(a => a.MediaFile)
                 .Include(a => a.UserProfile)
                 .ThenInclude(up => up.SkillLevel)
                 .FirstOrDefaultAsync(a => a.Id == id);
@@ -95,6 +102,7 @@ public class AccountService : IAccountService
             var account = await _unitOfWork.Accounts.GetQueryable()
                 .Include(a => a.Role)
                 .Include(a => a.Status)
+                .Include(a => a.MediaFile)
                 .Include(a => a.UserProfile)
                 .ThenInclude(up => up.SkillLevel)
                 .FirstOrDefaultAsync(a => a.Email == email);
@@ -110,27 +118,54 @@ public class AccountService : IAccountService
 
     public async Task<AccountDto> CreateAsync(CreateAccountDto accountDto)
     {
+        MediaFileDto? uploadedMedia = null;
+
         try
         {
-            var account = new Account
+            if (accountDto.Image != null)
             {
-                Email = accountDto.Email,
-                Password = HashPassword(accountDto.Password ?? "defaultpassword"), 
-                IsActive = accountDto.IsActive,
-                Image = accountDto.Image,
-                RoleId = accountDto.RoleId,
-                StatusId = accountDto.StatusId
-            };
+                var mediaDto = new MediaFileUploadDto
+                {
+                    MediaType = "Account",
+                    PlacementName = "ProfileImage",
+                    Title = $"{accountDto.Email} Profile Image"
+                };
 
+                uploadedMedia = await _mediaFileService.CreateAsync(accountDto.Image, mediaDto);
+            }
+
+            var account = _mapper.Map<Account>(accountDto);
+            account.Password = HashPassword(accountDto.Password ?? "defaultpassword");
+
+            if (uploadedMedia != null)
+            {
+                account.MediaFileId = uploadedMedia.Id; // یا MediaFileId
+            }
+
+            // 3️⃣ ذخیره Account در دیتابیس
             await _unitOfWork.Accounts.AddAsync(account);
             await _unitOfWork.SaveChangesAsync();
 
-            return await GetByIdAsync(account.Id)
-               ?? throw new Exception("Error retrieving newly created account.");
+            // 4️⃣ برگرداندن DTO
+            return _mapper.Map<AccountDto>(account);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating account");
+            _logger.LogError(ex, "Error creating account for Email: {Email}", accountDto.Email);
+
+            // 5️⃣ rollback فایل آپلود شده در صورت خطای دیتابیس
+            if (uploadedMedia != null)
+            {
+                try
+                {
+                    await _mediaFileService.DeleteAsync(uploadedMedia.Id);
+                }
+                catch (Exception fileEx)
+                {
+                    _logger.LogError(fileEx, "Error rolling back uploaded media file: {FileId}", uploadedMedia.Id);
+                }
+            }
+
             throw;
         }
     }
@@ -145,12 +180,35 @@ public class AccountService : IAccountService
 
             if (updateDto.IsActive.HasValue)
                 account.IsActive = updateDto.IsActive.Value;
-            if (updateDto.Image != null)
-                account.Image = updateDto.Image;
+            if (!string.IsNullOrEmpty(updateDto.Email))
+                account.Email = updateDto.Email;
+            if (updateDto.RoleId.HasValue)
+                account.RoleId = updateDto.RoleId.Value;
+            if (updateDto.StatusId.HasValue)
+                account.StatusId = updateDto.StatusId.Value;
+            if (updateDto.MediaFileId.HasValue)
+                account.MediaFileId = updateDto.MediaFileId.Value;
+
+            if (!string.IsNullOrEmpty(updateDto.Password))
+                account.Password = HashPassword(updateDto.Password);
+
+            if (updateDto.Image != null && updateDto.Image.Length > 0)
+            {
+                var mediaDto = new MediaFileUploadDto
+                {
+                    MediaType = "Account",
+                    PlacementName = "ProfileImage",
+                    Title = $"{account.Email} Profile Image"
+                };
+
+                var uploadedMedia = await _mediaFileService.CreateAsync(updateDto.Image, mediaDto);
+
+                account.MediaFileId = uploadedMedia.Id;
+            }
 
             account.UpdatedAt = DateTime.UtcNow;
 
-            _unitOfWork.Accounts.UpdateAsync(account);
+            await _unitOfWork.Accounts.UpdateAsync(account);
             await _unitOfWork.SaveChangesAsync();
 
             return await GetByIdAsync(id);
@@ -281,13 +339,15 @@ public class AccountService : IAccountService
             Id = account.Id,
             Email = account.Email,
             IsActive = account.IsActive,
-            Image = account.Image,
+            Image = account.MediaFile.Url,
             RoleId = account.RoleId,
             RoleTitle = account.Role?.Title,
             StatusId = account.StatusId,
             StatusValue = account.Status?.Value,
             CreatedAt = account.CreatedAt,
             UpdatedAt = account.UpdatedAt.Date,
+            MediaFileId = account.MediaFileId,
+            MediaFileUrl = account.MediaFile != null ? account.MediaFile.Url : null,
             UserProfile = account.UserProfile != null ? new UserProfileDto
             {
                 Id = account.UserProfile.Id,
