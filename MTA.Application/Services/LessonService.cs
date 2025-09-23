@@ -1,7 +1,8 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MTA.Application.DTOs;
+using MTA.Application.DTOs.Course;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
 
@@ -15,13 +16,15 @@ public class LessonService : ILessonService
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly ILogger<LessonService> _logger;
 	private readonly IMapper _mapper;
+    private readonly IMediaFileService _mediaFileService;
 
 
-	public LessonService(IUnitOfWork unitOfWork, ILogger<LessonService> logger, IMapper mapper)
+    public LessonService(IUnitOfWork unitOfWork, ILogger<LessonService> logger, IMapper mapper, IMediaFileService mediaFileService)
 	{
 		_unitOfWork = unitOfWork;
 		_logger = logger;
 		_mapper = mapper;
+		_mediaFileService = mediaFileService;
 	}
 
 	/// <summary>
@@ -140,8 +143,14 @@ public class LessonService : ILessonService
 				throw new InvalidOperationException($"Course with ID {lessonDto.CourseId} not found");
 			}
 
-			//TODO Lesson mediaId
-			var MediaFileId = 0;
+            var MediaFileInfo = new MediaFileUploadDto
+            {
+                MediaType = "Video",
+                PlacementName = "None",
+                Title = $"{lessonDto.Title} Video"
+            };
+
+            var posterMedia = await _mediaFileService.CreateAsync(lessonDto.MediaFile, MediaFileInfo);
 
 			var lesson = new Lesson
 			{
@@ -149,7 +158,7 @@ public class LessonService : ILessonService
 				Description = lessonDto.Description,
 				IsFree = lessonDto.IsFree,
 				CourseId = lessonDto.CourseId,
-				MediaFileId = MediaFileId,
+				MediaFileId = posterMedia.Id,
 				CreatedAt = DateTime.UtcNow
 			};
 
@@ -167,62 +176,98 @@ public class LessonService : ILessonService
 	}
 
 
-	/// <summary>
-	/// Update existing lesson
-	/// </summary>
-	public async Task<LessonDto> UpdateAsync(int id, UpdateLessonDto lessonDto)
-	{
-		try
-		{
-			var lesson = await _unitOfWork.Repository<Lesson>().GetByIdAsync(id);
-			if (lesson == null)
-			{
-				throw new InvalidOperationException($"Lesson with ID {id} not found");
-			}
+    /// <summary>
+    /// Update existing lesson
+    /// </summary>
+    /// <summary>
+    /// Update existing lesson
+    /// </summary>
+    public async Task<LessonDto> UpdateAsync(int id, UpdateLessonDto lessonDto)
+    {
+        try
+        {
+            var lesson = await _unitOfWork.Repository<Lesson>().GetByIdAsync(id);
+            if (lesson == null)
+                throw new InvalidOperationException($"Lesson with ID {id} not found");
 
-			// Validate course exists if changing course
-			if (lessonDto.CourseId != lesson.CourseId)
-			{
-				var course = await _unitOfWork.Repository<Course>().GetByIdAsync(lessonDto.CourseId);
-				if (course == null)
-				{
-					throw new InvalidOperationException($"Course with ID {lessonDto.CourseId} not found");
-				}
-			}
+            // اگر Course تغییر کرده، ولیدیشن
+            if (lessonDto.CourseId != lesson.CourseId)
+            {
+                var course = await _unitOfWork.Repository<Course>().GetByIdAsync(lessonDto.CourseId);
+                if (course == null)
+                    throw new InvalidOperationException($"Course with ID {lessonDto.CourseId} not found");
+            }
 
-            var MediaFileId = 0;
+            // -------------------------------
+            // آپدیت یا ایجاد MediaFile
+            // -------------------------------
+            if (lessonDto.NewMediaFile != null)
+            {
+                var mediaFileInfo = new MediaFileUploadDto
+                {
+                    MediaType = "Video",
+                    PlacementName = "None",
+                    Title = $"{lessonDto.Title ?? lesson.Title} Video"
+                };
 
-            //TODO if NewFile Exist 
-            //TODO Save new File 
-            //TODO Delete old File 
+                MediaFileDto posterMedia;
 
-            lesson.MediaFileId = MediaFileId == 0 ? lessonDto.MediaFileId : MediaFileId;
+                if (lesson.MediaFileId == 0 || lesson.MediaFileId == null)
+                {
+                    posterMedia = await _mediaFileService.CreateAsync(lessonDto.NewMediaFile, mediaFileInfo);
+                }
+                else
+                {
+                    posterMedia = await _mediaFileService.UpdateAsync(
+                        lesson.MediaFileId!.Value,
+                        lessonDto.NewMediaFile,
+                        mediaFileInfo
+                    );
+                }
 
-            // Update properties
-            lesson.Title = lessonDto.Title;
-			lesson.Description = lessonDto.Description;
-			lesson.IsFree = lessonDto.IsFree;
-			lesson.CourseId = lessonDto.CourseId;
-			lesson.MediaFileId = lessonDto.MediaFileId;
-			lesson.UpdatedAt = DateTime.UtcNow;
+                lesson.MediaFileId = posterMedia.Id;
+            }
+            else if (lessonDto.MediaFileId.HasValue)
+            {
+                // اگر فقط ID جدید ارسال شده
+                lesson.MediaFileId = lessonDto.MediaFileId.Value;
+            }
 
-			_unitOfWork.Repository<Lesson>().UpdateAsync(lesson);
-			await _unitOfWork.SaveChangesAsync();
+            // -------------------------------
+            // آپدیت پراپرتی‌های ساده
+            // -------------------------------
+            if (!string.IsNullOrEmpty(lessonDto.Title))
+                lesson.Title = lessonDto.Title;
 
-            // Return the updated lesson
-            return await GetByIdAsync(id)  ?? _mapper.Map<LessonDto>(lessonDto);
+            if (!string.IsNullOrEmpty(lessonDto.Description))
+                lesson.Description = lessonDto.Description;
+
+            lesson.IsFree = lessonDto.IsFree;
+
+            // CourseId اگر تغییر کرده
+            if (lessonDto.CourseId != 0)
+                lesson.CourseId = lessonDto.CourseId;
+
+            lesson.UpdatedAt = DateTime.UtcNow;
+
+            // ذخیره تغییرات
+            await _unitOfWork.Repository<Lesson>().UpdateAsync(lesson);
+            await _unitOfWork.SaveChangesAsync();
+
+            // برگردوندن LessonDto آپدیت شده
+            return _mapper.Map<LessonDto>(lesson);
         }
         catch (Exception ex)
-		{
-			_logger.LogError(ex, "Error updating lesson with ID: {LessonId}", id);
-			throw;
-		}
-	}
+        {
+            _logger.LogError(ex, "Error updating lesson with ID: {LessonId}", id);
+            throw;
+        }
+    }
 
-	/// <summary>
-	/// Delete lesson
-	/// </summary>
-	public async Task<bool> DeleteAsync(int id)
+    /// <summary>
+    /// Delete lesson
+    /// </summary>
+    public async Task<bool> DeleteAsync(int id)
 	{
 		try
 		{

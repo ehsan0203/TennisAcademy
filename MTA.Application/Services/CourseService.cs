@@ -145,7 +145,9 @@ public class CourseService : ICourseService
             var iconMedia = await _mediaFileService.CreateAsync(createCourseDto.IconFile, iconDto);
             course.IconMediaFileId = iconMedia.Id;
         }
+
         var createdCourse = await _unitOfWork.Repository<Course>().AddAsync(course);
+
         await _unitOfWork.SaveChangesAsync();
         return _mapper.Map<CourseDto>(createdCourse);
     }
@@ -155,7 +157,6 @@ public class CourseService : ICourseService
     /// </summary>
     public async Task<CourseDto> UpdateAsync(int id, UpdateCourseDto updateCourseDto)
     {
-        // Include related media and status to map DTO properly
         var existingCourse = await _unitOfWork.Repository<Course>()
             .GetQueryable()
             .Include(c => c.IconMediaFile)
@@ -167,7 +168,9 @@ public class CourseService : ICourseService
         if (existingCourse == null)
             throw new ArgumentException($"Course with ID {id} not found");
 
-        // Update simple properties
+        // -------------------------------
+        // به‌روزرسانی پراپرتی‌های ساده
+        // -------------------------------
         if (!string.IsNullOrEmpty(updateCourseDto.Title))
             existingCourse.Title = updateCourseDto.Title;
 
@@ -183,21 +186,66 @@ public class CourseService : ICourseService
         if (updateCourseDto.StatusId.HasValue)
             existingCourse.StatusId = updateCourseDto.StatusId.Value;
 
-        // Update media references
-        if (updateCourseDto.IconMediaFileId.HasValue)
-            existingCourse.IconMediaFileId = updateCourseDto.IconMediaFileId;
+        // -------------------------------
+        // آپدیت یا ایجاد Poster
+        // -------------------------------
+        if (updateCourseDto.NewPoster != null)
+        {
+            var posterDto = new MediaFileUploadDto
+            {
+                MediaType = "Course",
+                PlacementName = "Poster",
+                Title = $"{updateCourseDto.Title ?? existingCourse.Title} Poster"
+            };
 
-        if (updateCourseDto.PosterMediaFileId.HasValue)
-            existingCourse.PosterMediaFileId = updateCourseDto.PosterMediaFileId;
+            MediaFileDto posterMedia;
+            if (existingCourse.PosterMediaFileId == null || existingCourse.PosterMediaFileId == 0)
+            {
+                posterMedia = await _mediaFileService.CreateAsync(updateCourseDto.NewPoster, posterDto);
+            }
+            else
+            {
+                posterMedia = await _mediaFileService.UpdateAsync(existingCourse.PosterMediaFileId.Value, updateCourseDto.NewPoster, posterDto);
+            }
 
-        existingCourse.UpdatedAt = DateTime.UtcNow;
+            existingCourse.PosterMediaFileId = posterMedia.Id;
+        }
 
-        await _unitOfWork.Repository<Course>().UpdateAsync(existingCourse);
-        await _unitOfWork.SaveChangesAsync();
+        // -------------------------------
+        // آپدیت یا ایجاد Icon
+        // -------------------------------
+        if (updateCourseDto.NewIcon != null) 
+        {
+            var iconDto = new MediaFileUploadDto
+            {
+                MediaType = "Course",
+                PlacementName = "Icon",
+                Title = $"{updateCourseDto.Title ?? existingCourse.Title} Icon"
+            };
 
-        // Map to DTO
-        return _mapper.Map<CourseDto>(existingCourse);
-    }
+            MediaFileDto iconMedia;
+            if (existingCourse.IconMediaFileId == null || existingCourse.IconMediaFileId == 0)
+            {
+                iconMedia = await _mediaFileService.CreateAsync(updateCourseDto.NewIcon , iconDto);
+            }
+            else
+            {
+                iconMedia = await _mediaFileService.UpdateAsync(existingCourse.IconMediaFileId.Value, updateCourseDto.NewIcon, iconDto);
+            }
+
+            existingCourse.IconMediaFileId = iconMedia.Id;
+        }
+
+            // -------------------------------
+            // ذخیره تغییرات
+            // -------------------------------
+            existingCourse.UpdatedAt = DateTime.UtcNow;
+
+            await _unitOfWork.Repository<Course>().UpdateAsync(existingCourse);
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<CourseDto>(existingCourse);
+        }
 
     /// <summary>
     /// Delete course or archive if it has enrollments

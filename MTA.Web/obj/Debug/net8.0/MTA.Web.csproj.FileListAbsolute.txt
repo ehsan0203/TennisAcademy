@@ -146,10 +146,10 @@ C:\Users\XMART\Desktop\MTA\MTA.Web\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\XMART\Desktop\MTA\MTA.Web\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\XMART\Desktop\MTA\MTA.Web\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\XMART\Desktop\MTA\MTA.Web\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\XMART\Desktop\MTA\MTA.Web\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\XMART\Desktop\MTA\MTA.Web\obj\Debug\net8.0\MTA.Web.csproj.Up2Date
 C:\Users\XMART\Desktop\MTA\MTA.Web\obj\Debug\net8.0\MTA.Web.dll
 C:\Users\XMART\Desktop\MTA\MTA.Web\obj\Debug\net8.0\refint\MTA.Web.dll
 C:\Users\XMART\Desktop\MTA\MTA.Web\obj\Debug\net8.0\MTA.Web.pdb
 C:\Users\XMART\Desktop\MTA\MTA.Web\obj\Debug\net8.0\MTA.Web.genruntimeconfig.cache
 C:\Users\XMART\Desktop\MTA\MTA.Web\obj\Debug\net8.0\ref\MTA.Web.dll
-C:\Users\XMART\Desktop\MTA\MTA.Web\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -9,7 +9,7 @@ namespace MTA.Application.DTOs;
 /// </summary>
 public class MediaFileDto : BaseDto
 {
-    public required string Title { get; set; }
+    public  string Title { get; set; } = "Empty";
 
     // Url، FileSize و FileExtension حالا optional شدند
     public string? Url { get; set; }

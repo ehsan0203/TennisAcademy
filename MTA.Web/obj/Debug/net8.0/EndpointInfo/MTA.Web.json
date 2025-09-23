@@ -5823,19 +5823,68 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UserProfileDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserProfileDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserProfileDto"
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "int32"
+                  },
+                  "FirstName": {
+                    "type": "string"
+                  },
+                  "LastName": {
+                    "type": "string"
+                  },
+                  "DateOfBirth": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "Experience": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "SkillLevelId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "HealthCondition": {
+                    "type": "boolean"
+                  },
+                  "HealthDescription": {
+                    "type": "string"
+                  },
+                  "AvatarUrl": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "FirstName": {
+                  "style": "form"
+                },
+                "LastName": {
+                  "style": "form"
+                },
+                "DateOfBirth": {
+                  "style": "form"
+                },
+                "Experience": {
+                  "style": "form"
+                },
+                "SkillLevelId": {
+                  "style": "form"
+                },
+                "HealthCondition": {
+                  "style": "form"
+                },
+                "HealthDescription": {
+                  "style": "form"
+                },
+                "AvatarUrl": {
+                  "style": "form"
+                }
               }
             }
           }

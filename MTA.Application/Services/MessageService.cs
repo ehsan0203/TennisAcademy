@@ -1,9 +1,10 @@
-using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging;
 using MTA.Application.DTOs;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MTA.Application.Services;
 
@@ -14,11 +15,16 @@ public class MessageService : IMessageService
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
+    private readonly IMediaFileService _mediaFileService;
+    private readonly ILogger<MediaFileService> _logger;
 
-	public MessageService(IUnitOfWork unitOfWork, IMapper mapper)
+
+    public MessageService(IUnitOfWork unitOfWork, IMapper mapper, IMediaFileService mediaFileService, ILogger<MediaFileService> logger)
 	{
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
+		_mediaFileService = mediaFileService;
+		_logger = logger;
 	}
 
 	/// <summary>
@@ -136,56 +142,113 @@ public class MessageService : IMessageService
 		return messages.Select(m => _mapper.Map<MessageDto>(m));
 	}
 
-	/// <summary>
-	/// Create new message
-	/// </summary>
-	public async Task<MessageDto> CreateAsync(CreateMessageDto messageDto)
-	{
-		var message = _mapper.Map<Message>(messageDto);
+    /// <summary>
+    /// Create new message
+    /// </summary>
+    public async Task<MessageDto> CreateAsync(CreateMessageDto messageDto)
+    {
+        try
+        {
+            var message = _mapper.Map<Message>(messageDto);
 
-		//TODO Save File 
-		var MediaFileId = 0;
+            // -------------------------------
+            // ذخیره فایل اگر وجود دارد
+            // -------------------------------
+            if (messageDto.MediaFile != null)
+            {
+                var mediaFileDto = new MediaFileUploadDto
+                {
+                    MediaType = "Message",
+                    PlacementName = "Attachment",
+                    Title = $"Message {messageDto.TicketId}"
+                };
 
-        message.MediaFileId = MediaFileId;
-		message.CreatedAt = DateTime.UtcNow;
-		
-		var createdMessage = await _unitOfWork.Repository<Message>().AddAsync(message);
-		await _unitOfWork.SaveChangesAsync();
-		
-		return _mapper.Map<MessageDto>(createdMessage);
-	}
+                var mediaFile = await _mediaFileService.CreateAsync(messageDto.MediaFile, mediaFileDto);
+                message.MediaFileId = mediaFile.Id;
+            }
 
-	/// <summary>
-	/// Update existing message
-	/// </summary>
-	public async Task<MessageDto> UpdateAsync(int id, UpdateMessageDto messageDto)
-	{
-		var existingMessage = await _unitOfWork.Repository<Message>().GetByIdAsync(id);
-		if (existingMessage == null)
-			throw new ArgumentException($"Message with ID {id} not found");
+            message.CreatedAt = DateTime.UtcNow;
 
-		var MediaFileId = 0;
+            var createdMessage = await _unitOfWork.Repository<Message>().AddAsync(message);
+            await _unitOfWork.SaveChangesAsync();
 
-        //TODO if NewFile Exist 
-        //TODO Save new File 
-        //TODO Delete old File 
+            return _mapper.Map<MessageDto>(createdMessage);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating message for TicketId: {TicketId}", messageDto.TicketId);
+            throw;
+        }
+    }
 
-        existingMessage.MediaFileId = MediaFileId==0 ? messageDto.MediaFileId : MediaFileId;
+    public async Task<MessageDto> UpdateAsync(int id, UpdateMessageDto messageDto)
+    {
+        try
+        {
+            var existingMessage = await _unitOfWork.Repository<Message>().GetByIdAsync(id);
+            if (existingMessage == null)
+                throw new ArgumentException($"Message with ID {id} not found");
 
-        // Update only allowed fields
-        existingMessage.Text = messageDto.Text;
-		existingMessage.UpdatedAt = DateTime.UtcNow;
+            // -------------------------------
+            // آپدیت یا ایجاد MediaFile
+            // -------------------------------
+            if (messageDto.NewMediaFile != null)
+            {
+                var mediaFileDto = new MediaFileUploadDto
+                {
+                    MediaType = "Message",
+                    PlacementName = "Attachment",
+                    Title = $"Message {messageDto.TicketId}"
+                };
 
-		var updatedMessage = await _unitOfWork.Repository<Message>().UpdateAsync(existingMessage);
-		await _unitOfWork.SaveChangesAsync();
-		
-		return _mapper.Map<MessageDto>(updatedMessage);
-	}
+                MediaFileDto mediaFile;
 
-	/// <summary>
-	/// Delete message
-	/// </summary>
-	public async Task<bool> DeleteAsync(int id)
+                if (existingMessage.MediaFileId == null || existingMessage.MediaFileId == 0)
+                {
+                    // فایل جدید ایجاد شود
+                    mediaFile = await _mediaFileService.CreateAsync(messageDto.NewMediaFile, mediaFileDto);
+                }
+                else
+                {
+                    // فایل قبلی آپدیت شود
+                    mediaFile = await _mediaFileService.UpdateAsync(existingMessage.MediaFileId.Value, messageDto.NewMediaFile, mediaFileDto);
+                }
+
+                existingMessage.MediaFileId = mediaFile.Id;
+            }
+            else if (messageDto.MediaFileId.HasValue)
+            {
+                // اگر فقط ID جدید فرستاده شده
+                existingMessage.MediaFileId = messageDto.MediaFileId.Value;
+            }
+
+            // -------------------------------
+            // آپدیت پراپرتی‌های ساده
+            // -------------------------------
+            existingMessage.Text = messageDto.Text;
+            existingMessage.IsRead = messageDto.IsRead;
+            existingMessage.TicketId = messageDto.TicketId;
+            existingMessage.SenderId = messageDto.SenderId;
+            existingMessage.UpdatedAt = DateTime.UtcNow;
+
+            // ذخیره تغییرات
+            var updatedMessage = await _unitOfWork.Repository<Message>().UpdateAsync(existingMessage);
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<MessageDto>(updatedMessage);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating message with ID: {MessageId}", id);
+            throw;
+        }
+    }
+
+
+    /// <summary>
+    /// Delete message
+    /// </summary>
+    public async Task<bool> DeleteAsync(int id)
 	{
 		var message = await _unitOfWork.Repository<Message>().GetByIdAsync(id);
 		if (message == null)

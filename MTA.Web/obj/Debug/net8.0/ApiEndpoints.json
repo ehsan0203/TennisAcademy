@@ -4167,9 +4167,44 @@
         "IsRequired": true
       },
       {
-        "Name": "updateDto",
-        "Type": "MTA.Application.DTOs.User.UserProfileDto",
-        "IsRequired": true
+        "Name": "FirstName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "LastName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "DateOfBirth",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "Experience",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "SkillLevelId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "HealthCondition",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "HealthDescription",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "AvatarUrl",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
