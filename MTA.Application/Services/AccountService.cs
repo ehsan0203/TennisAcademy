@@ -170,6 +170,33 @@ public class AccountService : IAccountService
         }
     }
 
+    public async Task<CurrentUserDto?> GetCurrentUserAsync(int accountId)
+    {
+        var account = await _unitOfWork.Accounts.GetQueryable()
+            .Include(a => a.MediaFile)
+            .Include(a => a.UserProfile)
+            .FirstOrDefaultAsync(a => a.Id == accountId);
+
+        if (account == null) return null;
+
+        var profile = account.UserProfile;
+
+        return new CurrentUserDto
+        {
+            Id = account.Id,
+            Email = account.Email,
+            IsActive = account.IsActive,
+            ProfileImageUrl = account.MediaFile?.Url,
+            FirstName = profile?.FirstName ?? string.Empty,
+            LastName = profile?.LastName ?? string.Empty,
+            DateOfBirth = profile?.DateOfBirth ?? DateTime.MinValue,
+            Experience = profile?.Experience ?? 0,
+            HealthCondition = profile?.HealthCondition ?? false,
+            HealthDescription = profile?.HealthDescription,
+            SkillLevelId = profile?.SkillLevelId ?? 0
+        };
+    }
+
     public async Task<AccountDto?> UpdateAsync(int id, UpdateAccountDto updateDto)
     {
         try
@@ -178,10 +205,13 @@ public class AccountService : IAccountService
             if (account == null)
                 return null;
 
-            if (updateDto.IsActive.HasValue)
-                account.IsActive = updateDto.IsActive.Value;
             if (!string.IsNullOrEmpty(updateDto.Email))
                 account.Email = updateDto.Email;
+            if (!string.IsNullOrEmpty(updateDto.Password))
+                account.Password = HashPassword(updateDto.Password);
+
+            if (updateDto.IsActive.HasValue)
+                account.IsActive = updateDto.IsActive.Value;
             if (updateDto.RoleId.HasValue)
                 account.RoleId = updateDto.RoleId.Value;
             if (updateDto.StatusId.HasValue)
@@ -189,8 +219,6 @@ public class AccountService : IAccountService
             if (updateDto.MediaFileId.HasValue)
                 account.MediaFileId = updateDto.MediaFileId.Value;
 
-            if (!string.IsNullOrEmpty(updateDto.Password))
-                account.Password = HashPassword(updateDto.Password);
 
             if (updateDto.Image != null && updateDto.Image.Length > 0)
             {
@@ -218,6 +246,75 @@ public class AccountService : IAccountService
             _logger.LogError(ex, "Error updating account with ID: {AccountId}", id);
             throw;
         }
+    }
+
+    public async Task<CurrentUserDto?> UpdateCurrentUserAsync(int accountId, UpdateCurrentUserDto updateDto)
+    {
+        var account = await _unitOfWork.Accounts.GetQueryable()
+            .Include(a => a.MediaFile)
+            .Include(a => a.UserProfile)
+            .FirstOrDefaultAsync(a => a.Id == accountId);
+
+        if (account == null) return null;
+
+        // --- Account fields ---
+        if (!string.IsNullOrEmpty(updateDto.Email))
+            account.Email = updateDto.Email;
+
+        if (!string.IsNullOrEmpty(updateDto.Password))
+            account.Password = HashPassword(updateDto.Password);
+
+        if (updateDto.ProfileImage != null && updateDto.ProfileImage.Length > 0)
+        {
+            // حذف عکس قدیمی اگر موجود است
+            if (account.MediaFileId.HasValue)
+            {
+                await _mediaFileService.DeleteAsync(account.MediaFileId.Value);
+            }
+
+            var mediaDto = new MediaFileUploadDto
+            {
+                MediaType = "Account",
+                PlacementName = "ProfileImage",
+                Title = $"{account.Email} Profile Image"
+            };
+            var uploadedMedia = await _mediaFileService.CreateAsync(updateDto.ProfileImage, mediaDto);
+            account.MediaFileId = uploadedMedia.Id;
+        }
+
+        // --- UserProfile fields ---
+        var profile = account.UserProfile ?? new UserProfile
+        {
+            AccountId = account.Id,
+            FirstName = "",
+            LastName = ""
+        };
+
+        if (!string.IsNullOrEmpty(updateDto.FirstName))
+            profile.FirstName = updateDto.FirstName;
+        if (!string.IsNullOrEmpty(updateDto.LastName))
+            profile.LastName = updateDto.LastName;
+        if (updateDto.DateOfBirth.HasValue)
+            profile.DateOfBirth = updateDto.DateOfBirth.Value;
+        if (updateDto.Experience.HasValue)
+            profile.Experience = updateDto.Experience.Value;
+        if (updateDto.HealthCondition.HasValue)
+            profile.HealthCondition = updateDto.HealthCondition.Value;
+        if (!string.IsNullOrEmpty(updateDto.HealthDescription))
+            profile.HealthDescription = updateDto.HealthDescription;
+        if (updateDto.SkillLevelId.HasValue)
+            profile.SkillLevelId = updateDto.SkillLevelId.Value;
+
+        if (account.UserProfile == null)
+            account.UserProfile = profile;
+
+        account.UpdatedAt = DateTime.UtcNow;
+        profile.UpdatedAt = DateTime.UtcNow;
+
+        await _unitOfWork.Accounts.UpdateAsync(account);
+        await _unitOfWork.SaveChangesAsync();
+
+        return await GetCurrentUserAsync(accountId);
     }
 
     public async Task<bool> DeleteAsync(int id)

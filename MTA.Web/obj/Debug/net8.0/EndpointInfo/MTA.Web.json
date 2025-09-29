@@ -2875,13 +2875,18 @@
                     "type": "integer",
                     "format": "int32"
                   },
-                  "MediaFileId": {
-                    "type": "integer",
-                    "format": "int32"
+                  "MediaFiles": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/MediaFileDto"
+                    }
                   },
-                  "NewMediaFile": {
-                    "type": "string",
-                    "format": "binary"
+                  "NewMediaFiles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
                   },
                   "Id": {
                     "type": "integer",
@@ -2910,10 +2915,10 @@
                 "SenderId": {
                   "style": "form"
                 },
-                "MediaFileId": {
+                "MediaFiles": {
                   "style": "form"
                 },
-                "NewMediaFile": {
+                "NewMediaFiles": {
                   "style": "form"
                 },
                 "Id": {
@@ -3026,9 +3031,12 @@
                     "type": "integer",
                     "format": "int32"
                   },
-                  "MediaFile": {
-                    "type": "string",
-                    "format": "binary"
+                  "MediaFiles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
                   }
                 }
               },
@@ -3045,7 +3053,7 @@
                 "SenderId": {
                   "style": "form"
                 },
-                "MediaFile": {
+                "MediaFiles": {
                   "style": "form"
                 }
               }
@@ -4271,6 +4279,119 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PermissionDtoPaginatedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Profile": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Profile"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Email": {
+                    "type": "string"
+                  },
+                  "Password": {
+                    "type": "string"
+                  },
+                  "ProfileImage": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "FirstName": {
+                    "type": "string"
+                  },
+                  "LastName": {
+                    "type": "string"
+                  },
+                  "DateOfBirth": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "Experience": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "HealthCondition": {
+                    "type": "boolean"
+                  },
+                  "HealthDescription": {
+                    "type": "string"
+                  },
+                  "SkillLevelId": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "encoding": {
+                "Email": {
+                  "style": "form"
+                },
+                "Password": {
+                  "style": "form"
+                },
+                "ProfileImage": {
+                  "style": "form"
+                },
+                "FirstName": {
+                  "style": "form"
+                },
+                "LastName": {
+                  "style": "form"
+                },
+                "DateOfBirth": {
+                  "style": "form"
+                },
+                "Experience": {
+                  "style": "form"
+                },
+                "HealthCondition": {
+                  "style": "form"
+                },
+                "HealthDescription": {
+                  "style": "form"
+                },
+                "SkillLevelId": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserDto"
                 }
               }
             }
@@ -6876,6 +6997,54 @@
         },
         "additionalProperties": false
       },
+      "CurrentUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "profileImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "experience": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "healthCondition": {
+            "type": "boolean"
+          },
+          "healthDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "skillLevelId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "FAQCategoryDto": {
         "type": "object",
         "properties": {
@@ -7132,6 +7301,59 @@
         },
         "additionalProperties": false
       },
+      "MediaFileDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "fileSize": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "fileExtension": {
+            "type": "string",
+            "nullable": true
+          },
+          "typeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mediaType": {
+            "type": "string",
+            "nullable": true
+          },
+          "placementId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "placementName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "MessageDto": {
         "type": "object",
         "properties": {
@@ -7179,13 +7401,18 @@
             "type": "string",
             "nullable": true
           },
-          "mediaFileId": {
-            "type": "integer",
-            "format": "int32",
+          "mediaFiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MediaFileDto"
+            },
             "nullable": true
           },
-          "mediaFileUrl": {
-            "type": "string",
+          "mediaFileUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           }
         },

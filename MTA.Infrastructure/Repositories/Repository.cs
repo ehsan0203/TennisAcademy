@@ -151,4 +151,10 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         return await _dbSet.FirstOrDefaultAsync(predicate);
     }
+
+    public virtual async Task DeleteRangeAsync(IEnumerable<T> entities)
+    {
+        _dbSet.RemoveRange(entities);
+    }
+
 }

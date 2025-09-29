@@ -79,4 +79,5 @@ public interface IRepository<T> where T : BaseEntity
     /// <param name="predicate">Filter condition</param>
     /// <returns>First matching entity or null</returns>
     Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
+    Task DeleteRangeAsync(IEnumerable<T> entities);
 }

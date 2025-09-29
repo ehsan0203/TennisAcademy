@@ -18,9 +18,21 @@ public class Message : BaseEntity
     [ForeignKey(nameof(SenderId))]
     public virtual Account Sender { get; set; } = null!;
 
-    public int? MediaFileId { get; set; }
-    [ForeignKey(nameof(MediaFileId))]
-    public virtual MediaFile? MediaFile { get; set; }
+    public virtual ICollection<MessageMediaFile> MediaFiles { get; set; } = new List<MessageMediaFile>();
+
+    //public int? MediaFileId { get; set; }
+    //[ForeignKey(nameof(MediaFileId))]
+    //public virtual MediaFile? MediaFile { get; set; }
 
 }
+
+public class MessageMediaFile : BaseEntity
+{
+    public int MessageId { get; set; }
+    public virtual Message Message { get; set; } = null!;
+
+    public int MediaFileId { get; set; }
+    public virtual MediaFile MediaFile { get; set; } = null!;
+}
+
 

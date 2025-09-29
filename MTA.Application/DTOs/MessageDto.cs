@@ -46,12 +46,9 @@ public class MessageDto : BaseDto
 	/// Sender's profile image
 	/// </summary>
 	public string? SenderImage { get; set; }
-	
-	/// <summary>
-	/// Single media file reference for this message
-	/// </summary>
-	public int? MediaFileId { get; set; }
-	public string? MediaFileUrl { get; set; }
+    public List<MediaFileDto>? MediaFiles { get; set; }
+    public List<string> MediaFileUrls { get; set; } = new List<string>();
+
 }
 
 public class CreateMessageDto
@@ -79,36 +76,36 @@ public class CreateMessageDto
     /// <summary>
     /// Single media file reference for this message
     /// </summary>
-    public IFormFile? MediaFile { get; set; }
-}
+    public List<IFormFile>? MediaFiles { get; set; }
+    }
 
-public class UpdateMessageDto : BaseDto
-{
-    /// <summary>
-    /// Text content of the message
-    /// </summary>
-    public required string Text { get; set; }
+    public class UpdateMessageDto : BaseDto
+    {
+        /// <summary>
+        /// Text content of the message
+        /// </summary>
+        public required string Text { get; set; }
 
-    /// <summary>
-    /// Whether the message has been read
-    /// </summary>
-    public bool IsRead { get; set; }
+        /// <summary>
+        /// Whether the message has been read
+        /// </summary>
+        public bool IsRead { get; set; }
 
-    /// <summary>
-    /// Ticket ID that this message belongs to
-    /// </summary>
-    public int TicketId { get; set; }
+        /// <summary>
+        /// Ticket ID that this message belongs to
+        /// </summary>
+        public int TicketId { get; set; }
 
-    /// <summary>
-    /// Sender ID of the message
-    /// </summary>
-    public int SenderId { get; set; }
+        /// <summary>
+        /// Sender ID of the message
+        /// </summary>
+        public int SenderId { get; set; }
 
     /// <summary>
     /// Single media file reference for this message
     /// </summary>
-    public int? MediaFileId { get; set; }
-    public IFormFile? NewMediaFile { get; set; }
+    public List<MediaFileDto>? MediaFiles { get; set; }
+    public List<IFormFile>? NewMediaFiles { get; set; }
 }
 
 

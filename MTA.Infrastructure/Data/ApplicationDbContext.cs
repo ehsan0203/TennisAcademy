@@ -221,12 +221,6 @@ public class ApplicationDbContext : DbContext
 				.WithMany()
 				.HasForeignKey(e => e.SenderId)
 				.OnDelete(DeleteBehavior.Restrict);
-
-			// Message -> MediaFile (single)
-			entity.HasOne(e => e.MediaFile)
-				.WithMany()
-				.HasForeignKey(e => e.MediaFileId)
-				.OnDelete(DeleteBehavior.Restrict);
 		});
 
 		// --- PermissionsRole ---

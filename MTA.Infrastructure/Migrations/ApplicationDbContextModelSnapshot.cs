@@ -325,9 +325,6 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("MediaFileId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SenderId")
                         .HasColumnType("int");
 
@@ -346,13 +343,40 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("MediaFileId");
-
                     b.HasIndex("SenderId");
 
                     b.HasIndex("TicketId");
 
                     b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("MTA.Domain.Entities.MessageMediaFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MediaFileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MessageId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MediaFileId");
+
+                    b.HasIndex("MessageId");
+
+                    b.ToTable("MessageMediaFile");
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Package", b =>
@@ -835,11 +859,6 @@ namespace MTA.Infrastructure.Migrations
                         .WithMany("Messages")
                         .HasForeignKey("AccountId");
 
-                    b.HasOne("MTA.Domain.Entities.MediaFile", "MediaFile")
-                        .WithMany()
-                        .HasForeignKey("MediaFileId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("MTA.Domain.Entities.Account", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
@@ -852,11 +871,28 @@ namespace MTA.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("MediaFile");
-
                     b.Navigation("Sender");
 
                     b.Navigation("Ticket");
+                });
+
+            modelBuilder.Entity("MTA.Domain.Entities.MessageMediaFile", b =>
+                {
+                    b.HasOne("MTA.Domain.Entities.MediaFile", "MediaFile")
+                        .WithMany()
+                        .HasForeignKey("MediaFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MTA.Domain.Entities.Message", "Message")
+                        .WithMany("MediaFiles")
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MediaFile");
+
+                    b.Navigation("Message");
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Package", b =>
@@ -1047,6 +1083,11 @@ namespace MTA.Infrastructure.Migrations
                     b.Navigation("Courses");
 
                     b.Navigation("Profiles");
+                });
+
+            modelBuilder.Entity("MTA.Domain.Entities.Message", b =>
+                {
+                    b.Navigation("MediaFiles");
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Package", b =>

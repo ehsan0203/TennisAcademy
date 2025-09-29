@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MTA.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDatabase : Migration
+    public partial class InitialDataBase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -504,7 +504,6 @@ namespace MTA.Infrastructure.Migrations
                     IsRead = table.Column<bool>(type: "bit", nullable: false),
                     TicketId = table.Column<int>(type: "int", nullable: false),
                     SenderId = table.Column<int>(type: "int", nullable: false),
-                    MediaFileId = table.Column<int>(type: "int", nullable: true),
                     AccountId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -524,15 +523,37 @@ namespace MTA.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Messages_MediaFiles_MediaFileId",
-                        column: x => x.MediaFileId,
-                        principalTable: "MediaFiles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Messages_Tickets_TicketId",
                         column: x => x.TicketId,
                         principalTable: "Tickets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MessageMediaFile",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MessageId = table.Column<int>(type: "int", nullable: false),
+                    MediaFileId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageMediaFile", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MessageMediaFile_MediaFiles_MediaFileId",
+                        column: x => x.MediaFileId,
+                        principalTable: "MediaFiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MessageMediaFile_Messages_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "Messages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -611,14 +632,19 @@ namespace MTA.Infrastructure.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MessageMediaFile_MediaFileId",
+                table: "MessageMediaFile",
+                column: "MediaFileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageMediaFile_MessageId",
+                table: "MessageMediaFile",
+                column: "MessageId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Messages_AccountId",
                 table: "Messages",
                 column: "AccountId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Messages_MediaFileId",
-                table: "Messages",
-                column: "MediaFileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_SenderId",
@@ -741,7 +767,7 @@ namespace MTA.Infrastructure.Migrations
                 name: "Lessons");
 
             migrationBuilder.DropTable(
-                name: "Messages");
+                name: "MessageMediaFile");
 
             migrationBuilder.DropTable(
                 name: "PackageHistories");
@@ -762,7 +788,7 @@ namespace MTA.Infrastructure.Migrations
                 name: "UserProfiles");
 
             migrationBuilder.DropTable(
-                name: "Tickets");
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "Permissions");
@@ -774,13 +800,16 @@ namespace MTA.Infrastructure.Migrations
                 name: "Courses");
 
             migrationBuilder.DropTable(
+                name: "Tickets");
+
+            migrationBuilder.DropTable(
+                name: "Levels");
+
+            migrationBuilder.DropTable(
                 name: "Accounts");
 
             migrationBuilder.DropTable(
                 name: "Packages");
-
-            migrationBuilder.DropTable(
-                name: "Levels");
 
             migrationBuilder.DropTable(
                 name: "MediaFiles");

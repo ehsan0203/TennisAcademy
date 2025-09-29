@@ -38,6 +38,7 @@ public interface IUnitOfWork : IDisposable
     /// <returns>Number of affected records</returns>
     Task<int> SaveChangesAsync();
 
+
     /// <summary>
     /// Gets the UserProfiles repository
     /// </summary>
@@ -57,4 +58,5 @@ public interface IUnitOfWork : IDisposable
     /// Gets the Levels repository
     /// </summary>
     IRepository<Level> Levels { get; }
+
 }

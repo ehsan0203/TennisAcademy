@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace MTA.Application.DTOs.Auth;
 
 /// <summary>
@@ -86,3 +88,20 @@ public class UserInfoDto
     /// </summary>
     public DateTime DateOfBirth { get; set; }
 }
+
+public class UpdateFullUserProfileDto
+{
+    public string? Email { get; set; }
+    public bool? IsActive { get; set; }
+
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public DateTime? DateOfBirth { get; set; }
+    public int? Experience { get; set; }
+    public bool? HealthCondition { get; set; }
+    public string? HealthDescription { get; set; }
+    public int? SkillLevelId { get; set; }
+
+    public IFormFile? AvatarFile { get; set; }
+}
+

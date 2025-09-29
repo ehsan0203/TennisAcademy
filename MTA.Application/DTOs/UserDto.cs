@@ -101,13 +101,15 @@ namespace MTA.Application.DTOs.User
     public class UpdateAccountDto
     {
         public string? Email { get; set; }
-        public string? Password { get; set; } // فقط ورودی
+        public string? Password { get; set; }
         public bool? IsActive { get; set; }
         public IFormFile? Image { get; set; }
         public int? RoleId { get; set; }
         public int? StatusId { get; set; }
         public int? MediaFileId { get; set; }
+
     }
+
 
     // ======================
     // DTO جستجو و فیلتر
@@ -137,13 +139,36 @@ namespace MTA.Application.DTOs.User
         public bool HasNextPage => Page < TotalPages;
     }
 
-    // ======================
-    // DTO آمار پروفایل‌ها
-    // ======================
-    public class UserProfileStatisticsDto
+    public class CurrentUserDto
     {
-        public int TotalProfiles { get; set; }
-        public int ProfilesWithExperience { get; set; }
-        public double AverageExperience { get; set; }
+        public int Id { get; set; }
+        public string Email { get; set; } = null!;
+        public bool IsActive { get; set; }
+        public string? ProfileImageUrl { get; set; }
+
+        // UserProfile fields
+        public string FirstName { get; set; } = null!;
+        public string LastName { get; set; } = null!;
+        public DateTime DateOfBirth { get; set; }
+        public int Experience { get; set; }
+        public bool HealthCondition { get; set; }
+        public string? HealthDescription { get; set; }
+        public int SkillLevelId { get; set; }
     }
+
+    public class UpdateCurrentUserDto
+    {
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+        public IFormFile? ProfileImage { get; set; }
+
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public int? Experience { get; set; }
+        public bool? HealthCondition { get; set; }
+        public string? HealthDescription { get; set; }
+        public int? SkillLevelId { get; set; }
+    }
+
 }

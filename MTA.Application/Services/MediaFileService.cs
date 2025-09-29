@@ -58,17 +58,18 @@ public class MediaFileService : IMediaFileService
 					select m;
 		}
 
-		// Filter by messages referencing this media file
-		if (messageId.HasValue)
-		{
-			var messageQuery = _unitOfWork.Repository<Message>().GetQueryable();
-			query = from m in query
-					join ms in messageQuery on m.Id equals ms.MediaFileId
-					where ms.Id == messageId.Value
-					select m;
-		}
+        // Filter by messages referencing this media file
+        if (messageId.HasValue)
+        {
+            var messageMediaFilesQuery = _unitOfWork.Repository<MessageMediaFile>().GetQueryable()
+                .Include(mm => mm.MediaFile)
+                .Where(mm => mm.MessageId == messageId.Value);
 
-		var totalCount = await query.CountAsync();
+            query = messageMediaFilesQuery.Select(mm => mm.MediaFile);
+        }
+
+
+        var totalCount = await query.CountAsync();
 		var mediaFiles = await query
 			.OrderByDescending(m => m.CreatedAt)
 			.Skip((page - 1) * pageSize)
@@ -151,18 +152,30 @@ public class MediaFileService : IMediaFileService
 			await _unitOfWork.SaveChangesAsync();
 		}
 
-		if (mediaFileDto.MessageId.HasValue)
-		{
-			var message = await _unitOfWork.Repository<Message>().GetByIdAsync(mediaFileDto.MessageId.Value);
-			if (message == null)
-				throw new ArgumentException($"Invalid MessageId: {mediaFileDto.MessageId}");
-			message.MediaFileId = created.Id;
-			message.UpdatedAt = DateTime.UtcNow;
-			await _unitOfWork.Repository<Message>().UpdateAsync(message);
-			await _unitOfWork.SaveChangesAsync();
-		}
+        if (mediaFileDto.MessageId.HasValue)
+        {
+            var message = await _unitOfWork.Repository<Message>().GetByIdAsync(mediaFileDto.MessageId.Value);
+            if (message == null)
+                throw new ArgumentException($"Invalid MessageId: {mediaFileDto.MessageId}");
 
-		return _mapper.Map<MediaFileDto>(created);
+            var messageMediaFile = new MessageMediaFile
+            {
+                MessageId = message.Id,
+                MediaFileId = created.Id,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            await _unitOfWork.Repository<MessageMediaFile>().AddAsync(messageMediaFile);
+
+            message.UpdatedAt = DateTime.UtcNow;
+            await _unitOfWork.Repository<Message>().UpdateAsync(message);
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+
+        return _mapper.Map<MediaFileDto>(created);
 	}
 
 
@@ -233,18 +246,30 @@ public class MediaFileService : IMediaFileService
 			await _unitOfWork.SaveChangesAsync();
 		}
 
-		if (mediaFileDto.MessageId.HasValue)
-		{
-			var message = await _unitOfWork.Repository<Message>().GetByIdAsync(mediaFileDto.MessageId.Value);
-			if (message == null)
-				throw new ArgumentException($"Invalid MessageId: {mediaFileDto.MessageId}");
-			message.MediaFileId = existing.Id;
-			message.UpdatedAt = DateTime.UtcNow;
-			await _unitOfWork.Repository<Message>().UpdateAsync(message);
-			await _unitOfWork.SaveChangesAsync();
-		}
+        if (mediaFileDto.MessageId.HasValue)
+        {
+            var message = await _unitOfWork.Repository<Message>().GetByIdAsync(mediaFileDto.MessageId.Value);
+            if (message == null)
+                throw new ArgumentException($"Invalid MessageId: {mediaFileDto.MessageId}");
 
-		return _mapper.Map<MediaFileDto>(updated);
+            var messageMediaFile = new MessageMediaFile
+            {
+                MessageId = message.Id,
+                MediaFileId = existing.Id, 
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            await _unitOfWork.Repository<MessageMediaFile>().AddAsync(messageMediaFile);
+
+            message.UpdatedAt = DateTime.UtcNow;
+            await _unitOfWork.Repository<Message>().UpdateAsync(message);
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+
+        return _mapper.Map<MediaFileDto>(updated);
 	}
 
 

@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs.Auth;
+using MTA.Application.DTOs.User;
 using MTA.Application.Services;
+using System.Security.Claims;
 
 namespace MTA.Web.Controllers;
 
@@ -14,11 +17,13 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly ILookupService _lookupService;
+    private readonly IAccountService _accountService;
 
-    public AuthController(IAuthService authService, ILookupService lookupService)
+    public AuthController(IAuthService authService, ILookupService lookupService, IAccountService accountService)
     {
         _authService = authService;
         _lookupService = lookupService;
+        _accountService = accountService;
     }
 
     /// <summary>
@@ -185,4 +190,5 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { message = "Internal server error", error = ex.Message });
         }
     }
+
 }

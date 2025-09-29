@@ -18,6 +18,9 @@ public interface IAccountService
     /// </summary>
     Task<AccountDto?> GetByIdAsync(int id);
 
+    Task<CurrentUserDto?> UpdateCurrentUserAsync(int accountId, UpdateCurrentUserDto updateDto);
+
+    Task<CurrentUserDto?> GetCurrentUserAsync(int accountId);
     /// <summary>
     /// Get account by email
     /// </summary>
