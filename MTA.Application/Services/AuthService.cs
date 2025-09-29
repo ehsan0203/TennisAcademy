@@ -64,7 +64,7 @@ public class AuthService : IAuthService
                 RoleId = account.RoleId,
                 RoleTitle = account.Role?.Title ?? "",
                 SkillLevelValue = profile?.SkillLevel?.Title ?? "",
-                ImageUrl = account.MediaFile.Url
+                ImageUrl = string.IsNullOrEmpty(account.MediaFile?.Url) ? string.Empty : account.MediaFile.Url
             }
         };
     }
@@ -142,7 +142,7 @@ public class AuthService : IAuthService
                 LastName = registerDto.LastName,
                 RoleTitle = studentRole?.Title ?? "",
                 SkillLevelValue = skillLevel?.Title ?? "",
-                ImageUrl = account.MediaFile.Url
+                ImageUrl = string.IsNullOrEmpty(account.MediaFile?.Url) ? string.Empty : account.MediaFile.Url
             }
         };
     }
@@ -156,7 +156,14 @@ public class AuthService : IAuthService
         if (tokenEntity == null || tokenEntity.IsRevoked || tokenEntity.ExpiresAt < DateTime.UtcNow)
             throw new UnauthorizedAccessException("Invalid or expired refresh token");
 
-        var account = await _unitOfWork.Repository<Account>().GetByIdAsync(tokenEntity.AccountId);
+        // بارگذاری Account همراه با Role و UserProfile و SkillLevel
+        var account = (await _unitOfWork.Repository<Account>()
+                        .GetAllAsync(include: q => q
+                            .Include(a => a.Role)
+                            .Include(a => a.UserProfile)
+                                .ThenInclude(p => p.SkillLevel)))
+                      .FirstOrDefault(a => a.Id == tokenEntity.AccountId);
+
         if (account == null)
             throw new UnauthorizedAccessException("User not found");
 
@@ -171,6 +178,8 @@ public class AuthService : IAuthService
         // Save new token
         await SaveRefreshTokenAsync(account.Id, newRefreshToken);
 
+        var profile = account.UserProfile;
+
         return new AuthResponseDto
         {
             AccessToken = newAccessToken,
@@ -180,11 +189,14 @@ public class AuthService : IAuthService
             {
                 Id = account.Id,
                 Email = account.Email,
-                FirstName = account.UserProfile?.FirstName ?? "",
-                LastName = account.UserProfile?.LastName ?? "",
+                FirstName = profile?.FirstName ?? "",
+                LastName = profile?.LastName ?? "",
+                RoleId = account.RoleId,
+                SkillLevelId = profile.SkillLevelId,
                 RoleTitle = account.Role?.Title ?? "",
-                SkillLevelValue = account.UserProfile?.SkillLevel?.Title ?? "",
-                ImageUrl = account.MediaFile.Url
+                Experience = profile.Experience,
+                SkillLevelValue = profile?.SkillLevel?.Title ?? "",
+                ImageUrl = string.IsNullOrEmpty(account.MediaFile?.Url) ? string.Empty : account.MediaFile.Url
             }
         };
     }

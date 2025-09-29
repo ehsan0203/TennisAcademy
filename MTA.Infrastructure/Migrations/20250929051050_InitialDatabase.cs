@@ -117,6 +117,37 @@ namespace MTA.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MediaFiles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    FileSize = table.Column<long>(type: "bigint", nullable: false),
+                    FileExtension = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TypeId = table.Column<int>(type: "int", nullable: false),
+                    PlacementId = table.Column<int>(type: "int", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MediaFiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MediaFiles_Lookups_PlacementId",
+                        column: x => x.PlacementId,
+                        principalTable: "Lookups",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MediaFiles_Lookups_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "Lookups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Packages",
                 columns: table => new
                 {
@@ -138,38 +169,6 @@ namespace MTA.Infrastructure.Migrations
                         name: "FK_Packages_Lookups_DurationUnitId",
                         column: x => x.DurationUnitId,
                         principalTable: "Lookups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Accounts",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Accounts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Accounts_Lookups_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "Lookups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Accounts_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -200,6 +199,89 @@ namespace MTA.Infrastructure.Migrations
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Accounts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    MediaFileId = table.Column<int>(type: "int", nullable: true),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Accounts_Lookups_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Lookups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Accounts_MediaFiles_MediaFileId",
+                        column: x => x.MediaFileId,
+                        principalTable: "MediaFiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Accounts_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Courses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    LevelId = table.Column<int>(type: "int", nullable: false),
+                    PosterMediaFileId = table.Column<int>(type: "int", nullable: true),
+                    IconMediaFileId = table.Column<int>(type: "int", nullable: true),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Courses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Courses_Levels_LevelId",
+                        column: x => x.LevelId,
+                        principalTable: "Levels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Courses_Lookups_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Lookups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Courses_MediaFiles_IconMediaFileId",
+                        column: x => x.IconMediaFileId,
+                        principalTable: "MediaFiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Courses_MediaFiles_PosterMediaFileId",
+                        column: x => x.PosterMediaFileId,
+                        principalTable: "MediaFiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -346,75 +428,6 @@ namespace MTA.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Messages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Text = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
-                    IsRead = table.Column<bool>(type: "bit", nullable: false),
-                    TicketId = table.Column<int>(type: "int", nullable: false),
-                    SenderId = table.Column<int>(type: "int", nullable: false),
-                    AccountId = table.Column<int>(type: "int", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Messages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Messages_Accounts_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Messages_Accounts_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Messages_Tickets_TicketId",
-                        column: x => x.TicketId,
-                        principalTable: "Tickets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Courses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    LevelId = table.Column<int>(type: "int", nullable: false),
-                    PosterMediaFileId = table.Column<int>(type: "int", nullable: true),
-                    IconMediaFileId = table.Column<int>(type: "int", nullable: true),
-                    StatusId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Courses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Courses_Levels_LevelId",
-                        column: x => x.LevelId,
-                        principalTable: "Levels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Courses_Lookups_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "Lookups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Lessons",
                 columns: table => new
                 {
@@ -423,8 +436,8 @@ namespace MTA.Infrastructure.Migrations
                     Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     IsFree = table.Column<bool>(type: "bit", nullable: false),
-                    Order = table.Column<int>(type: "int", nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false),
+                    MediaFileId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -437,6 +450,12 @@ namespace MTA.Infrastructure.Migrations
                         principalTable: "Courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Lessons_MediaFiles_MediaFileId",
+                        column: x => x.MediaFileId,
+                        principalTable: "MediaFiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -476,46 +495,44 @@ namespace MTA.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MediaFiles",
+                name: "Messages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    FileSize = table.Column<long>(type: "bigint", nullable: false),
-                    FileExtension = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TypeId = table.Column<int>(type: "int", nullable: false),
-                    PlacementId = table.Column<int>(type: "int", nullable: true),
-                    LessonId = table.Column<int>(type: "int", nullable: true),
-                    MessageId = table.Column<int>(type: "int", nullable: true),
+                    Text = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false),
+                    TicketId = table.Column<int>(type: "int", nullable: false),
+                    SenderId = table.Column<int>(type: "int", nullable: false),
+                    MediaFileId = table.Column<int>(type: "int", nullable: true),
+                    AccountId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MediaFiles", x => x.Id);
+                    table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MediaFiles_Lessons_LessonId",
-                        column: x => x.LessonId,
-                        principalTable: "Lessons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MediaFiles_Lookups_PlacementId",
-                        column: x => x.PlacementId,
-                        principalTable: "Lookups",
+                        name: "FK_Messages_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Accounts",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_MediaFiles_Lookups_TypeId",
-                        column: x => x.TypeId,
-                        principalTable: "Lookups",
+                        name: "FK_Messages_Accounts_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_MediaFiles_Messages_MessageId",
-                        column: x => x.MessageId,
-                        principalTable: "Messages",
+                        name: "FK_Messages_MediaFiles_MediaFileId",
+                        column: x => x.MediaFileId,
+                        principalTable: "MediaFiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Messages_Tickets_TicketId",
+                        column: x => x.TicketId,
+                        principalTable: "Tickets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -525,6 +542,11 @@ namespace MTA.Infrastructure.Migrations
                 table: "Accounts",
                 column: "Email",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Accounts_MediaFileId",
+                table: "Accounts",
+                column: "MediaFileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_RoleId",
@@ -562,6 +584,11 @@ namespace MTA.Infrastructure.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Lessons_MediaFileId",
+                table: "Lessons",
+                column: "MediaFileId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Levels_Title",
                 table: "Levels",
                 column: "Title",
@@ -572,16 +599,6 @@ namespace MTA.Infrastructure.Migrations
                 table: "Lookups",
                 columns: new[] { "Category", "Key" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MediaFiles_LessonId",
-                table: "MediaFiles",
-                column: "LessonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MediaFiles_MessageId",
-                table: "MediaFiles",
-                column: "MessageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MediaFiles_PlacementId",
@@ -597,6 +614,11 @@ namespace MTA.Infrastructure.Migrations
                 name: "IX_Messages_AccountId",
                 table: "Messages",
                 column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_MediaFileId",
+                table: "Messages",
+                column: "MediaFileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_SenderId",
@@ -710,66 +732,16 @@ namespace MTA.Infrastructure.Migrations
                 name: "IX_UserProfiles_SkillLevelId",
                 table: "UserProfiles",
                 column: "SkillLevelId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Courses_MediaFiles_IconMediaFileId",
-                table: "Courses",
-                column: "IconMediaFileId",
-                principalTable: "MediaFiles",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Courses_MediaFiles_PosterMediaFileId",
-                table: "Courses",
-                column: "PosterMediaFileId",
-                principalTable: "MediaFiles",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Accounts_Lookups_StatusId",
-                table: "Accounts");
+            migrationBuilder.DropTable(
+                name: "Lessons");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_Courses_Lookups_StatusId",
-                table: "Courses");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_MediaFiles_Lookups_PlacementId",
-                table: "MediaFiles");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_MediaFiles_Lookups_TypeId",
-                table: "MediaFiles");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Packages_Lookups_DurationUnitId",
-                table: "Packages");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Tickets_Lookups_StatusId",
-                table: "Tickets");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Accounts_Roles_RoleId",
-                table: "Accounts");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Courses_Levels_LevelId",
-                table: "Courses");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Courses_MediaFiles_IconMediaFileId",
-                table: "Courses");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Courses_MediaFiles_PosterMediaFileId",
-                table: "Courses");
+            migrationBuilder.DropTable(
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "PackageHistories");
@@ -790,16 +762,22 @@ namespace MTA.Infrastructure.Migrations
                 name: "UserProfiles");
 
             migrationBuilder.DropTable(
+                name: "Tickets");
+
+            migrationBuilder.DropTable(
                 name: "Permissions");
 
             migrationBuilder.DropTable(
                 name: "FAQCategories");
 
             migrationBuilder.DropTable(
-                name: "Lookups");
+                name: "Courses");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "Accounts");
+
+            migrationBuilder.DropTable(
+                name: "Packages");
 
             migrationBuilder.DropTable(
                 name: "Levels");
@@ -808,22 +786,10 @@ namespace MTA.Infrastructure.Migrations
                 name: "MediaFiles");
 
             migrationBuilder.DropTable(
-                name: "Lessons");
+                name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "Messages");
-
-            migrationBuilder.DropTable(
-                name: "Courses");
-
-            migrationBuilder.DropTable(
-                name: "Tickets");
-
-            migrationBuilder.DropTable(
-                name: "Accounts");
-
-            migrationBuilder.DropTable(
-                name: "Packages");
+                name: "Lookups");
         }
     }
 }

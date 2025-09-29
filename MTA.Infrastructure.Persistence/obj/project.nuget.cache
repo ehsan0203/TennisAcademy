@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "X95t6/xkROA=",
+  "dgSpecHash": "Ji55zFza1b0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\XMART\\Desktop\\MTA\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj",
+  "projectFilePath": "C:\\Maldoust\\MTA\\MTA.Infrastructure.Persistence\\MTA.Infrastructure.Persistence.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\XMART\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\XMART\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

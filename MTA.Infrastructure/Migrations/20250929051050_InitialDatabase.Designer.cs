@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MTA.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250918055935_InitialDatabase")]
+    [Migration("20250929051050_InitialDatabase")]
     partial class InitialDatabase
     {
         /// <inheritdoc />
@@ -41,12 +41,11 @@ namespace MTA.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Image")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("MediaFileId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -66,6 +65,8 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("Email")
                         .IsUnique();
+
+                    b.HasIndex("MediaFileId");
 
                     b.HasIndex("RoleId");
 
@@ -180,7 +181,7 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<bool>("IsFree")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Order")
+                    b.Property<int?>("MediaFileId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -194,6 +195,8 @@ namespace MTA.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
+
+                    b.HasIndex("MediaFileId");
 
                     b.ToTable("Lessons");
                 });
@@ -280,12 +283,6 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<long>("FileSize")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("LessonId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MessageId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("PlacementId")
                         .HasColumnType("int");
 
@@ -306,10 +303,6 @@ namespace MTA.Infrastructure.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LessonId");
-
-                    b.HasIndex("MessageId");
 
                     b.HasIndex("PlacementId");
 
@@ -335,6 +328,9 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("MediaFileId")
+                        .HasColumnType("int");
+
                     b.Property<int>("SenderId")
                         .HasColumnType("int");
 
@@ -352,6 +348,8 @@ namespace MTA.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("MediaFileId");
 
                     b.HasIndex("SenderId");
 
@@ -742,6 +740,11 @@ namespace MTA.Infrastructure.Migrations
 
             modelBuilder.Entity("MTA.Domain.Entities.Account", b =>
                 {
+                    b.HasOne("MTA.Domain.Entities.MediaFile", "MediaFile")
+                        .WithMany()
+                        .HasForeignKey("MediaFileId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MTA.Domain.Entities.Role", "Role")
                         .WithMany("Accounts")
                         .HasForeignKey("RoleId")
@@ -753,6 +756,8 @@ namespace MTA.Infrastructure.Migrations
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("MediaFile");
 
                     b.Navigation("Role");
 
@@ -800,21 +805,18 @@ namespace MTA.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MTA.Domain.Entities.MediaFile", "MediaFile")
+                        .WithMany()
+                        .HasForeignKey("MediaFileId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Course");
+
+                    b.Navigation("MediaFile");
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.MediaFile", b =>
                 {
-                    b.HasOne("MTA.Domain.Entities.Lesson", "Lesson")
-                        .WithMany("MediaFiles")
-                        .HasForeignKey("LessonId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MTA.Domain.Entities.Message", "Message")
-                        .WithMany("MediaFiles")
-                        .HasForeignKey("MessageId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("MTA.Domain.Entities.Lookup", "Placement")
                         .WithMany()
                         .HasForeignKey("PlacementId");
@@ -824,10 +826,6 @@ namespace MTA.Infrastructure.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Lesson");
-
-                    b.Navigation("Message");
 
                     b.Navigation("Placement");
 
@@ -840,6 +838,11 @@ namespace MTA.Infrastructure.Migrations
                         .WithMany("Messages")
                         .HasForeignKey("AccountId");
 
+                    b.HasOne("MTA.Domain.Entities.MediaFile", "MediaFile")
+                        .WithMany()
+                        .HasForeignKey("MediaFileId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MTA.Domain.Entities.Account", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
@@ -851,6 +854,8 @@ namespace MTA.Infrastructure.Migrations
                         .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("MediaFile");
 
                     b.Navigation("Sender");
 
@@ -1040,21 +1045,11 @@ namespace MTA.Infrastructure.Migrations
                     b.Navigation("Questions");
                 });
 
-            modelBuilder.Entity("MTA.Domain.Entities.Lesson", b =>
-                {
-                    b.Navigation("MediaFiles");
-                });
-
             modelBuilder.Entity("MTA.Domain.Entities.Level", b =>
                 {
                     b.Navigation("Courses");
 
                     b.Navigation("Profiles");
-                });
-
-            modelBuilder.Entity("MTA.Domain.Entities.Message", b =>
-                {
-                    b.Navigation("MediaFiles");
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Package", b =>

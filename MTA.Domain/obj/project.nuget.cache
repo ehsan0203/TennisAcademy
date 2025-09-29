@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "leSpXX0GtMY=",
+  "dgSpecHash": "ZBYr1ADtFak=",
   "success": true,
-  "projectFilePath": "C:\\Users\\XMART\\Desktop\\MTA\\MTA.Domain\\MTA.Domain.csproj",
+  "projectFilePath": "C:\\Maldoust\\MTA\\MTA.Domain\\MTA.Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\XMART\\.nuget\\packages\\fluentvalidation\\11.8.1\\fluentvalidation.11.8.1.nupkg.sha512",
     "C:\\Users\\XMART\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.0\\microsoft.entityframeworkcore.8.0.0.nupkg.sha512",

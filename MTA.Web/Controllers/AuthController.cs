@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using MTA.Application.DTOs;
 using MTA.Application.DTOs.Auth;
 using MTA.Application.Services;
 

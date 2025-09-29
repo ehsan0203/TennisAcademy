@@ -10,7 +10,7 @@ namespace MTA.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+//[Authorize]
 public class UserController : ControllerBase
 {
     private readonly IUserProfileService _userProfileService;
@@ -72,12 +72,12 @@ public class UserController : ControllerBase
     {
         try
         {
-            var userId = GetCurrentUserId();
-            if (userId == null)
-                return Unauthorized();
+            //var userId = GetCurrentUserId();
+            //if (userId == null)
+            //    return Unauthorized();
 
-            if (userId.Value != id && !User.IsInRole("Admin"))
-                return Forbid();
+            //if (userId.Value != id && !User.IsInRole("Admin"))
+            //    return Forbid();
 
             var account = await _accountService.GetByIdAsync(id);
             if (account == null)

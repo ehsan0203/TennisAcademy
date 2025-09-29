@@ -2871,21 +2871,9 @@
                     "type": "integer",
                     "format": "int32"
                   },
-                  "TicketTopic": {
-                    "type": "string"
-                  },
                   "SenderId": {
                     "type": "integer",
                     "format": "int32"
-                  },
-                  "SenderFirstName": {
-                    "type": "string"
-                  },
-                  "SenderLastName": {
-                    "type": "string"
-                  },
-                  "SenderImage": {
-                    "type": "string"
                   },
                   "MediaFileId": {
                     "type": "integer",
@@ -2919,19 +2907,7 @@
                 "TicketId": {
                   "style": "form"
                 },
-                "TicketTopic": {
-                  "style": "form"
-                },
                 "SenderId": {
-                  "style": "form"
-                },
-                "SenderFirstName": {
-                  "style": "form"
-                },
-                "SenderLastName": {
-                  "style": "form"
-                },
-                "SenderImage": {
                   "style": "form"
                 },
                 "MediaFileId": {
@@ -3046,18 +3022,9 @@
                     "type": "integer",
                     "format": "int32"
                   },
-                  "TicketTopic": {
-                    "type": "string"
-                  },
                   "SenderId": {
                     "type": "integer",
                     "format": "int32"
-                  },
-                  "SenderFirstName": {
-                    "type": "string"
-                  },
-                  "SenderLastName": {
-                    "type": "string"
                   },
                   "MediaFile": {
                     "type": "string",
@@ -3075,16 +3042,7 @@
                 "TicketId": {
                   "style": "form"
                 },
-                "TicketTopic": {
-                  "style": "form"
-                },
                 "SenderId": {
-                  "style": "form"
-                },
-                "SenderFirstName": {
-                  "style": "form"
-                },
-                "SenderLastName": {
                   "style": "form"
                 },
                 "MediaFile": {

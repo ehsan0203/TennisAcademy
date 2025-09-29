@@ -2042,23 +2042,8 @@
         "IsRequired": false
       },
       {
-        "Name": "TicketTopic",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
         "Name": "SenderId",
         "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "SenderFirstName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "SenderLastName",
-        "Type": "System.String",
         "IsRequired": false
       },
       {
@@ -2154,28 +2139,8 @@
         "IsRequired": false
       },
       {
-        "Name": "TicketTopic",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
         "Name": "SenderId",
         "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "SenderFirstName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "SenderLastName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "SenderImage",
-        "Type": "System.String",
         "IsRequired": false
       },
       {

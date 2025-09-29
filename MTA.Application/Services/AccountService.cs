@@ -339,15 +339,15 @@ public class AccountService : IAccountService
             Id = account.Id,
             Email = account.Email,
             IsActive = account.IsActive,
-            Image = account.MediaFile.Url,
+            Image = account.MediaFile?.Url ?? string.Empty,
             RoleId = account.RoleId,
-            RoleTitle = account.Role?.Title,
+            RoleTitle = account.Role?.Title ?? string.Empty,
             StatusId = account.StatusId,
-            StatusValue = account.Status?.Value,
+            StatusValue = account.Status?.Value ?? string.Empty,
             CreatedAt = account.CreatedAt,
-            UpdatedAt = account.UpdatedAt.Date,
+            UpdatedAt = account.UpdatedAt,
             MediaFileId = account.MediaFileId,
-            MediaFileUrl = account.MediaFile != null ? account.MediaFile.Url : null,
+            MediaFileUrl = account.MediaFile?.Url ?? string.Empty,
             UserProfile = account.UserProfile != null ? new UserProfileDto
             {
                 Id = account.UserProfile.Id,
@@ -357,10 +357,16 @@ public class AccountService : IAccountService
                 Experience = account.UserProfile.Experience,
                 AccountId = account.UserProfile.AccountId,
                 SkillLevelId = account.UserProfile.SkillLevelId,
-                SkillLevelValue = account.UserProfile.SkillLevel?.Title
+                SkillLevelValue = account.UserProfile.SkillLevel?.Title ?? "Beginner",
+                AvatarUrl = account.MediaFile?.Url ?? string.Empty,
+                CreatedAt = account.UserProfile.CreatedAt,
+                UpdatedAt = account.UserProfile.UpdatedAt,
+                HealthCondition = account.UserProfile.HealthCondition,
+                HealthDescription = account.UserProfile.HealthDescription
             } : null
         };
     }
+
 
     #endregion
 }
