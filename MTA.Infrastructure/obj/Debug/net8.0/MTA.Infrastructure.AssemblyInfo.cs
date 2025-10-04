@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MTA.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f77a42f5ea6ced746174995edeaa29527d42874")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+572f6673d97f4eb479b805718e3cf68e9a5b4687")]
 [assembly: System.Reflection.AssemblyProductAttribute("MTA.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MTA.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MTA.Application.DTOs;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
 using MTA.Infrastructure.Data;
+using System.Security.Claims;
 
 namespace MTA.Web.Controllers;
 
@@ -136,19 +138,55 @@ public class TicketsController : ControllerBase
         try
         {
             if (string.IsNullOrWhiteSpace(ticketDto.Topic))
-            {
                 return BadRequest("Topic is required");
-            }
+
+            var accountIdClaim = User.FindFirst("AccountId")?.Value
+                ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (accountIdClaim == null)
+                return Unauthorized("Account ID not found in token.");
+
+            int accountId = int.Parse(accountIdClaim);
+
+            var openStatus = await _unitOfWork.Repository<Lookup>()
+                .GetQueryable()
+                .FirstOrDefaultAsync(l => l.Category == "TicketStatus" && l.Key == "Pending");
+
+            if (openStatus == null)
+                return StatusCode(500, "Ticket status 'Open' not found in database.");
+
+            var account = await _unitOfWork.Repository<Account>()
+                .GetQueryable()
+                .Include(a => a.PackageHistory)
+                    .ThenInclude(ph => ph.Package)
+                .Include(a => a.UserProfile)
+                .FirstOrDefaultAsync(a => a.Id == accountId);
+
+            if (account == null)
+                return NotFound("Account not found.");
+
+            var activePackage = account.PackageHistory
+                .Where(ph => ph.ExpiredDate > DateTime.UtcNow && ph.RemainingTickets > 0)
+                .OrderBy(ph => ph.ExpiredDate)
+                .FirstOrDefault();
+
+            if (activePackage == null)
+                return BadRequest("No active package with remaining tickets found.");
 
             var ticket = new Ticket
             {
                 Topic = ticketDto.Topic,
-                StatusId = 21, 
-                AccountId = ticketDto.AccountId,
-                PackageId = ticketDto.PackageId
+                StatusId = openStatus.Id,
+                AccountId = account.Id,
+                PackageId = activePackage.PackageId
             };
 
             var createdTicket = await _unitOfWork.Repository<Ticket>().AddAsync(ticket);
+
+            activePackage.RemainingTickets = Math.Max(0, activePackage.RemainingTickets - 1);
+            activePackage.RemainingMessages = activePackage.Package.MessageCount;
+
+            _unitOfWork.Repository<PackageHistory>().UpdateAsync(activePackage);
             await _unitOfWork.SaveChangesAsync();
 
             var ticketWithNav = await _unitOfWork.Repository<Ticket>()
@@ -162,22 +200,20 @@ public class TicketsController : ControllerBase
             if (ticketWithNav == null)
                 return StatusCode(500, "Ticket could not be loaded after creation.");
 
-
-            // ساخت DTO امن از لحاظ null
             var resultDto = new TicketDto
             {
-                Id = createdTicket.Id,
-                Topic = createdTicket.Topic,
-                StatusId = createdTicket.StatusId,
-                StatusValue = createdTicket.Status?.Value,
-                AccountId = createdTicket.AccountId,
-                PackageId = createdTicket.PackageId,
-                PackageTitle = createdTicket.Package?.Title,
-                UserFirstName = createdTicket.Account?.UserProfile?.FirstName,
-                UserLastName = createdTicket.Account?.UserProfile?.LastName,
-                MessageCount = 0,
-                CreatedAt = createdTicket.CreatedAt,
-                UpdatedAt = createdTicket.UpdatedAt
+                Id = ticketWithNav.Id,
+                Topic = ticketWithNav.Topic,
+                StatusId = ticketWithNav.StatusId,
+                StatusValue = ticketWithNav.Status?.Value,
+                AccountId = ticketWithNav.AccountId,
+                PackageId = ticketWithNav.PackageId,
+                PackageTitle = ticketWithNav.Package?.Title,
+                UserFirstName = ticketWithNav.Account?.UserProfile?.FirstName,
+                UserLastName = ticketWithNav.Account?.UserProfile?.LastName,
+                MessageCount = ticketWithNav.Package?.MessageCount ?? 0,
+                CreatedAt = ticketWithNav.CreatedAt,
+                UpdatedAt = ticketWithNav.UpdatedAt
             };
 
             return CreatedAtAction(nameof(GetTicket), new { id = resultDto.Id }, resultDto);

@@ -154,7 +154,14 @@ namespace MTA.Application.DTOs.User
         public bool HealthCondition { get; set; }
         public string? HealthDescription { get; set; }
         public int SkillLevelId { get; set; }
+        public string SkillLevelValue { get; set; }
+
+        public List<int> PurchasedCourseIds { get; set; } = new();
+        public int RemainingCredit { get; set; }
+
     }
+
+    
 
     public class UpdateCurrentUserDto
     {

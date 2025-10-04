@@ -28,11 +28,6 @@ public class LessonDto : BaseDto
 	public int CourseId { get; set; }
 	
 	/// <summary>
-	/// Course title
-	/// </summary>
-	public string? CourseTitle { get; set; }
-	
-	/// <summary>
 	/// Single media file reference for this lesson
 	/// </summary>
 	public int? MediaFileId { get; set; }
@@ -73,11 +68,6 @@ public class CreateLessonDto
 	public int CourseId { get; set; }
 
 	/// <summary>
-	/// Course title
-	/// </summary>
-	public string? CourseTitle { get; set; }
-
-	/// <summary>
 	/// Single media file reference for this lesson
 	/// </summary>
 	public IFormFile? MediaFile { get; set; }
@@ -85,7 +75,7 @@ public class CreateLessonDto
 
 }
 
-public class UpdateLessonDto : BaseDto
+public class UpdateLessonDto
 {
     /// <summary>
     /// Title of the lesson
@@ -97,20 +87,15 @@ public class UpdateLessonDto : BaseDto
     /// </summary>
     public string? Description { get; set; }
 
-    /// <summary>
-    /// Whether this lesson is free or requires purchase
-    /// </summary>
-    public bool IsFree { get; set; }
+	/// <summary>
+	/// Whether this lesson is free or requires purchase
+	/// </summary>
+	public bool? IsFree { get; set; } = true;
 
     /// <summary>
     /// Course ID that this lesson belongs to
     /// </summary>
     public int CourseId { get; set; }
-
-    /// <summary>
-    /// Course title
-    /// </summary>
-    public string? CourseTitle { get; set; }
 
     /// <summary>
     /// Single media file reference for this lesson

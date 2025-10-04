@@ -60,7 +60,6 @@ public class CourseMappingProfile : BaseMappingProfile
 		// Lesson mappings
 		// Lesson -> LessonDto
 		CreateMap<Lesson, LessonDto>()
-			.ForMember(dest => dest.CourseTitle, opt => opt.MapFrom(src => src.Course.Title))
 			.ForMember(dest => dest.MediaFileId, opt => opt.MapFrom(src => src.MediaFileId))
 			.ForMember(dest => dest.MediaFileUrl, opt => opt.MapFrom(src => src.MediaFile != null ? src.MediaFile.Url : null))
 			.ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))

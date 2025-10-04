@@ -190,7 +190,6 @@ public class LessonService : ILessonService
             if (lesson == null)
                 throw new InvalidOperationException($"Lesson with ID {id} not found");
 
-            // اگر Course تغییر کرده، ولیدیشن
             if (lessonDto.CourseId != lesson.CourseId)
             {
                 var course = await _unitOfWork.Repository<Course>().GetByIdAsync(lessonDto.CourseId);
@@ -198,9 +197,6 @@ public class LessonService : ILessonService
                     throw new InvalidOperationException($"Course with ID {lessonDto.CourseId} not found");
             }
 
-            // -------------------------------
-            // آپدیت یا ایجاد MediaFile
-            // -------------------------------
             if (lessonDto.NewMediaFile != null)
             {
                 var mediaFileInfo = new MediaFileUploadDto
@@ -229,32 +225,25 @@ public class LessonService : ILessonService
             }
             else if (lessonDto.MediaFileId.HasValue)
             {
-                // اگر فقط ID جدید ارسال شده
                 lesson.MediaFileId = lessonDto.MediaFileId.Value;
             }
 
-            // -------------------------------
-            // آپدیت پراپرتی‌های ساده
-            // -------------------------------
             if (!string.IsNullOrEmpty(lessonDto.Title))
                 lesson.Title = lessonDto.Title;
 
             if (!string.IsNullOrEmpty(lessonDto.Description))
                 lesson.Description = lessonDto.Description;
 
-            lesson.IsFree = lessonDto.IsFree;
+            lesson.IsFree = lessonDto.IsFree ?? true;
 
-            // CourseId اگر تغییر کرده
             if (lessonDto.CourseId != 0)
                 lesson.CourseId = lessonDto.CourseId;
 
             lesson.UpdatedAt = DateTime.UtcNow;
 
-            // ذخیره تغییرات
             await _unitOfWork.Repository<Lesson>().UpdateAsync(lesson);
             await _unitOfWork.SaveChangesAsync();
 
-            // برگردوندن LessonDto آپدیت شده
             return _mapper.Map<LessonDto>(lesson);
         }
         catch (Exception ex)
@@ -370,7 +359,6 @@ public class LessonService : ILessonService
 			Description = lesson.Description,
 			IsFree = lesson.IsFree,
 			CourseId = lesson.CourseId,
-			CourseTitle = lesson.Course?.Title,
 			MediaFileId = lesson.MediaFileId,
 			MediaFileUrl = lesson.MediaFile != null ? lesson.MediaFile.Url : null,
 			CreatedAt = lesson.CreatedAt,

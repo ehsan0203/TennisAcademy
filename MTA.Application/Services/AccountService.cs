@@ -153,7 +153,6 @@ public class AccountService : IAccountService
         {
             _logger.LogError(ex, "Error creating account for Email: {Email}", accountDto.Email);
 
-            // 5️⃣ rollback فایل آپلود شده در صورت خطای دیتابیس
             if (uploadedMedia != null)
             {
                 try
@@ -175,9 +174,29 @@ public class AccountService : IAccountService
         var account = await _unitOfWork.Accounts.GetQueryable()
             .Include(a => a.MediaFile)
             .Include(a => a.UserProfile)
+                .ThenInclude(a=>a.SkillLevel)
+            .Include(u => u.UserCourseHistory)
+            .Include(u => u.PackageHistory)
+                .ThenInclude(ph => ph.Package)
+            .Include(u => u.Tickets)
             .FirstOrDefaultAsync(a => a.Id == accountId);
 
         if (account == null) return null;
+
+        var purchasedCourseIds = account.UserCourseHistory
+            .Select(uch => uch.CourseId)
+            .ToList();
+
+        var activePackage = account.PackageHistory
+            .Where(p => p.ExpiredDate > DateTime.UtcNow)
+            .OrderByDescending(p => p.ExpiredDate)
+            .FirstOrDefault();
+
+        int remainingCredit = 0;
+        if (activePackage != null)
+        {
+            remainingCredit = activePackage.RemainingTickets;
+        }
 
         var profile = account.UserProfile;
 
@@ -193,7 +212,10 @@ public class AccountService : IAccountService
             Experience = profile?.Experience ?? 0,
             HealthCondition = profile?.HealthCondition ?? false,
             HealthDescription = profile?.HealthDescription,
-            SkillLevelId = profile?.SkillLevelId ?? 0
+            SkillLevelId = profile?.SkillLevelId ?? 0,
+            SkillLevelValue = profile.SkillLevel?.Title ?? "",
+            PurchasedCourseIds = purchasedCourseIds,
+            RemainingCredit = remainingCredit
         };
     }
 

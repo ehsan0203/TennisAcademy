@@ -33,6 +33,7 @@ public class CourseService : ICourseService
             .Include(c => c.IconMediaFile)
             .Include(c => c.Level)
             .Include(c => c.Status)
+            .Include(c => c.Lessons)
             .AsQueryable();
 
         // Apply filters
@@ -89,6 +90,7 @@ public class CourseService : ICourseService
             .Include(c => c.IconMediaFile)
             .Include(c => c.Level)
             .Include(c => c.Status)
+            .Include(c=>c.Lessons)
             .FirstOrDefaultAsync(c => c.Id == id);
         return course != null ? _mapper.Map<CourseDto>(course) : null;
     }

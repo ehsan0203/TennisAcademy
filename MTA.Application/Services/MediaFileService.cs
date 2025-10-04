@@ -102,7 +102,6 @@ public class MediaFileService : IMediaFileService
 		if (file == null || file.Length == 0)
 			throw new ArgumentException("File is required");
 
-		// گرفتن TypeId از جدول Lookup
 		var typeEntity = await _unitOfWork.Repository<Lookup>()
 			.GetQueryable()
 			.FirstOrDefaultAsync(l => l.Category == "MediaType" && l.Key == mediaFileDto.MediaType);
@@ -110,7 +109,6 @@ public class MediaFileService : IMediaFileService
 		if (typeEntity == null)
 			throw new ArgumentException($"Invalid MediaType: {mediaFileDto.MediaType}");
 
-		// گرفتن PlacementId از جدول Lookup
 		Lookup placementEntity = null;
 		if (!string.IsNullOrEmpty(mediaFileDto.PlacementName))
 		{
@@ -122,7 +120,6 @@ public class MediaFileService : IMediaFileService
 				throw new ArgumentException($"Invalid MediaPlacement: {mediaFileDto.PlacementName}");
 		}
 
-		// Map و پر کردن فیلدهای ضروری
 		var mediaFile = _mapper.Map<MediaFile>(mediaFileDto);
 		mediaFile.TypeId = typeEntity.Id;
 
@@ -140,7 +137,6 @@ public class MediaFileService : IMediaFileService
 		var created = await _unitOfWork.Repository<MediaFile>().AddAsync(mediaFile);
 		await _unitOfWork.SaveChangesAsync();
 
-		// Link to Lesson/Message by setting their MediaFileId
 		if (mediaFileDto.LessonId.HasValue)
 		{
 			var lesson = await _unitOfWork.Repository<Lesson>().GetByIdAsync(mediaFileDto.LessonId.Value);

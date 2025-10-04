@@ -1710,9 +1710,6 @@
                     "type": "integer",
                     "format": "int32"
                   },
-                  "CourseTitle": {
-                    "type": "string"
-                  },
                   "MediaFile": {
                     "type": "string",
                     "format": "binary"
@@ -1730,9 +1727,6 @@
                   "style": "form"
                 },
                 "CourseId": {
-                  "style": "form"
-                },
-                "CourseTitle": {
                   "style": "form"
                 },
                 "MediaFile": {
@@ -1844,9 +1838,6 @@
                     "type": "integer",
                     "format": "int32"
                   },
-                  "CourseTitle": {
-                    "type": "string"
-                  },
                   "MediaFileId": {
                     "type": "integer",
                     "format": "int32"
@@ -1854,18 +1845,6 @@
                   "NewMediaFile": {
                     "type": "string",
                     "format": "binary"
-                  },
-                  "Id": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "CreatedAt": {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  "UpdatedAt": {
-                    "type": "string",
-                    "format": "date-time"
                   }
                 }
               },
@@ -1882,22 +1861,10 @@
                 "CourseId": {
                   "style": "form"
                 },
-                "CourseTitle": {
-                  "style": "form"
-                },
                 "MediaFileId": {
                   "style": "form"
                 },
                 "NewMediaFile": {
-                  "style": "form"
-                },
-                "Id": {
-                  "style": "form"
-                },
-                "CreatedAt": {
-                  "style": "form"
-                },
-                "UpdatedAt": {
                   "style": "form"
                 }
               }
@@ -2387,6 +2354,327 @@
           },
           "500": {
             "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/api/Lookup": {
+      "get": {
+        "tags": [
+          "Lookup"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupDtoPaginatedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupDtoPaginatedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupDtoPaginatedResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Lookup"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLookupDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLookupDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLookupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Lookup/{id}": {
+      "get": {
+        "tags": [
+          "Lookup"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Lookup"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LookupDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LookupDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LookupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Lookup"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Lookup/category/{category}": {
+      "get": {
+        "tags": [
+          "Lookup"
+        ],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LookupDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LookupDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LookupDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Lookup/categories": {
+      "get": {
+        "tags": [
+          "Lookup"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -6947,38 +7235,6 @@
           "topic": {
             "type": "string",
             "nullable": true
-          },
-          "statusId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "statusValue": {
-            "type": "string",
-            "nullable": true
-          },
-          "accountId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userFirstName": {
-            "type": "string",
-            "nullable": true
-          },
-          "userLastName": {
-            "type": "string",
-            "nullable": true
-          },
-          "packageId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "packageTitle": {
-            "type": "string",
-            "nullable": true
-          },
-          "messageCount": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -7039,6 +7295,22 @@
             "nullable": true
           },
           "skillLevelId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "skillLevelValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "purchasedCourseIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "remainingCredit": {
             "type": "integer",
             "format": "int32"
           }
@@ -7147,10 +7419,6 @@
           "courseId": {
             "type": "integer",
             "format": "int32"
-          },
-          "courseTitle": {
-            "type": "string",
-            "nullable": true
           },
           "mediaFileId": {
             "type": "integer",
@@ -7297,6 +7565,44 @@
           "value": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LookupDtoPaginatedResult": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LookupDto"
+            },
+            "nullable": true
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "hasPreviousPage": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "hasNextPage": {
+            "type": "boolean",
+            "readOnly": true
           }
         },
         "additionalProperties": false
