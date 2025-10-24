@@ -37,7 +37,8 @@ namespace MTA.Web.Controllers
                 return NotFound(CustomJsonResult<string>.Failure("User not found."));
             }
 
-            return Ok(CustomJsonResult<CurrentUserDto>.SuccessResult(user));
+            //return Ok(CustomJsonResult<CurrentUserDto>.SuccessResult(user));
+            return Ok(user);
         }
 
         [HttpPut("[action]")]
@@ -58,7 +59,8 @@ namespace MTA.Web.Controllers
                 return NotFound(CustomJsonResult<string>.Failure("User not found."));
             }
 
-            return Ok(CustomJsonResult<CurrentUserDto>.SuccessResult(updatedUser));
+            //return Ok(CustomJsonResult<CurrentUserDto>.SuccessResult(updatedUser));
+            return Ok(updatedUser);
         }
 
         [HttpPost("[action]")]
@@ -84,7 +86,8 @@ namespace MTA.Web.Controllers
                 return NotFound(CustomJsonResult<string>.Failure("User not found."));
             }
 
-            return Ok(CustomJsonResult<string>.SuccessResult(profileImagePath));
+            //return Ok(CustomJsonResult<string>.SuccessResult(profileImagePath));
+            return Ok(profileImagePath);
         }
     }
 }
