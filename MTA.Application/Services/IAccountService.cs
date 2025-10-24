@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using MTA.Application.DTOs;
 using MTA.Application.DTOs.User;
 
@@ -21,6 +22,8 @@ public interface IAccountService
     Task<CurrentUserDto?> UpdateCurrentUserAsync(int accountId, UpdateCurrentUserDto updateDto);
 
     Task<CurrentUserDto?> GetCurrentUserAsync(int accountId);
+
+    Task<string?> UploadProfileImageAsync(int accountId, IFormFile profileImage);
     /// <summary>
     /// Get account by email
     /// </summary>
