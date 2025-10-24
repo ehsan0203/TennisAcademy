@@ -100,13 +100,13 @@ public class UserController : ControllerBase
     {
         try
         {
-            var userId = GetCurrentUserId();
-            if (userId == null)
-                return Unauthorized();
+            //var userId = GetCurrentUserId();
+            //if (userId == null)
+            //    return Unauthorized();
 
             // Users can only update their own profile, admins can update any profile
-            if (userId.Value != id && !User.IsInRole("Admin"))
-                return Forbid();
+            //if ( !User.IsInRole("Admin"))
+            //    return Forbid();
 
             var updatedProfile = await _userProfileService.UpdateAsync(id, updateDto);
             if (updatedProfile == null)
@@ -150,31 +150,31 @@ public class UserController : ControllerBase
     /// <summary>
     /// Update user avatar
     /// </summary>
-    //[HttpPatch("{id}/avatar")]
-    //public async Task<ActionResult<UserProfileDto>> UpdateAvatar(int id, [FromBody] string ImageUrl)
-    //{
-    //    try
-    //    {
-    //        var userId = GetCurrentUserId();
-    //        if (userId == null)
-    //            return Unauthorized();
+    [HttpPatch("{id}/avatar")]
+    public async Task<ActionResult<UserProfileDto>> UpdateAvatar(int id, [FromBody] string ImageUrl)
+    {
+        try
+        {
+            //var userId = GetCurrentUserId();
+            //if (userId == null)
+            //    return Unauthorized();
 
-    //        // Users can only update their own avatar, admins can update any avatar
-    //        if (userId.Value != id && !User.IsInRole("Admin"))
-    //            return Forbid();
+            // Users can only update their own avatar, admins can update any avatar
+            //if (userId.Value != id && !User.IsInRole("Admin"))
+            //    return Forbid();
 
-    //        var updatedProfile = await _userProfileService.UpdateAvatarAsync(id, ImageUrl);
-    //        if (updatedProfile == null)
-    //            return NotFound("User profile not found");
+            var updatedProfile = await _userProfileService.UpdateAvatarAsync(id, ImageUrl);
+            if (updatedProfile == null)
+                return NotFound("User profile not found");
 
-    //        return Ok(updatedProfile);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error updating avatar for user with ID: {UserId}", id);
-    //        return StatusCode(500, "Internal server error");
-    //    }
-    //}
+            return Ok(updatedProfile);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating avatar for user with ID: {UserId}", id);
+            return StatusCode(500, "Internal server error");
+        }
+    }
 
     ///// <summary>
     ///// Update user skill level

@@ -1,4 +1,4 @@
-using MTA.Application.DTOs;
+﻿using MTA.Application.DTOs;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -144,37 +144,49 @@ public class UserProfileService : IUserProfileService
     }
 
 
-    public async Task<UserProfileDto?> UpdateAsync(int id, UpdateUserProfileDto updateDto)
+    public async Task<UserProfileDto?> UpdateAsync(int id, UpdateUserProfileDto dto)
     {
-        try
+        var user = await _unitOfWork.UserProfiles.GetByIdAsync(id);
+        if (user is null) return null;
+
+        if (dto.FirstName != null)
+            user.FirstName = dto.FirstName.Trim();
+
+        if (dto.LastName != null)
+            user.LastName = dto.LastName.Trim();
+
+        if (dto.DateOfBirth.HasValue)
+            user.DateOfBirth = dto.DateOfBirth.Value; // یا .Date اگر فقط تاریخ مهمه
+
+        if (dto.Experience.HasValue)
+            user.Experience = dto.Experience.Value;
+
+        if (dto.SkillLevelId.HasValue)
+            user.SkillLevelId = dto.SkillLevelId.Value;
+
+        if (dto.HealthCondition.HasValue)
         {
-            var userProfile = await _unitOfWork.UserProfiles.GetByIdAsync(id);
-            if (userProfile == null)
-                return null;
-
-            if (updateDto.FirstName != null)
-                userProfile.FirstName = updateDto.FirstName;
-            if (updateDto.LastName != null)
-                userProfile.LastName = updateDto.LastName;
-            if (updateDto.DateOfBirth != null)
-                userProfile.DateOfBirth = updateDto.DateOfBirth;
-            if (updateDto.Experience != null)
-                userProfile.Experience = updateDto.Experience;
-            if (updateDto.SkillLevelId != null)
-                userProfile.SkillLevelId = updateDto.SkillLevelId;
-
-            userProfile.UpdatedAt = DateTime.UtcNow;
-
-            _unitOfWork.UserProfiles.UpdateAsync(userProfile);
-            await _unitOfWork.SaveChangesAsync();
-
-            return await GetByIdAsync(id);
+            user.HealthCondition = dto.HealthCondition.Value;
+            user.HealthDescription = dto.HealthCondition.Value
+                ? (dto.HealthDescription ?? user.HealthDescription) // اگر توضیح جدید آمد جایگزین کن
+                : null; // اگر وضعیت سلامت false شد، توضیح هم پاک شود
         }
-        catch (Exception ex)
+        else if (dto.HealthDescription != null && user.HealthCondition)
         {
-            _logger.LogError(ex, "Error updating user profile with ID: {UserId}", id);
-            throw;
+            // وقتی فقط توضیح آمد و وضعیت سلامت قبلاً true بوده
+            user.HealthDescription = dto.HealthDescription;
         }
+
+        user.UpdatedAt = DateTime.UtcNow;
+
+        // اگر ریپازیتوری async است:
+        await _unitOfWork.UserProfiles.UpdateAsync(user);
+        // اگر Sync بود، از این استفاده کن:
+        // _unitOfWork.UserProfiles.Update(user);
+
+        await _unitOfWork.SaveChangesAsync();
+
+        return await GetByIdAsync(id);
     }
 
     public async Task<bool> DeleteAsync(int id)

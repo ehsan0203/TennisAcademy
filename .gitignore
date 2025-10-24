@@ -1,17 +1,24 @@
-# Visual Studio cache files
-.vs/
-*.vsidx
-
-# Build results
+# Build outputs
 bin/
 obj/
+[Bb]uild/
+[Ll]og/
 
-# User-specific files
+# IDE
+.vs/
 *.user
 *.suo
-*.userosscache
-*.sln.docstates
+*.svclog
+_ReSharper*/
+*.DotSettings.user
+.idea/
+*.sln.iml
 
-# Logs
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+
+
+# Misc
 *.log
-

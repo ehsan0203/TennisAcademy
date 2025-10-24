@@ -45,13 +45,14 @@ namespace MTA.Application.DTOs.User
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public int Experience { get; set; }
-        public int SkillLevelId { get; set; }
-        public bool HealthCondition { get; set; }
+        public DateTime? DateOfBirth { get; set; }  // nullable
+        public int? Experience { get; set; }        // nullable
+        public int? SkillLevelId { get; set; }      // nullable
+        public bool? HealthCondition { get; set; }  // nullable
         public string? HealthDescription { get; set; }
-        public IFormFile? AvatarUrl { get; set; }
     }
+
+
 
     // ======================
     // Base DTO اکانت (برای جلوگیری از تکرار)

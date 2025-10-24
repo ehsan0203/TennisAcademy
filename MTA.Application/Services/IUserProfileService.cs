@@ -11,8 +11,8 @@ public interface IUserProfileService
 
     Task<UserProfileDto?> GetByIdAsync(int id);               
     Task<UserProfileDto?> GetByAccountIdAsync(int accountId);  
-    Task<UserProfileDto> CreateAsync(UserProfileDto userProfileDto); 
-    Task<UserProfileDto?> UpdateAsync(int id, UpdateUserProfileDto updateDto); 
+    Task<UserProfileDto> CreateAsync(UserProfileDto userProfileDto);
+    Task<UserProfileDto?> UpdateAsync(int id, UpdateUserProfileDto dto);
     Task<bool> DeleteAsync(int id);                              
 
     #endregion

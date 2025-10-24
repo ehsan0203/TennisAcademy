@@ -154,17 +154,17 @@ var app = builder.Build();
 //}
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "MTA API V1");
         // Swagger UI will be available at /swagger
     });
-}
+
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseCors("AllowAll");
 
 // Add authentication and authorization middleware

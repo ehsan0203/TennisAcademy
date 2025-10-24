@@ -176,7 +176,14 @@ public class FAQService : IFAQService
 
     public async Task<QuestionDto> CreateQuestionAsync(CreateQuestionDto questionDto)
     {
-        var question = _mapper.Map<QuestionFAQ>(questionDto);
+        var question = new QuestionFAQ
+        {
+            QuestionText = questionDto.QuestionText,
+            AnswerText = questionDto.AnswerText,
+            IsActive = questionDto.IsActive,
+            CategoryId = questionDto.CategoryId
+        };
+
         question.CreatedAt = DateTime.UtcNow;
         
         await _unitOfWork.Repository<QuestionFAQ>().AddAsync(question);
