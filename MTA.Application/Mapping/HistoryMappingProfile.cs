@@ -30,11 +30,6 @@ public class HistoryMappingProfile : BaseMappingProfile
         CreateMap<UpdateUserCourseHistoryDto, UserCourseHistory>()
             .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
             .ForMember(dest => dest.CourseId, opt => opt.MapFrom(src => src.CourseId))
-            .ForMember(dest => dest.PurchasePrice, opt =>
-            {
-                opt.PreCondition(src => src.PurchasePrice.HasValue);
-                opt.MapFrom(src => src.PurchasePrice!.Value);
-            })
             .ForMember(dest => dest.Account, opt => opt.Ignore())
             .ForMember(dest => dest.Course, opt => opt.Ignore());
     }

@@ -176,7 +176,7 @@ public class PackageHistoryService : IPackageHistoryService
             ExpiredDate = DateTime.UtcNow.AddMonths(package.Duration), // مثال: Duration ماه
             RemainingTickets = package.TicketCount,
             RemainingMessages = package.MessageCount,
-            PurchasePrice = dto.PurchasePrice ?? package.Price
+            PurchasePrice = package.Price
         };
 
         // ذخیره در دیتابیس

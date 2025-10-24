@@ -175,7 +175,7 @@ public class UserCourseHistoryService : IUserCourseHistoryService
                 CourseId = userCourseHistoryDto.CourseId,
                 EnrolledAt = DateTime.UtcNow,
                 StatusId = activeStatusLookup.Id, // مقدار پویا
-                PurchasePrice = userCourseHistoryDto.PurchasePrice ?? course.Price
+                PurchasePrice = course.Price
             };
 
             var created = await _unitOfWork.Repository<UserCourseHistory>().AddAsync(userCourseHistory);
@@ -203,8 +203,6 @@ public class UserCourseHistoryService : IUserCourseHistoryService
             // Update properties
             existing.CourseId = userCourseHistoryDto.CourseId;
             existing.AccountId = userCourseHistoryDto.AccountId;
-            if (userCourseHistoryDto.PurchasePrice.HasValue)
-                existing.PurchasePrice = userCourseHistoryDto.PurchasePrice.Value;
             existing.UpdatedAt = DateTime.UtcNow;
 
             var updated = await _unitOfWork.Repository<UserCourseHistory>().UpdateAsync(existing);

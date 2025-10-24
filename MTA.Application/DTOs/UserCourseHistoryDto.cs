@@ -15,10 +15,6 @@ public class CreateUserCourseHistoryDto
     /// </summary>
     public int AccountId { get; set; }
 
-    /// <summary>
-    /// Price paid for the course (if omitted the current course price will be used)
-    /// </summary>
-    public decimal? PurchasePrice { get; set; }
 }
 
 public class UpdateUserCourseHistoryDto

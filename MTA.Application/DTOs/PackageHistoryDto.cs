@@ -74,7 +74,7 @@ public class PackageHistoryDto : BaseDto
 
 public class CreatePackageHistoryDto
 {
-       /// <summary>
+    /// <summary>
     /// Package ID
     /// </summary>
     public int PackageId { get; set; }
@@ -85,12 +85,8 @@ public class CreatePackageHistoryDto
     public int AccountId { get; set; }
 
     /// <summary>
-    /// Price paid for the package (if omitted the current package price will be used)
-    /// </summary>
-    public decimal? PurchasePrice { get; set; }
-
-    /// <summary>
     /// Whether the package is expired
     /// </summary>
     public bool IsExpired { get; set; }
 }
+
