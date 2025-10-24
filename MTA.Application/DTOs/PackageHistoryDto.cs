@@ -31,7 +31,7 @@ public class PackageHistoryDto : BaseDto
     public string? PackageTitle { get; set; }
     
     /// <summary>
-    /// Package price
+    /// Price that the user paid when purchasing the package
     /// </summary>
     public decimal PackagePrice { get; set; }
     
@@ -72,9 +72,9 @@ public class PackageHistoryDto : BaseDto
 }
 
 
-public class CreatePackageHistoryDto 
+public class CreatePackageHistoryDto
 {
-       /// <summary>
+    /// <summary>
     /// Package ID
     /// </summary>
     public int PackageId { get; set; }
@@ -89,3 +89,4 @@ public class CreatePackageHistoryDto
     /// </summary>
     public bool IsExpired { get; set; }
 }
+

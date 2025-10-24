@@ -19,6 +19,10 @@ public class PackageHistoryConfiguration : IEntityTypeConfiguration<PackageHisto
         builder.Property(history => history.RemainingMessages)
             .IsRequired();
 
+        builder.Property(history => history.PurchasePrice)
+            .HasColumnType("decimal(18,2)")
+            .IsRequired();
+
         builder.HasOne(history => history.Package)
             .WithMany(package => package.PackageHistories)
             .HasForeignKey(history => history.PackageId)

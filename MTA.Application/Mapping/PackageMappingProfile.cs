@@ -46,7 +46,7 @@ public class PackageMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.RemainingTickets, opt => opt.MapFrom(src => src.RemainingTickets))
             .ForMember(dest => dest.RemainingMessages, opt => opt.MapFrom(src => src.RemainingMessages))
             .ForMember(dest => dest.PackageTitle, opt => opt.MapFrom(src => src.Package.Title))
-            .ForMember(dest => dest.PackagePrice, opt => opt.MapFrom(src => src.Package.Price))
+            .ForMember(dest => dest.PackagePrice, opt => opt.MapFrom(src => src.PurchasePrice))
             .ForMember(dest => dest.TotalTickets, opt => opt.MapFrom(src => src.Package.TicketCount))
             .ForMember(dest => dest.TotalMessages, opt => opt.MapFrom(src => src.Package.MessageCount))
             .ForMember(dest => dest.UserFirstName, opt => opt.MapFrom(src => src.Account.UserProfile.FirstName))
@@ -61,6 +61,7 @@ public class PackageMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.ExpiredDate, opt => opt.MapFrom(src => src.ExpiredDate))
             .ForMember(dest => dest.RemainingTickets, opt => opt.MapFrom(src => src.RemainingTickets))
             .ForMember(dest => dest.RemainingMessages, opt => opt.MapFrom(src => src.RemainingMessages))
+            .ForMember(dest => dest.PurchasePrice, opt => opt.MapFrom(src => src.PackagePrice))
             .ForMember(dest => dest.Account, opt => opt.Ignore())
             .ForMember(dest => dest.Package, opt => opt.Ignore());
     }

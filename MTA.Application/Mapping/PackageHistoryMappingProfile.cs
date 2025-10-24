@@ -19,7 +19,7 @@ public class PackageHistoryMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.RemainingMessages, opt => opt.MapFrom(src => src.RemainingMessages))
             .ForMember(dest => dest.PackageId, opt => opt.MapFrom(src => src.PackageId))
             .ForMember(dest => dest.PackageTitle, opt => opt.MapFrom(src => src.Package != null ? src.Package.Title : null))
-            .ForMember(dest => dest.PackagePrice, opt => opt.MapFrom(src => src.Package != null ? src.Package.Price : 0))
+            .ForMember(dest => dest.PackagePrice, opt => opt.MapFrom(src => src.PurchasePrice))
             .ForMember(dest => dest.TotalTickets, opt => opt.MapFrom(src => src.Package != null ? src.Package.TicketCount : 0))
             .ForMember(dest => dest.TotalMessages, opt => opt.MapFrom(src => src.Package != null ? src.Package.MessageCount : 0))
             .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
@@ -38,6 +38,7 @@ public class PackageHistoryMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.RemainingMessages, opt => opt.MapFrom(src => src.RemainingMessages))
             .ForMember(dest => dest.PackageId, opt => opt.MapFrom(src => src.PackageId))
             .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
+            .ForMember(dest => dest.PurchasePrice, opt => opt.MapFrom(src => src.PackagePrice))
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt))
             .ForMember(dest => dest.Package, opt => opt.Ignore())
@@ -48,12 +49,13 @@ public class PackageHistoryMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.ExpiredDate, opt => opt.Ignore()) // مقداردهی دستی در Service
             .ForMember(dest => dest.RemainingTickets, opt => opt.Ignore())
             .ForMember(dest => dest.RemainingMessages, opt => opt.Ignore())
+            .ForMember(dest => dest.PurchasePrice, opt => opt.Ignore())
             .ForMember(dest => dest.Package, opt => opt.Ignore())
             .ForMember(dest => dest.Account, opt => opt.Ignore());
 
         CreateMap<PackageHistory, PackageHistoryDto>()
             .ForMember(dest => dest.PackageTitle, opt => opt.MapFrom(src => src.Package.Title))
-            .ForMember(dest => dest.PackagePrice, opt => opt.MapFrom(src => src.Package.Price))
+            .ForMember(dest => dest.PackagePrice, opt => opt.MapFrom(src => src.PurchasePrice))
             .ForMember(dest => dest.UserFirstName, opt => opt.MapFrom(src => src.Account.UserProfile.FirstName))
             .ForMember(dest => dest.UserLastName, opt => opt.MapFrom(src => src.Account.UserProfile.LastName))
             .ForMember(dest => dest.UserEmail, opt => opt.MapFrom(src => src.Account.Email))

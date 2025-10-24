@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MTA.Application.DTOs;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
+using System.Collections.Generic;
 
 namespace MTA.Application.Services;
 
@@ -174,7 +175,8 @@ public class PackageHistoryService : IPackageHistoryService
             CreatedAt = DateTime.UtcNow,
             ExpiredDate = DateTime.UtcNow.AddMonths(package.Duration), // مثال: Duration ماه
             RemainingTickets = package.TicketCount,
-            RemainingMessages = package.MessageCount
+            RemainingMessages = package.MessageCount,
+            PurchasePrice = package.Price
         };
 
         // ذخیره در دیتابیس
@@ -187,7 +189,7 @@ public class PackageHistoryService : IPackageHistoryService
             Id = created.Id,
             PackageId = package.Id,
             PackageTitle = package.Title,
-            PackagePrice = package.Price,
+            PackagePrice = packageHistory.PurchasePrice,
             RemainingTickets = created.RemainingTickets,
             RemainingMessages = created.RemainingMessages,
             ExpiredDate = created.ExpiredDate,
@@ -217,6 +219,7 @@ public class PackageHistoryService : IPackageHistoryService
         existingPackageHistory.RemainingMessages = packageHistoryDto.RemainingMessages;
         existingPackageHistory.PackageId = packageHistoryDto.PackageId;
         existingPackageHistory.AccountId = packageHistoryDto.AccountId;
+        existingPackageHistory.PurchasePrice = packageHistoryDto.PackagePrice;
         existingPackageHistory.UpdatedAt = DateTime.UtcNow;
 
         var updatedPackageHistory = await _unitOfWork.Repository<PackageHistory>().UpdateAsync(existingPackageHistory);

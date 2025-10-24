@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using MTA.Domain.Interfaces;
+using System.Collections.Generic;
 
 namespace MTA.Application.Services;
 
@@ -160,6 +161,9 @@ public class UserCourseHistoryService : IUserCourseHistoryService
             if (existing)
                 throw new InvalidOperationException("User has already purchased this course");
 
+            var course = await _unitOfWork.Repository<Course>().GetByIdAsync(userCourseHistoryDto.CourseId)
+                ?? throw new KeyNotFoundException("Course not found");
+
             // دریافت StatusId از جدول Lookups
             var activeStatusLookup = await _lookupService.GetByCategoryAndKeyAsync("UserCourseStatus", "Active");
             if (activeStatusLookup == null)
@@ -170,7 +174,8 @@ public class UserCourseHistoryService : IUserCourseHistoryService
                 AccountId = userCourseHistoryDto.AccountId,
                 CourseId = userCourseHistoryDto.CourseId,
                 EnrolledAt = DateTime.UtcNow,
-                StatusId = activeStatusLookup.Id // مقدار پویا
+                StatusId = activeStatusLookup.Id, // مقدار پویا
+                PurchasePrice = course.Price
             };
 
             var created = await _unitOfWork.Repository<UserCourseHistory>().AddAsync(userCourseHistory);
