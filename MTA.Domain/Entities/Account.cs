@@ -12,6 +12,8 @@ public class Account : BaseEntity
     
     public bool IsActive { get; set; } = true;
 
+    public string? ProfileImagePath { get; set; }
+
     public int? MediaFileId { get; set; }
     [ForeignKey(nameof(MediaFileId))]
     public virtual MediaFile? MediaFile { get; set; }

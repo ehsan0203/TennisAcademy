@@ -73,6 +73,7 @@ namespace MTA.Application.DTOs.User
         // Single media reference for account
         public int? MediaFileId { get; set; }
         public string? MediaFileUrl { get; set; }
+        public string? ProfileImagePath { get; set; }
     }
 
     // ======================

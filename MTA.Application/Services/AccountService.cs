@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MTA.Application.DTOs;
@@ -140,6 +141,7 @@ public class AccountService : IAccountService
             if (uploadedMedia != null)
             {
                 account.MediaFileId = uploadedMedia.Id; // یا MediaFileId
+                account.ProfileImagePath = uploadedMedia.Url;
             }
 
             // 3️⃣ ذخیره Account در دیتابیس
@@ -205,7 +207,7 @@ public class AccountService : IAccountService
             Id = account.Id,
             Email = account.Email,
             IsActive = account.IsActive,
-            ProfileImageUrl = account.MediaFile?.Url,
+            ProfileImageUrl = account.ProfileImagePath ?? account.MediaFile?.Url,
             FirstName = profile?.FirstName ?? string.Empty,
             LastName = profile?.LastName ?? string.Empty,
             DateOfBirth = profile?.DateOfBirth ?? DateTime.MinValue,
@@ -239,7 +241,11 @@ public class AccountService : IAccountService
             if (updateDto.StatusId.HasValue)
                 account.StatusId = updateDto.StatusId.Value;
             if (updateDto.MediaFileId.HasValue)
+            {
                 account.MediaFileId = updateDto.MediaFileId.Value;
+                var mediaFile = await _unitOfWork.Repository<MediaFile>().GetByIdAsync(updateDto.MediaFileId.Value);
+                account.ProfileImagePath = mediaFile?.Url;
+            }
 
 
             if (updateDto.Image != null && updateDto.Image.Length > 0)
@@ -254,6 +260,7 @@ public class AccountService : IAccountService
                 var uploadedMedia = await _mediaFileService.CreateAsync(updateDto.Image, mediaDto);
 
                 account.MediaFileId = uploadedMedia.Id;
+                account.ProfileImagePath = uploadedMedia.Url;
             }
 
             account.UpdatedAt = DateTime.UtcNow;
@@ -268,6 +275,48 @@ public class AccountService : IAccountService
             _logger.LogError(ex, "Error updating account with ID: {AccountId}", id);
             throw;
         }
+    }
+
+    public async Task<string?> UploadProfileImageAsync(int accountId, IFormFile profileImage)
+    {
+        if (profileImage == null || profileImage.Length == 0)
+        {
+            throw new ArgumentException("Profile image file is required.", nameof(profileImage));
+        }
+
+        var account = await _unitOfWork.Accounts.GetQueryable()
+            .Include(a => a.MediaFile)
+            .FirstOrDefaultAsync(a => a.Id == accountId);
+
+        if (account == null)
+        {
+            return null;
+        }
+
+        if (account.MediaFileId.HasValue)
+        {
+            await _mediaFileService.DeleteAsync(account.MediaFileId.Value);
+            account.MediaFileId = null;
+            account.ProfileImagePath = null;
+        }
+
+        var mediaDto = new MediaFileUploadDto
+        {
+            MediaType = "Account",
+            PlacementName = "ProfileImage",
+            Title = $"{account.Email} Profile Image"
+        };
+
+        var uploadedMedia = await _mediaFileService.CreateAsync(profileImage, mediaDto);
+
+        account.MediaFileId = uploadedMedia.Id;
+        account.ProfileImagePath = uploadedMedia.Url;
+        account.UpdatedAt = DateTime.UtcNow;
+
+        await _unitOfWork.Accounts.UpdateAsync(account);
+        await _unitOfWork.SaveChangesAsync();
+
+        return account.ProfileImagePath;
     }
 
     public async Task<CurrentUserDto?> UpdateCurrentUserAsync(int accountId, UpdateCurrentUserDto updateDto)
@@ -292,6 +341,7 @@ public class AccountService : IAccountService
             if (account.MediaFileId.HasValue)
             {
                 await _mediaFileService.DeleteAsync(account.MediaFileId.Value);
+                account.ProfileImagePath = null;
             }
 
             var mediaDto = new MediaFileUploadDto
@@ -302,6 +352,7 @@ public class AccountService : IAccountService
             };
             var uploadedMedia = await _mediaFileService.CreateAsync(updateDto.ProfileImage, mediaDto);
             account.MediaFileId = uploadedMedia.Id;
+            account.ProfileImagePath = uploadedMedia.Url;
         }
 
         // --- UserProfile fields ---
@@ -458,7 +509,7 @@ public class AccountService : IAccountService
             Id = account.Id,
             Email = account.Email,
             IsActive = account.IsActive,
-            Image = account.MediaFile?.Url ?? string.Empty,
+            Image = account.ProfileImagePath ?? account.MediaFile?.Url ?? string.Empty,
             RoleId = account.RoleId,
             RoleTitle = account.Role?.Title ?? string.Empty,
             StatusId = account.StatusId,
@@ -467,6 +518,7 @@ public class AccountService : IAccountService
             UpdatedAt = account.UpdatedAt,
             MediaFileId = account.MediaFileId,
             MediaFileUrl = account.MediaFile?.Url ?? string.Empty,
+            ProfileImagePath = account.ProfileImagePath,
             UserProfile = account.UserProfile != null ? new UserProfileDto
             {
                 Id = account.UserProfile.Id,
@@ -477,7 +529,7 @@ public class AccountService : IAccountService
                 AccountId = account.UserProfile.AccountId,
                 SkillLevelId = account.UserProfile.SkillLevelId,
                 SkillLevelValue = account.UserProfile.SkillLevel?.Title ?? "Beginner",
-                AvatarUrl = account.MediaFile?.Url ?? string.Empty,
+                AvatarUrl = account.ProfileImagePath ?? account.MediaFile?.Url ?? string.Empty,
                 CreatedAt = account.UserProfile.CreatedAt,
                 UpdatedAt = account.UserProfile.UpdatedAt,
                 HealthCondition = account.UserProfile.HealthCondition,

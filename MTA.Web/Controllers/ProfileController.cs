@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs.User;
 using MTA.Application.Services;
+using MTA.Web.Models;
 
 namespace MTA.Web.Controllers
 {
@@ -16,29 +19,72 @@ namespace MTA.Web.Controllers
             _accountService = accountService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<CurrentUserDto>> GetCurrentUser()
+        [HttpGet("[action]")]
+        [ProducesResponseType(typeof(CustomJsonResult<CurrentUserDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Unauthorized)]
+        public async Task<ActionResult<CustomJsonResult<CurrentUserDto>>> GetCurrentUser()
         {
-            int userId = int.Parse(User.FindFirst("UserId")?.Value ?? "0");
-            if (userId == 0) return Unauthorized();
+            if (!int.TryParse(User.FindFirst("UserId")?.Value, out var userId) || userId == 0)
+            {
+                return Unauthorized(CustomJsonResult<string>.Failure("User is not authenticated."));
+            }
 
             var user = await _accountService.GetCurrentUserAsync(userId);
-            if (user == null) return NotFound();
+            if (user == null)
+            {
+                return NotFound(CustomJsonResult<string>.Failure("User not found."));
+            }
 
-            return Ok(user);
+            return Ok(CustomJsonResult<CurrentUserDto>.SuccessResult(user));
         }
 
-        [HttpPut]
-        public async Task<ActionResult<CurrentUserDto>> UpdateCurrentUser([FromForm] UpdateCurrentUserDto updateDto)
+        [HttpPut("[action]")]
+        [ProducesResponseType(typeof(CustomJsonResult<CurrentUserDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Unauthorized)]
+        public async Task<ActionResult<CustomJsonResult<CurrentUserDto>>> UpdateCurrentUser([FromForm] UpdateCurrentUserDto updateDto)
         {
-            int userId = int.Parse(User.FindFirst("UserId")?.Value ?? "0");
-            if (userId == 0) return Unauthorized();
+            if (!int.TryParse(User.FindFirst("UserId")?.Value, out var userId) || userId == 0)
+            {
+                return Unauthorized(CustomJsonResult<string>.Failure("User is not authenticated."));
+            }
 
             var updatedUser = await _accountService.UpdateCurrentUserAsync(userId, updateDto);
-            if (updatedUser == null) return NotFound();
+            if (updatedUser == null)
+            {
+                return NotFound(CustomJsonResult<string>.Failure("User not found."));
+            }
 
-            return Ok(updatedUser);
+            return Ok(CustomJsonResult<CurrentUserDto>.SuccessResult(updatedUser));
+        }
+
+        [HttpPost("[action]")]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.Unauthorized)]
+        public async Task<ActionResult<CustomJsonResult<string>>> UploadAvatar([FromForm] IFormFile profileImage)
+        {
+            if (profileImage == null || profileImage.Length == 0)
+            {
+                return BadRequest(CustomJsonResult<string>.Failure("Profile image file is required."));
+            }
+
+            if (!int.TryParse(User.FindFirst("UserId")?.Value, out var userId) || userId == 0)
+            {
+                return Unauthorized(CustomJsonResult<string>.Failure("User is not authenticated."));
+            }
+
+            var profileImagePath = await _accountService.UploadProfileImageAsync(userId, profileImage);
+            if (profileImagePath == null)
+            {
+                return NotFound(CustomJsonResult<string>.Failure("User not found."));
+            }
+
+            return Ok(CustomJsonResult<string>.SuccessResult(profileImagePath));
         }
     }
-
 }

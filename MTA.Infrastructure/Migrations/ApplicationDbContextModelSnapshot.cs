@@ -44,6 +44,10 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<int?>("MediaFileId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ProfileImagePath")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(255)

@@ -83,10 +83,11 @@ public class ApplicationDbContext : DbContext
 		modelBuilder.Entity<Account>(entity =>
 		{
 			entity.HasKey(e => e.Id);
-			entity.Property(e => e.Email).IsRequired().HasMaxLength(255);
-			entity.Property(e => e.Password).IsRequired().HasMaxLength(255);
+                        entity.Property(e => e.Email).IsRequired().HasMaxLength(255);
+                        entity.Property(e => e.Password).IsRequired().HasMaxLength(255);
+                        entity.Property(e => e.ProfileImagePath).HasMaxLength(1000);
 
-			entity.HasIndex(e => e.Email).IsUnique();
+                        entity.HasIndex(e => e.Email).IsUnique();
 
 			entity.HasOne(e => e.Role)
 				.WithMany(r => r.Accounts)
