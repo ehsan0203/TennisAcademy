@@ -7,11 +7,13 @@ namespace MTA.Domain.Entities;
 /// </summary>
 public class UserCourseHistory : BaseEntity
 {
-    
+
     public int CourseId { get; set; }
     [ForeignKey("CourseId")]
     public virtual Course Course { get; set; } = null!;
-    
+
+    public decimal PurchasePrice { get; set; }
+
 
     public int AccountId { get; set; }
     [ForeignKey("AccountId")]

@@ -10,6 +10,7 @@ public class PackageHistory : BaseEntity
     public DateTime ExpiredDate { get; set; }
     public int RemainingTickets { get; set; }
     public int RemainingMessages { get; set; }
+    public decimal PurchasePrice { get; set; }
 
     public int PackageId { get; set; }
     [ForeignKey("PackageId")]

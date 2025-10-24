@@ -19,5 +19,9 @@ public class UserCourseHistoryConfiguration : IEntityTypeConfiguration<UserCours
             .WithMany(account => account.UserCourseHistory)
             .HasForeignKey(history => history.AccountId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Property(history => history.PurchasePrice)
+            .HasColumnType("decimal(18,2)")
+            .IsRequired();
     }
 }

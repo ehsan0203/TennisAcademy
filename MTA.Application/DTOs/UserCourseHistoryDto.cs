@@ -14,6 +14,11 @@ public class CreateUserCourseHistoryDto
     /// Account ID
     /// </summary>
     public int AccountId { get; set; }
+
+    /// <summary>
+    /// Price paid for the course (if omitted the current course price will be used)
+    /// </summary>
+    public decimal? PurchasePrice { get; set; }
 }
 
 public class UpdateUserCourseHistoryDto
@@ -33,6 +38,11 @@ public class UpdateUserCourseHistoryDto
     /// وضعیت دوره برای کاربر (اختیاری)
     /// </summary>
     public int StatusId { get; set; }
+
+    /// <summary>
+    /// Price that the user paid when enrolling in the course
+    /// </summary>
+    public decimal? PurchasePrice { get; set; }
 }
 
 
