@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MTA.Domain.Entities;
 
-namespace MTA.Infrastructure.Data.Configurations.Role;
+namespace MTA.Infrastructure.Data.Configurations;
 
 public class RoleConfiguration : IEntityTypeConfiguration<Role>
 {

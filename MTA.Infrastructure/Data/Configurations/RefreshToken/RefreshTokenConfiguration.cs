@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MTA.Domain.Entities;
 
-namespace MTA.Infrastructure.Data.Configurations.RefreshToken;
+namespace MTA.Infrastructure.Data.Configurations;
 
 public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 {

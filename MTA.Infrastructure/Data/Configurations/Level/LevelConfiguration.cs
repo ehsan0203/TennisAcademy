@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MTA.Domain.Entities;
 
-namespace MTA.Infrastructure.Data.Configurations.Level;
+namespace MTA.Infrastructure.Data.Configurations;
 
 public class LevelConfiguration : IEntityTypeConfiguration<Level>
 {
