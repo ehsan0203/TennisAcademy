@@ -151,6 +151,16 @@ public class UserProfileService : IUserProfileService
         var user = await _unitOfWork.UserProfiles.GetByIdAsync(id);
         if (user is null) return null;
 
+        if (dto.StatusId.HasValue)
+        {
+            var account = await _unitOfWork.Accounts.GetByIdAsync(user.AccountId);
+            if (account != null && account.StatusId != dto.StatusId.Value)
+            {
+                account.StatusId = dto.StatusId.Value;
+                await _unitOfWork.Accounts.UpdateAsync(account);
+            }
+        }
+
         if (dto.FirstName != null)
             user.FirstName = dto.FirstName.Trim();
 
