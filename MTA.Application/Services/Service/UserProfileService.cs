@@ -120,6 +120,7 @@ public class UserProfileService : IUserProfileService
         int total = await query.CountAsync();
 
         var items = await query
+            .Include(u => u.Account)
             .Skip((queryDto.Page - 1) * queryDto.PageSize)
             .Take(queryDto.PageSize)
             .Select(u => new UserProfileDto
@@ -127,6 +128,7 @@ public class UserProfileService : IUserProfileService
                 Id = u.Id,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
+                Email = u.Account.Email,
                 DateOfBirth = u.DateOfBirth,
                 Experience = u.Experience,
                 SkillLevelId = u.SkillLevelId,
@@ -298,6 +300,7 @@ public class UserProfileService : IUserProfileService
             Id = userProfile.Id,
             FirstName = userProfile.FirstName,
             LastName = userProfile.LastName,
+            Email = userProfile.Account?.Email ?? string.Empty,
             DateOfBirth = userProfile.DateOfBirth,
             Experience = userProfile.Experience,
             AccountId = userProfile.AccountId,
