@@ -13,6 +13,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
+[AllowAnonymous]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;

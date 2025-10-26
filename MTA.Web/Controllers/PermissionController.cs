@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
 using Microsoft.Extensions.Logging;
+using MTA.Domain.Constants;
+using MTA.Web.Attributes;
 
 namespace MTA.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize(Roles = "Admin")]
+[AuthorizeRole(RoleNames.Admin)]
 public class PermissionController : ControllerBase
 {
     private readonly IPermissionService _permissionService;

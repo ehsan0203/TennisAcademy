@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
+using MTA.Domain.Constants;
 using MTA.Web.Attributes;
 
 namespace MTA.Web.Controllers;
@@ -13,7 +14,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-//[Authorize(Policy = "RolesAdminCoach")]
+[Authorize]
 public class FAQController : ControllerBase
 {
     private readonly IFAQService _faqService;
@@ -105,6 +106,7 @@ public class FAQController : ControllerBase
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPost("CreateCategory")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -139,6 +141,7 @@ public class FAQController : ControllerBase
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPut("UpdateCategory/{id}")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -177,6 +180,7 @@ public class FAQController : ControllerBase
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpDelete("DeleteCategory/{id}")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -312,6 +316,7 @@ public class FAQController : ControllerBase
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPost("CreateQuestion")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -346,6 +351,7 @@ public class FAQController : ControllerBase
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPut("UpdateQuestion/{id}")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -383,6 +389,7 @@ public class FAQController : ControllerBase
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpDelete("DeleteQuestion/{id}")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

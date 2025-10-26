@@ -4,13 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
+using MTA.Domain.Constants;
+using MTA.Web.Attributes;
 
 namespace MTA.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    //[Authorize]
+    [Authorize]
     public class MediaFileController : ControllerBase
     {
         private readonly IMediaFileService _mediaFileService;
@@ -26,6 +28,7 @@ namespace MTA.Web.Controllers
 
         #region Create / Upload
         [HttpPost("upload")]
+        [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -49,6 +52,7 @@ namespace MTA.Web.Controllers
 
         #region Get All / Search / Filter
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll(
             int page = 1,
@@ -65,6 +69,7 @@ namespace MTA.Web.Controllers
 
         #region Get By ID
         [HttpGet("{id}")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
@@ -79,6 +84,7 @@ namespace MTA.Web.Controllers
 
         #region Update / Replace File
         [HttpPut("{id}")]
+        [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -108,6 +114,7 @@ namespace MTA.Web.Controllers
 
         #region Delete
         [HttpDelete("{id}")]
+        [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
@@ -122,6 +129,7 @@ namespace MTA.Web.Controllers
 
         #region Download
         [HttpGet("{id}/download")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Download(int id)

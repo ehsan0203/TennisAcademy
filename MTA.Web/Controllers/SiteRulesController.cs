@@ -1,11 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
+using MTA.Domain.Constants;
+using MTA.Web.Attributes;
 
 namespace MTA.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class SiteRulesController : ControllerBase
     {
         private readonly ILookupService _lookupService;
@@ -19,6 +24,7 @@ namespace MTA.Web.Controllers
 
         // GET: api/siterules
         [HttpGet("SiteRules")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<LookupDto>>> GetSiteRules([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
@@ -27,6 +33,7 @@ namespace MTA.Web.Controllers
         }
 
         [HttpGet("category")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<LookupDto>>> GetCategory([FromQuery] string CategoryName)
         {
@@ -35,6 +42,7 @@ namespace MTA.Web.Controllers
         }
 
         [HttpGet("categories")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<string>>> Categories()
         {
@@ -44,6 +52,7 @@ namespace MTA.Web.Controllers
 
         // GET: api/siterules/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<LookupDto>> GetById(int id)
@@ -57,6 +66,7 @@ namespace MTA.Web.Controllers
 
         // POST: api/siterules
         [HttpPost]
+        [AuthorizeRole(RoleNames.Admin)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<LookupDto>> Create([FromBody] CreateLookupDto dto)
         {
@@ -68,6 +78,7 @@ namespace MTA.Web.Controllers
 
         // PUT: api/siterules/5
         [HttpPut("{id}")]
+        [AuthorizeRole(RoleNames.Admin)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, [FromBody] LookupDto dto)
@@ -84,6 +95,7 @@ namespace MTA.Web.Controllers
 
         // DELETE: api/siterules/5
         [HttpDelete("{id}")]
+        [AuthorizeRole(RoleNames.Admin)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
@@ -98,8 +110,5 @@ namespace MTA.Web.Controllers
 
             return NoContent();
         }
-
-
     }
-
 }

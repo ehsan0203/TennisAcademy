@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MTA.Application.DTOs;
+using MTA.Domain.Constants;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
 using MTA.Infrastructure.Data;
+using MTA.Web.Attributes;
 using System.Security.Claims;
 
 namespace MTA.Web.Controllers;
@@ -15,6 +17,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
+[Authorize]
 public class TicketsController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -33,6 +36,7 @@ public class TicketsController : ControllerBase
     /// <response code="200">Returns the list of tickets</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpGet]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<TicketDto>>> GetTickets()
@@ -80,6 +84,7 @@ public class TicketsController : ControllerBase
     /// <response code="404">If the ticket was not found</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpGet("{id}")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -236,6 +241,7 @@ public class TicketsController : ControllerBase
     /// <response code="404">If the ticket was not found</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPut("{id}")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -280,6 +286,7 @@ public class TicketsController : ControllerBase
     /// <response code="404">If the ticket was not found</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpDelete("{id}")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -316,6 +323,7 @@ public class TicketsController : ControllerBase
     /// <response code="200">Returns the list of user tickets</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpGet("user/{userId}")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<TicketDto>>> GetTicketsByUser(int userId)

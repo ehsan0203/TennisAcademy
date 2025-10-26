@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
 using MTA.Application.DTOs.Course;
 using MTA.Application.Services;
+using MTA.Domain.Constants;
 using MTA.Web.Attributes;
 
 namespace MTA.Web.Controllers;
@@ -14,7 +15,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-//[Authorize]
+[Authorize]
 public class CoursesController : ControllerBase
 {
     private readonly ICourseService _courseService;
@@ -107,7 +108,7 @@ public class CoursesController : ControllerBase
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPost]
-    //[Authorize(Policy = "RolesAdminCoach")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -209,7 +210,7 @@ public class CoursesController : ControllerBase
     /// <response code="400">If the filter parameters are invalid</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPost("filter")]
-    //[AllowAnonymous]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

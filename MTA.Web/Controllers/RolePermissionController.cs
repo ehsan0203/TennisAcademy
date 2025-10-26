@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
 using MTA.Web.Attributes;
+using MTA.Domain.Constants;
 
 namespace MTA.Web.Controllers;
 
@@ -12,7 +13,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-//[Authorize(Roles = "Admin")]
+[AuthorizeRole(RoleNames.Admin)]
 public class RolePermissionController : ControllerBase
 {
     private readonly IRolePermissionService _rolePermissionService;

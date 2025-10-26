@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
+using MTA.Domain.Constants;
+using MTA.Web.Attributes;
 
-namespace MTA.API.Controllers
+namespace MTA.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class LookupController : ControllerBase
     {
         private readonly ILookupService _lookupService;
@@ -16,6 +20,7 @@ namespace MTA.API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<PaginatedResult<LookupDto>>> GetAll(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
@@ -27,6 +32,7 @@ namespace MTA.API.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [AllowAnonymous]
         public async Task<ActionResult<LookupDto>> GetById(int id)
         {
             var lookup = await _lookupService.GetByIdAsync(id);
@@ -37,14 +43,15 @@ namespace MTA.API.Controllers
         }
 
         [HttpGet("category/{category}")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<LookupDto>>> GetByCategory(string category)
         {
             var result = await _lookupService.GetByCategoryAsync(category);
             return Ok(result);
         }
 
-
         [HttpPost]
+        [AuthorizeRole(RoleNames.Admin)]
         public async Task<ActionResult<LookupDto>> Create([FromBody] CreateLookupDto dto)
         {
             if (dto == null)
@@ -55,6 +62,7 @@ namespace MTA.API.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [AuthorizeRole(RoleNames.Admin)]
         public async Task<ActionResult<LookupDto>> Update(int id, [FromBody] LookupDto dto)
         {
             if (dto == null)
@@ -72,6 +80,7 @@ namespace MTA.API.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [AuthorizeRole(RoleNames.Admin)]
         public async Task<ActionResult> Delete(int id)
         {
             var success = await _lookupService.DeleteAsync(id);
@@ -82,11 +91,11 @@ namespace MTA.API.Controllers
         }
 
         [HttpGet("categories")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<string>>> GetCategories()
         {
             var result = await _lookupService.GetAllCategoriesAsync();
             return Ok(result);
         }
-
     }
 }
