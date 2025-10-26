@@ -15,28 +15,28 @@ public interface IUserCourseHistoryService
     /// <param name="accountId">Filter by account ID</param>
     /// <param name="courseId">Filter by course ID</param>
     /// <returns>Paginated list of user course histories</returns>
-    Task<PaginatedResult<UpdateUserCourseHistoryDto>> GetAllAsync(int page = 1, int pageSize = 10, int? accountId = null, int? courseId = null);
+    Task<PaginatedResult<UserCourseHistoryDetailDto>> GetAllAsync(int page = 1, int pageSize = 10, int? accountId = null, int? courseId = null);
     
     /// <summary>
     /// Get user course history by ID
     /// </summary>
     /// <param name="id">User course history ID</param>
     /// <returns>User course history details</returns>
-    Task<UpdateUserCourseHistoryDto?> GetByIdAsync(int id);
+    Task<UserCourseHistoryDetailDto?> GetByIdAsync(int id);
     
     /// <summary>
     /// Get user course histories by account ID
     /// </summary>
     /// <param name="accountId">Account ID</param>
     /// <returns>List of user course histories</returns>
-    Task<IEnumerable<UpdateUserCourseHistoryDto>> GetByAccountAsync(int accountId);
+    Task<IEnumerable<UserCourseHistoryDetailDto>> GetByAccountAsync(int accountId);
     
     /// <summary>
     /// Get user course histories by course ID
     /// </summary>
     /// <param name="courseId">Course ID</param>
     /// <returns>List of user course histories</returns>
-    Task<IEnumerable<UpdateUserCourseHistoryDto>> GetByCourseAsync(int courseId);
+    Task<IEnumerable<UserCourseHistoryDetailDto>> GetByCourseAsync(int courseId);
     
     /// <summary>
     /// Check if user has purchased course
@@ -80,7 +80,7 @@ public interface IUserCourseHistoryService
     /// <param name="startDate">Start date</param>
     /// <param name="endDate">End date</param>
     /// <returns>List of user course histories</returns>
-    Task<IEnumerable<UpdateUserCourseHistoryDto>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
+    Task<IEnumerable<UserCourseHistoryDetailDto>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
     
     ///// <summary>
     ///// Get popular courses (by purchase count)

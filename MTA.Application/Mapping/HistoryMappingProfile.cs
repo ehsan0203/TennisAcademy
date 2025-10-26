@@ -27,6 +27,15 @@ public class HistoryMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.StatusId, opt => opt.MapFrom(src => src.StatusId))
             .ForMember(dest => dest.PurchasePrice, opt => opt.MapFrom(src => src.PurchasePrice));
 
+        CreateMap<UserCourseHistory, UserCourseHistoryDetailDto>()
+            .ForMember(dest => dest.CourseTitle, opt => opt.MapFrom(src => src.Course != null ? src.Course.Title : null))
+            .ForMember(dest => dest.UserFirstName, opt => opt.MapFrom(src =>
+                src.Account != null && src.Account.UserProfile != null ? src.Account.UserProfile.FirstName : null))
+            .ForMember(dest => dest.UserLastName, opt => opt.MapFrom(src =>
+                src.Account != null && src.Account.UserProfile != null ? src.Account.UserProfile.LastName : null))
+            .ForMember(dest => dest.PurchasedAt, opt => opt.MapFrom(src => src.EnrolledAt))
+            .ForMember(dest => dest.PurchasePrice, opt => opt.MapFrom(src => src.PurchasePrice));
+
         CreateMap<UpdateUserCourseHistoryDto, UserCourseHistory>()
             .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
             .ForMember(dest => dest.CourseId, opt => opt.MapFrom(src => src.CourseId))
