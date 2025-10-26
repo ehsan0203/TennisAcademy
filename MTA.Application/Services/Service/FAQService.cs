@@ -198,19 +198,21 @@ public class FAQService : IFAQService
         return result;
     }
 
-    public async Task<QuestionDto> UpdateQuestionAsync(int id, QuestionDto questionDto)
+    public async Task<QuestionDto> UpdateQuestionAsync(int id, UpdateQuestionDto questionDto)
     {
         var existingQuestion = await _unitOfWork.Repository<QuestionFAQ>().GetByIdAsync(id);
         if (existingQuestion == null)
             throw new ArgumentException($"Question with ID {id} not found");
 
-        _mapper.Map(questionDto, existingQuestion);
+        existingQuestion.QuestionText = questionDto.QuestionText;
+        existingQuestion.AnswerText = questionDto.AnswerText;
+        existingQuestion.IsActive = questionDto.IsActive;
         existingQuestion.UpdatedAt = DateTime.UtcNow;
-        
-        _unitOfWork.Repository<QuestionFAQ>().UpdateAsync(existingQuestion);
+
+        await _unitOfWork.Repository<QuestionFAQ>().UpdateAsync(existingQuestion);
         await _unitOfWork.SaveChangesAsync();
-        
-        return await GetQuestionByIdAsync(id) ?? questionDto;
+
+        return await GetQuestionByIdAsync(id) ?? _mapper.Map<QuestionDto>(existingQuestion);
     }
 
     public async Task<bool> DeleteQuestionAsync(int id)
