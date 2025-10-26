@@ -12,6 +12,7 @@ namespace MTA.Web
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<IFAQService, FAQService>();
