@@ -51,6 +51,7 @@ namespace MTA.Application.DTOs.User
         public int? SkillLevelId { get; set; }      // nullable
         public bool? HealthCondition { get; set; }  // nullable
         public string? HealthDescription { get; set; }
+        public int? StatusId { get; set; }          // nullable - updates account status
     }
 
 
