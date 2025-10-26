@@ -26,7 +26,10 @@ public class PackageHistoryService : IPackageHistoryService
     /// </summary>
     public async Task<PaginatedResult<PackageHistoryDto>> GetAllAsync(int page = 1, int pageSize = 10, int? accountId = null, int? packageId = null, bool? isExpired = null)
     {
-        var query = _unitOfWork.Repository<PackageHistory>().GetQueryable();
+        var query = _unitOfWork
+            .Repository<PackageHistory>()
+            .GetQueryable()
+            .AsNoTracking();
 
         // Apply filters
         if (accountId.HasValue)
@@ -55,8 +58,13 @@ public class PackageHistoryService : IPackageHistoryService
         // Get total count
         var totalCount = await _unitOfWork.Repository<PackageHistory>().CountAsync(query);
 
+        var dataQuery = query
+            .Include(ph => ph.Package)
+            .Include(ph => ph.Account)
+            .ThenInclude(account => account.UserProfile);
+
         // Apply pagination
-        var packageHistories = await _unitOfWork.Repository<PackageHistory>().GetPagedAsync(query, page, pageSize);
+        var packageHistories = await _unitOfWork.Repository<PackageHistory>().GetPagedAsync(dataQuery, page, pageSize);
 
         // Map to DTOs with additional data
         var packageHistoryDtos = packageHistories.Select(ph => _mapper.Map<PackageHistoryDto>(ph)).ToList();
