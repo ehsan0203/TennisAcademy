@@ -38,7 +38,7 @@ public class UserCourseHistoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<PaginatedResult<UpdateUserCourseHistoryDto>>> GetUserCourseHistories(
+    public async Task<ActionResult<PaginatedResult<UserCourseHistoryDetailDto>>> GetUserCourseHistories(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
         [FromQuery] int? accountId = null,
@@ -67,7 +67,7 @@ public class UserCourseHistoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<UpdateUserCourseHistoryDto>> GetUserCourseHistory(int id)
+    public async Task<ActionResult<UserCourseHistoryDetailDto>> GetUserCourseHistory(int id)
     {
         try
         {
@@ -192,7 +192,7 @@ public class UserCourseHistoryController : ControllerBase
     [HttpGet("account/{accountId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<UpdateUserCourseHistoryDto>>> GetUserCourseHistoriesByAccount(int accountId)
+    public async Task<ActionResult<IEnumerable<UserCourseHistoryDetailDto>>> GetUserCourseHistoriesByAccount(int accountId)
     {
         try
         {
@@ -215,7 +215,7 @@ public class UserCourseHistoryController : ControllerBase
     [HttpGet("course/{courseId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<UpdateUserCourseHistoryDto>>> GetUserCourseHistoriesByCourse(int courseId)
+    public async Task<ActionResult<IEnumerable<UserCourseHistoryDetailDto>>> GetUserCourseHistoriesByCourse(int courseId)
     {
         try
         {
