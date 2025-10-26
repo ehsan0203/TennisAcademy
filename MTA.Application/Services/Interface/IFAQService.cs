@@ -83,7 +83,7 @@ public interface IFAQService
     /// <param name="id">Question ID</param>
     /// <param name="questionDto">Updated question data</param>
     /// <returns>Updated question</returns>
-    Task<QuestionDto> UpdateQuestionAsync(int id, QuestionDto questionDto);
+    Task<QuestionDto> UpdateQuestionAsync(int id, UpdateQuestionDto questionDto);
     
     /// <summary>
     /// Delete question

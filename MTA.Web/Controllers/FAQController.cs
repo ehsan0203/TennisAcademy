@@ -352,7 +352,7 @@ public class FAQController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<QuestionDto>> UpdateQuestion(int id, [FromBody] QuestionDto questionDto)
+    public async Task<ActionResult<QuestionDto>> UpdateQuestion(int id, [FromBody] UpdateQuestionDto questionDto)
     {
         try
         {
