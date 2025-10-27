@@ -47,7 +47,6 @@ public class MessageDto : BaseDto
 	/// </summary>
 	public string? SenderImage { get; set; }
     public List<MediaFileDto>? MediaFiles { get; set; }
-    public List<string> MediaFileUrls { get; set; } = new List<string>();
 
 }
 
