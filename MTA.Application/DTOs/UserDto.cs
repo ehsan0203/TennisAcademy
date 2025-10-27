@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace MTA.Application.DTOs.User
 {
@@ -182,4 +183,22 @@ namespace MTA.Application.DTOs.User
         public int? SkillLevelId { get; set; }
     }
 
+
+    public class ChangeUserRoleDto
+    {
+        public int UserId { get; set; }
+        public int RoleId { get; set; }
+    }
+
+    public class RoleLookupDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = string.Empty;
+    }
+
+    public class UserListResponseDto
+    {
+        public PaginatedResult<AccountDto> Users { get; set; } = new();
+        public IEnumerable<RoleLookupDto> Roles { get; set; } = new List<RoleLookupDto>();
+    }
 }

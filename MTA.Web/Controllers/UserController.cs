@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
 using MTA.Application.DTOs.User;
 using MTA.Application.Services;
-using MTA.Domain.Entities;
+using MTA.Domain.Interfaces;
 using System.Security.Claims;
+using System.Linq;
 
 namespace MTA.Web.Controllers;
 
@@ -16,15 +16,18 @@ public class UserController : ControllerBase
     private readonly IUserProfileService _userProfileService;
     private readonly IAccountService _accountService;
     private readonly ILogger<UserController> _logger;
+    private readonly IUnitOfWork _unitOfWork;
 
     public UserController(
         IUserProfileService userProfileService,
         IAccountService accountService,
-        ILogger<UserController> logger)
+        ILogger<UserController> logger,
+        IUnitOfWork unitOfWork)
     {
         _userProfileService = userProfileService;
         _accountService = accountService;
         _logger = logger;
+        _unitOfWork = unitOfWork;
     }
 
     #region CRUD Operations
@@ -34,7 +37,7 @@ public class UserController : ControllerBase
     /// </summary>
     [HttpGet]
     //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<PaginatedResult<AccountDto>>> GetUsers(
+    public async Task<ActionResult<UserListResponseDto>> GetUsers(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
         [FromQuery] int? roleId = null,
@@ -44,22 +47,88 @@ public class UserController : ControllerBase
         try
         {
             var result = await _accountService.GetAllAsync(page, pageSize, null, roleId, isActive);
-            
+
             // Filter by skill level if specified
             if (skillLevelId.HasValue)
             {
-                var filteredData = result.Data.Where(account => 
-                    account.UserProfile?.SkillLevelId == skillLevelId.Value).ToList();
-                
+                var filteredData = result.Data
+                    .Where(account => account.UserProfile?.SkillLevelId == skillLevelId.Value)
+                    .ToList();
+
                 result.Data = filteredData;
                 result.TotalCount = filteredData.Count;
             }
 
-            return Ok(result);
+            var roles = await _unitOfWork.Roles.GetAllAsync();
+            var roleDtos = roles
+                .Select(role => new RoleLookupDto
+                {
+                    Id = role.Id,
+                    Title = role.Title
+                })
+                .ToList();
+
+            var response = new UserListResponseDto
+            {
+                Users = result,
+                Roles = roleDtos
+            };
+
+            return Ok(response);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error getting users");
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+    [HttpPost("change-role")]
+    public async Task<ActionResult<AccountDto>> ChangeRole([FromBody] ChangeUserRoleDto request)
+    {
+        try
+        {
+            var roleExists = await _unitOfWork.Roles.ExistsAsync(request.RoleId);
+            if (!roleExists)
+            {
+                return BadRequest("Role not found.");
+            }
+
+            var updatedAccount = await _accountService.ChangeRoleAsync(request.UserId, request.RoleId);
+
+            if (updatedAccount == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            return Ok(updatedAccount);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error changing role for user with ID: {UserId}", request.UserId);
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+    [HttpGet("roles")]
+    public async Task<ActionResult<IEnumerable<RoleLookupDto>>> GetRoles()
+    {
+        try
+        {
+            var roles = await _unitOfWork.Roles.GetAllAsync();
+            var roleDtos = roles
+                .Select(role => new RoleLookupDto
+                {
+                    Id = role.Id,
+                    Title = role.Title
+                })
+                .ToList();
+
+            return Ok(roleDtos);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving roles");
             return StatusCode(500, "Internal server error");
         }
     }
