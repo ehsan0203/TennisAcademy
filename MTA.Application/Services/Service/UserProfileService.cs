@@ -131,7 +131,12 @@ public class UserProfileService : IUserProfileService
                 Email = u.Account.Email,
                 DateOfBirth = u.DateOfBirth,
                 Experience = u.Experience,
+                RoleId = u.Account.RoleId,
+                RoleTitle = u.Account.Role.Title,
+                StatusId = u.Account.StatusId,
+                StatusValue = u.Account.Status.Value,
                 SkillLevelId = u.SkillLevelId,
+                SkillLevelValue = u.SkillLevel != null ? u.SkillLevel.Title : null,
                 AccountId = u.AccountId
             })
             .ToListAsync();
@@ -151,12 +156,30 @@ public class UserProfileService : IUserProfileService
         var user = await _unitOfWork.UserProfiles.GetByIdAsync(id);
         if (user is null) return null;
 
-        if (dto.StatusId.HasValue)
+        Account? account = null;
+        var shouldUpdateAccount = false;
+
+        if (dto.StatusId.HasValue || dto.RoleId.HasValue)
         {
-            var account = await _unitOfWork.Accounts.GetByIdAsync(user.AccountId);
-            if (account != null && account.StatusId != dto.StatusId.Value)
+            account = await _unitOfWork.Accounts.GetByIdAsync(user.AccountId);
+        }
+
+        if (account is not null)
+        {
+            if (dto.StatusId.HasValue && account.StatusId != dto.StatusId.Value)
             {
                 account.StatusId = dto.StatusId.Value;
+                shouldUpdateAccount = true;
+            }
+
+            if (dto.RoleId.HasValue && account.RoleId != dto.RoleId.Value)
+            {
+                account.RoleId = dto.RoleId.Value;
+                shouldUpdateAccount = true;
+            }
+
+            if (shouldUpdateAccount)
+            {
                 await _unitOfWork.Accounts.UpdateAsync(account);
             }
         }
@@ -314,6 +337,10 @@ public class UserProfileService : IUserProfileService
             DateOfBirth = userProfile.DateOfBirth,
             Experience = userProfile.Experience,
             AccountId = userProfile.AccountId,
+            RoleId = userProfile.Account?.RoleId ?? 0,
+            RoleTitle = userProfile.Account?.Role?.Title,
+            StatusId = userProfile.Account?.StatusId ?? 0,
+            StatusValue = userProfile.Account?.Status?.Value,
             SkillLevelId = userProfile.SkillLevelId,
             SkillLevelValue = userProfile.SkillLevel?.Title,
             CreatedAt = userProfile.CreatedAt,

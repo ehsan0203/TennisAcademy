@@ -16,6 +16,10 @@ namespace MTA.Application.DTOs.User
         public int Experience { get; set; }
         public int SkillLevelId { get; set; } = 1;
         public string? SkillLevelValue { get; set; } = "Beginner";
+        public int RoleId { get; set; }
+        public string? RoleTitle { get; set; }
+        public int StatusId { get; set; }
+        public string? StatusValue { get; set; }
         public int AccountId { get; set; }
         public string? AvatarUrl { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -52,6 +56,7 @@ namespace MTA.Application.DTOs.User
         public bool? HealthCondition { get; set; }  // nullable
         public string? HealthDescription { get; set; }
         public int? StatusId { get; set; }          // nullable - updates account status
+        public int? RoleId { get; set; }            // nullable - updates account role
     }
 
 
