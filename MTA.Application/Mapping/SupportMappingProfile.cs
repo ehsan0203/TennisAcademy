@@ -47,8 +47,7 @@ public class SupportMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.SenderFirstName, opt => opt.MapFrom(src => src.Sender.UserProfile.FirstName))
             .ForMember(dest => dest.SenderLastName, opt => opt.MapFrom(src => src.Sender.UserProfile.LastName))
             .ForMember(dest => dest.SenderImage, opt => opt.MapFrom(src => src.Sender.MediaFile != null ? src.Sender.MediaFile.Url : null))
-            .ForMember(dest => dest.MediaFiles, opt => opt.MapFrom(src => src.MediaFiles.Select(mm => mm.MediaFile))) 
-            .ForMember(dest => dest.MediaFileUrls, opt => opt.MapFrom(src => src.MediaFiles.Select(mm => mm.MediaFile.Url))); 
+            .ForMember(dest => dest.MediaFiles, opt => opt.MapFrom(src => src.MediaFiles.Select(mm => mm.MediaFile)));
 
         CreateMap<MessageDto, Message>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))

@@ -25,9 +25,6 @@ public class MessageMappingProfile : BaseMappingProfile
             // ???? MediaFile DTO??
             .ForMember(dest => dest.MediaFiles, opt => opt.MapFrom(src => src.MediaFiles.Select(mf => mf.MediaFile)))
 
-            // ???? URL ??????? ???? ????? ?????
-            .ForMember(dest => dest.MediaFileUrls, opt => opt.MapFrom(src => src.MediaFiles.Select(mf => mf.MediaFile.Url).ToList()))
-
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt));
 
