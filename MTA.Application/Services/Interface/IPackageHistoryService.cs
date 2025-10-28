@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using MTA.Application.DTOs;
 
 namespace MTA.Application.Services;
@@ -84,20 +86,12 @@ public interface IPackageHistoryService
     Task<bool> DeleteAsync(int id);
     
     /// <summary>
-    /// Update remaining tickets
+    /// Update remaining credits
     /// </summary>
     /// <param name="id">Package history ID</param>
-    /// <param name="remainingTickets">New remaining tickets count</param>
+    /// <param name="remainingCredits">New remaining credit count</param>
     /// <returns>Updated package history</returns>
-    Task<PackageHistoryDto> UpdateRemainingTicketsAsync(int id, int remainingTickets);
-    
-    /// <summary>
-    /// Update remaining messages
-    /// </summary>
-    /// <param name="id">Package history ID</param>
-    /// <param name="remainingMessages">New remaining messages count</param>
-    /// <returns>Updated package history</returns>
-    Task<PackageHistoryDto> UpdateRemainingMessagesAsync(int id, int remainingMessages);
+    Task<PackageHistoryDto> UpdateRemainingCreditsAsync(int id, int remainingCredits);
     
     /// <summary>
     /// Extend package expiration
@@ -145,12 +139,9 @@ public class PackageHistoryStatisticsDto
     public int ActivePackages { get; set; }
     public int ExpiredPackages { get; set; }
     public decimal TotalRevenue { get; set; }
-    public int TotalTicketsSold { get; set; }
-    public int TotalMessagesSold { get; set; }
-    public int TotalTicketsUsed { get; set; }
-    public int TotalMessagesUsed { get; set; }
-    public double AverageTicketsPerPackage { get; set; }
-    public double AverageMessagesPerPackage { get; set; }
+    public int TotalCreditsSold { get; set; }
+    public int TotalCreditsUsed { get; set; }
+    public double AverageCreditsPerPackage { get; set; }
     public int PackagesThisMonth { get; set; }
     public int PackagesLastMonth { get; set; }
     public decimal RevenueThisMonth { get; set; }
@@ -169,12 +160,9 @@ public class UserPackageUsageSummaryDto
     public int ActivePackages { get; set; }
     public int ExpiredPackages { get; set; }
     public decimal TotalSpent { get; set; }
-    public int TotalTicketsPurchased { get; set; }
-    public int TotalMessagesPurchased { get; set; }
-    public int TotalTicketsUsed { get; set; }
-    public int TotalMessagesUsed { get; set; }
-    public int RemainingTickets { get; set; }
-    public int RemainingMessages { get; set; }
+    public int TotalCreditsPurchased { get; set; }
+    public int TotalCreditsUsed { get; set; }
+    public int RemainingCredits { get; set; }
     public DateTime? NextExpiryDate { get; set; }
     public List<PackageUsageDto> PackageUsage { get; set; } = new();
 }
@@ -189,11 +177,8 @@ public class PackageUsageDto
     public DateTime PurchaseDate { get; set; }
     public DateTime ExpiryDate { get; set; }
     public bool IsExpired { get; set; }
-    public int TotalTickets { get; set; }
-    public int TotalMessages { get; set; }
-    public int UsedTickets { get; set; }
-    public int UsedMessages { get; set; }
-    public int RemainingTickets { get; set; }
-    public int RemainingMessages { get; set; }
+    public int TotalCredits { get; set; }
+    public int UsedCredits { get; set; }
+    public int RemainingCredits { get; set; }
     public double UsagePercentage { get; set; } // percentage
 }

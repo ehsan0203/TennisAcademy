@@ -1,3 +1,4 @@
+using System;
 namespace MTA.Application.DTOs;
 
 /// <summary>
@@ -11,14 +12,9 @@ public class PackageHistoryDto : BaseDto
     public DateTime ExpiredDate { get; set; }
     
     /// <summary>
-    /// Number of remaining tickets
+    /// Number of remaining credits
     /// </summary>
-    public int RemainingTickets { get; set; }
-    
-    /// <summary>
-    /// Number of remaining messages
-    /// </summary>
-    public int RemainingMessages { get; set; }
+    public int RemainingCredits { get; set; }
     
     /// <summary>
     /// Package ID
@@ -36,14 +32,9 @@ public class PackageHistoryDto : BaseDto
     public decimal PackagePrice { get; set; }
     
     /// <summary>
-    /// Total number of tickets in the package
+    /// Total number of credits in the package
     /// </summary>
-    public int TotalTickets { get; set; }
-    
-    /// <summary>
-    /// Total number of messages in the package
-    /// </summary>
-    public int TotalMessages { get; set; }
+    public int TotalCredits { get; set; }
     
     /// <summary>
     /// Account ID
@@ -83,6 +74,11 @@ public class CreatePackageHistoryDto
     /// Account ID
     /// </summary>
     public int AccountId { get; set; }
+
+    /// <summary>
+    /// Package expiration date selected by the administrator at creation time
+    /// </summary>
+    public DateTime ExpiredDate { get; set; }
 
     /// <summary>
     /// Whether the package is expired

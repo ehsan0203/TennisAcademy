@@ -1,9 +1,11 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using MTA.Application.DTOs;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace MTA.Application.Services;
 
@@ -173,6 +175,9 @@ public class PackageHistoryService : IPackageHistoryService
         if (account == null)
             throw new KeyNotFoundException("Account not found");
 
+        if (dto.ExpiredDate <= DateTime.UtcNow)
+            throw new InvalidOperationException("Expiration date must be in the future.");
+
         // ایجاد PackageHistory
         var packageHistory = new PackageHistory
         {
@@ -181,9 +186,9 @@ public class PackageHistoryService : IPackageHistoryService
             Package = package,
             Account = account,
             CreatedAt = DateTime.UtcNow,
-            ExpiredDate = DateTime.UtcNow.AddMonths(package.Duration), // مثال: Duration ماه
-            RemainingTickets = package.TicketCount,
-            RemainingMessages = package.MessageCount,
+            ExpiredDate = dto.ExpiredDate,
+            TotalCredits = package.CreditCount,
+            RemainingCredits = package.CreditCount,
             PurchasePrice = package.Price
         };
 
@@ -198,8 +203,8 @@ public class PackageHistoryService : IPackageHistoryService
             PackageId = package.Id,
             PackageTitle = package.Title,
             PackagePrice = packageHistory.PurchasePrice,
-            RemainingTickets = created.RemainingTickets,
-            RemainingMessages = created.RemainingMessages,
+            TotalCredits = created.TotalCredits,
+            RemainingCredits = created.RemainingCredits,
             ExpiredDate = created.ExpiredDate,
             AccountId = account.Id,
             UserFirstName = account.UserProfile?.FirstName,
@@ -223,8 +228,14 @@ public class PackageHistoryService : IPackageHistoryService
 
         // Update only allowed fields
         existingPackageHistory.ExpiredDate = packageHistoryDto.ExpiredDate;
-        existingPackageHistory.RemainingTickets = packageHistoryDto.RemainingTickets;
-        existingPackageHistory.RemainingMessages = packageHistoryDto.RemainingMessages;
+        if (packageHistoryDto.TotalCredits < 0)
+            throw new InvalidOperationException("Total credits cannot be negative.");
+
+        if (packageHistoryDto.RemainingCredits < 0 || packageHistoryDto.RemainingCredits > packageHistoryDto.TotalCredits)
+            throw new InvalidOperationException("Remaining credits must be between 0 and total credits.");
+
+        existingPackageHistory.TotalCredits = packageHistoryDto.TotalCredits;
+        existingPackageHistory.RemainingCredits = packageHistoryDto.RemainingCredits;
         existingPackageHistory.PackageId = packageHistoryDto.PackageId;
         existingPackageHistory.AccountId = packageHistoryDto.AccountId;
         existingPackageHistory.PurchasePrice = packageHistoryDto.PackagePrice;
@@ -252,38 +263,23 @@ public class PackageHistoryService : IPackageHistoryService
     }
 
     /// <summary>
-    /// Update remaining tickets
+    /// Update remaining credits
     /// </summary>
-    public async Task<PackageHistoryDto> UpdateRemainingTicketsAsync(int id, int remainingTickets)
+    public async Task<PackageHistoryDto> UpdateRemainingCreditsAsync(int id, int remainingCredits)
     {
         var packageHistory = await _unitOfWork.Repository<PackageHistory>().GetByIdAsync(id);
         if (packageHistory == null)
             throw new ArgumentException($"Package history with ID {id} not found");
 
-        packageHistory.RemainingTickets = remainingTickets;
+        if (remainingCredits < 0 || remainingCredits > packageHistory.TotalCredits)
+            throw new InvalidOperationException("Remaining credits must be between 0 and total credits.");
+
+        packageHistory.RemainingCredits = remainingCredits;
         packageHistory.UpdatedAt = DateTime.UtcNow;
 
         var updatedPackageHistory = await _unitOfWork.Repository<PackageHistory>().UpdateAsync(packageHistory);
         await _unitOfWork.SaveChangesAsync();
-        
-        return _mapper.Map<PackageHistoryDto>(updatedPackageHistory);
-    }
 
-    /// <summary>
-    /// Update remaining messages
-    /// </summary>
-    public async Task<PackageHistoryDto> UpdateRemainingMessagesAsync(int id, int remainingMessages)
-    {
-        var packageHistory = await _unitOfWork.Repository<PackageHistory>().GetByIdAsync(id);
-        if (packageHistory == null)
-            throw new ArgumentException($"Package history with ID {id} not found");
-
-        packageHistory.RemainingMessages = remainingMessages;
-        packageHistory.UpdatedAt = DateTime.UtcNow;
-
-        var updatedPackageHistory = await _unitOfWork.Repository<PackageHistory>().UpdateAsync(packageHistory);
-        await _unitOfWork.SaveChangesAsync();
-        
         return _mapper.Map<PackageHistoryDto>(updatedPackageHistory);
     }
 
@@ -322,16 +318,13 @@ public class PackageHistoryService : IPackageHistoryService
             ph.CreatedAt.Month == currentDate.AddMonths(-1).Month && ph.CreatedAt.Year == currentDate.AddMonths(-1).Year);
         
         // Calculate totals
-        var totalTicketsSold = allPackageHistories.Sum(ph => ph.RemainingTickets);
-        var totalMessagesSold = allPackageHistories.Sum(ph => ph.RemainingMessages);
+        var totalCreditsPurchased = allPackageHistories.Sum(ph => ph.TotalCredits);
+        var totalCreditsRemaining = allPackageHistories.Sum(ph => ph.RemainingCredits);
+        var totalCreditsUsed = totalCreditsPurchased - totalCreditsRemaining;
 
         // Calculate averages
-        var averageTicketsPerPackage = allPackageHistories.Count() > 0
-            ? (double)totalTicketsSold / allPackageHistories.Count()
-            : 0;
-
-        var averageMessagesPerPackage = allPackageHistories.Count() > 0
-            ? (double)totalMessagesSold / allPackageHistories.Count()
+        var averageCreditsPerPackage = allPackageHistories.Count() > 0
+            ? (double)totalCreditsPurchased / allPackageHistories.Count()
             : 0;
 
         // Revenue calculations would need actual package price data
@@ -345,12 +338,9 @@ public class PackageHistoryService : IPackageHistoryService
             ActivePackages = activePackages,
             ExpiredPackages = expiredPackages,
             TotalRevenue = totalRevenue,
-            TotalTicketsSold = totalTicketsSold,
-            TotalMessagesSold = totalMessagesSold,
-            TotalTicketsUsed = 0, // Would need to calculate from package data
-            TotalMessagesUsed = 0, // Would need to calculate from package data
-            AverageTicketsPerPackage = averageTicketsPerPackage,
-            AverageMessagesPerPackage = averageMessagesPerPackage,
+            TotalCreditsSold = totalCreditsPurchased,
+            TotalCreditsUsed = totalCreditsUsed,
+            AverageCreditsPerPackage = averageCreditsPerPackage,
             PackagesThisMonth = packagesThisMonth,
             PackagesLastMonth = packagesLastMonth,
             RevenueThisMonth = revenueThisMonth,
@@ -392,8 +382,9 @@ public class PackageHistoryService : IPackageHistoryService
         var activePackages = packageHistories.Count(ph => ph.ExpiredDate >= currentDate);
         var expiredPackages = packageHistories.Count(ph => ph.ExpiredDate < currentDate);
         
-        var totalTicketsPurchased = packageHistories.Sum(ph => ph.RemainingTickets);
-        var totalMessagesPurchased = packageHistories.Sum(ph => ph.RemainingMessages);
+        var totalCreditsPurchased = packageHistories.Sum(ph => ph.TotalCredits);
+        var totalCreditsRemaining = packageHistories.Sum(ph => ph.RemainingCredits);
+        var totalCreditsUsed = totalCreditsPurchased - totalCreditsRemaining;
         
         var nextExpiryDate = packageHistories
             .Where(ph => ph.ExpiredDate >= currentDate)
@@ -407,15 +398,12 @@ public class PackageHistoryService : IPackageHistoryService
             PurchaseDate = ph.CreatedAt,
             ExpiryDate = ph.ExpiredDate,
             IsExpired = ph.ExpiredDate < currentDate,
-            TotalTickets = ph.RemainingTickets, // Would need to get from Package entity
-            TotalMessages = ph.RemainingMessages, // Would need to get from Package entity
-            UsedTickets = 0, // Would need to calculate
-            UsedMessages = 0, // Would need to calculate
-            RemainingTickets = ph.RemainingTickets,
-            RemainingMessages = ph.RemainingMessages,
-            UsagePercentage = 0 // Would need to calculate
+            TotalCredits = ph.TotalCredits,
+            UsedCredits = ph.TotalCredits - ph.RemainingCredits,
+            RemainingCredits = ph.RemainingCredits,
+            UsagePercentage = ph.TotalCredits == 0 ? 0 : (double)(ph.TotalCredits - ph.RemainingCredits) / ph.TotalCredits * 100
         }).ToList();
-        
+
         return new UserPackageUsageSummaryDto
         {
             AccountId = accountId,
@@ -425,12 +413,9 @@ public class PackageHistoryService : IPackageHistoryService
             ActivePackages = activePackages,
             ExpiredPackages = expiredPackages,
             TotalSpent = 0, // Would need to calculate from package prices
-            TotalTicketsPurchased = totalTicketsPurchased,
-            TotalMessagesPurchased = totalMessagesPurchased,
-            TotalTicketsUsed = 0, // Would need to calculate
-            TotalMessagesUsed = 0, // Would need to calculate
-            RemainingTickets = packageHistories.Sum(ph => ph.RemainingTickets),
-            RemainingMessages = packageHistories.Sum(ph => ph.RemainingMessages),
+            TotalCreditsPurchased = totalCreditsPurchased,
+            TotalCreditsUsed = totalCreditsUsed,
+            RemainingCredits = totalCreditsRemaining,
             NextExpiryDate = nextExpiryDate,
             PackageUsage = packageUsage
         };

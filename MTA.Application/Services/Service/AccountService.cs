@@ -197,7 +197,7 @@ public class AccountService : IAccountService
         int remainingCredit = 0;
         if (activePackage != null)
         {
-            remainingCredit = activePackage.RemainingTickets;
+            remainingCredit = activePackage.RemainingCredits;
         }
 
         var profile = account.UserProfile;

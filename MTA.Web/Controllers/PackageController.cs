@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
@@ -32,11 +33,12 @@ public class PackageController : ControllerBase
         [FromQuery] string? searchTerm = null,
         [FromQuery] decimal? minPrice = null,
         [FromQuery] decimal? maxPrice = null,
-        [FromQuery] int? durationUnitId = null)
+        [FromQuery] DateTime? expiresAfter = null,
+        [FromQuery] DateTime? expiresBefore = null)
     {
         try
         {
-            var result = await _packageService.GetAllAsync(page, pageSize, searchTerm, minPrice, maxPrice, durationUnitId);
+            var result = await _packageService.GetAllAsync(page, pageSize, searchTerm, minPrice, maxPrice, expiresAfter, expiresBefore);
             return Ok(result);
         }
         catch (Exception ex)
@@ -83,24 +85,6 @@ public class PackageController : ControllerBase
     //    catch (Exception ex)
     //    {
     //        _logger.LogError(ex, "Error getting packages by price range from {MinPrice} to {MaxPrice}", minPrice, maxPrice);
-    //        return StatusCode(500, "Internal server error");
-    //    }
-    //}
-
-    ///// <summary>
-    ///// Get packages by duration unit
-    ///// </summary>
-    //[HttpGet("by-duration-unit/{durationUnitId}")]
-    //public async Task<ActionResult<IEnumerable<PackageDto>>> GetPackagesByDurationUnit(int durationUnitId)
-    //{
-    //    try
-    //    {
-    //        var packages = await _packageService.GetByDurationUnitAsync(durationUnitId);
-    //        return Ok(packages);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error getting packages by duration unit ID: {DurationUnitId}", durationUnitId);
     //        return StatusCode(500, "Internal server error");
     //    }
     //}
@@ -214,15 +198,15 @@ public class PackageController : ControllerBase
     //}
 
     ///// <summary>
-    ///// Update package capacity
+    ///// Update package credits
     ///// </summary>
-    //[HttpPatch("{id}/capacity")]
+    //[HttpPatch("{id}/credits")]
     ////[Authorize(Roles = "Admin")]
-    //public async Task<ActionResult<PackageDto>> UpdateCapacity(int id, [FromBody] UpdateCapacityDto capacityDto)
+    //public async Task<ActionResult<PackageDto>> UpdateCredits(int id, [FromBody] UpdateCreditsDto creditsDto)
     //{
     //    try
     //    {
-    //        var updatedPackage = await _packageService.UpdateCapacityAsync(id, capacityDto.TicketCount, capacityDto.MessageCount);
+    //        var updatedPackage = await _packageService.UpdateCreditsAsync(id, creditsDto.CreditCount);
     //        return Ok(updatedPackage);
     //    }
     //    catch (InvalidOperationException ex)
@@ -231,21 +215,21 @@ public class PackageController : ControllerBase
     //    }
     //    catch (Exception ex)
     //    {
-    //        _logger.LogError(ex, "Error updating capacity for package with ID: {PackageId}", id);
+    //        _logger.LogError(ex, "Error updating credits for package with ID: {PackageId}", id);
     //        return StatusCode(500, "Internal server error");
     //    }
     //}
 
     ///// <summary>
-    ///// Update package duration
+    ///// Update package expiration date
     ///// </summary>
-    //[HttpPatch("{id}/duration")]
+    //[HttpPatch("{id}/expiration")]
     ////[Authorize(Roles = "Admin")]
-    //public async Task<ActionResult<PackageDto>> UpdateDuration(int id, [FromBody] UpdateDurationDto durationDto)
+    //public async Task<ActionResult<PackageDto>> UpdateExpiration(int id, [FromBody] DateTime expirationDate)
     //{
     //    try
     //    {
-    //        var updatedPackage = await _packageService.UpdateDurationAsync(id, durationDto.Duration, durationDto.DurationUnitId);
+    //        var updatedPackage = await _packageService.UpdateExpirationAsync(id, expirationDate);
     //        return Ok(updatedPackage);
     //    }
     //    catch (InvalidOperationException ex)
@@ -254,7 +238,7 @@ public class PackageController : ControllerBase
     //    }
     //    catch (Exception ex)
     //    {
-    //        _logger.LogError(ex, "Error updating duration for package with ID: {PackageId}", id);
+    //        _logger.LogError(ex, "Error updating expiration for package with ID: {PackageId}", id);
     //        return StatusCode(500, "Internal server error");
     //    }
     //}
@@ -273,12 +257,13 @@ public class PackageController : ControllerBase
         try
         {
             var result = await _packageService.GetAllAsync(
-                searchDto.Page, 
-                searchDto.PageSize, 
+                searchDto.Page,
+                searchDto.PageSize,
                 searchDto.SearchTerm,
                 searchDto.MinPrice,
                 searchDto.MaxPrice,
-                searchDto.DurationUnitId);
+                searchDto.ExpiresAfter,
+                searchDto.ExpiresBefore);
             
             return Ok(result);
         }

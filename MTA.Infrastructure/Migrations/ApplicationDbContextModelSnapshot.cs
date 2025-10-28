@@ -394,20 +394,14 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Duration")
+                    b.Property<int>("CreditCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("DurationUnitId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MessageCount")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("TicketCount")
-                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -418,8 +412,6 @@ namespace MTA.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DurationUnitId");
 
                     b.ToTable("Packages");
                 });
@@ -447,10 +439,10 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<decimal>("PurchasePrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("RemainingMessages")
+                    b.Property<int>("RemainingCredits")
                         .HasColumnType("int");
 
-                    b.Property<int>("RemainingTickets")
+                    b.Property<int>("TotalCredits")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -903,17 +895,6 @@ namespace MTA.Infrastructure.Migrations
                     b.Navigation("MediaFile");
 
                     b.Navigation("Message");
-                });
-
-            modelBuilder.Entity("MTA.Domain.Entities.Package", b =>
-                {
-                    b.HasOne("MTA.Domain.Entities.Lookup", "DurationUnit")
-                        .WithMany()
-                        .HasForeignKey("DurationUnitId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("DurationUnit");
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.PackageHistory", b =>

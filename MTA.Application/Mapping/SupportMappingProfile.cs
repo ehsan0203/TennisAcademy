@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Linq;
 using MTA.Domain.Entities;
 using MTA.Application.DTOs;
 
@@ -12,17 +13,16 @@ public class SupportMappingProfile : BaseMappingProfile
 	public SupportMappingProfile()
 	{
 		// Ticket mappings
-		CreateMap<Ticket, TicketDto>()
-			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-			.ForMember(dest => dest.Topic, opt => opt.MapFrom(src => src.Topic))
-			.ForMember(dest => dest.StatusId, opt => opt.MapFrom(src => src.StatusId))
-			.ForMember(dest => dest.StatusValue, opt => opt.MapFrom(src => src.Status.Value)) // مقدار از Lookup
-			.ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
-			.ForMember(dest => dest.UserFirstName, opt => opt.MapFrom(src => src.Account.UserProfile.FirstName))
-			.ForMember(dest => dest.UserLastName, opt => opt.MapFrom(src => src.Account.UserProfile.LastName))
-			.ForMember(dest => dest.PackageId, opt => opt.MapFrom(src => src.PackageId))
-			.ForMember(dest => dest.PackageTitle, opt => opt.MapFrom(src => src.Package.Title))
-			.ForMember(dest => dest.MessageCount, opt => opt.MapFrom(src => src.Messages.Count));
+                CreateMap<Ticket, TicketDto>()
+                        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                        .ForMember(dest => dest.Topic, opt => opt.MapFrom(src => src.Topic))
+                        .ForMember(dest => dest.StatusId, opt => opt.MapFrom(src => src.StatusId))
+                        .ForMember(dest => dest.StatusValue, opt => opt.MapFrom(src => src.Status.Value)) // مقدار از Lookup
+                        .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId))
+                        .ForMember(dest => dest.UserFirstName, opt => opt.MapFrom(src => src.Account.UserProfile.FirstName))
+                        .ForMember(dest => dest.UserLastName, opt => opt.MapFrom(src => src.Account.UserProfile.LastName))
+                        .ForMember(dest => dest.PackageId, opt => opt.MapFrom(src => src.PackageId))
+                        .ForMember(dest => dest.PackageTitle, opt => opt.MapFrom(src => src.Package.Title));
 
 		CreateMap<TicketDto, Ticket>()
 			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
