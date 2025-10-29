@@ -49,7 +49,7 @@ namespace MTA.Web.Controllers
         public async Task<ActionResult<LookupDto>> GetById(int id)
         {
             var rule = await _lookupService.GetByIdAsync(id);
-            if (rule == null || rule.Category != "SiteRules")
+            if (rule == null || rule.Category != "SiteRule")
                 return NotFound();
 
             return Ok(rule);
@@ -60,7 +60,7 @@ namespace MTA.Web.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<LookupDto>> Create([FromBody] CreateLookupDto dto)
         {
-            dto.Category = "SiteRules"; // همیشه دسته‌بندی رو SiteRules می‌ذاریم
+            dto.Category = "SiteRule"; // همیشه دسته‌بندی رو SiteRule می‌ذاریم
             var created = await _lookupService.CreateAsync(dto);
 
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
@@ -73,10 +73,10 @@ namespace MTA.Web.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] LookupDto dto)
         {
             var existing = await _lookupService.GetByIdAsync(id);
-            if (existing == null || existing.Category != "SiteRules")
+            if (existing == null || existing.Category != "SiteRule")
                 return NotFound();
 
-            dto.Category = "SiteRules"; // دسته‌بندی نباید تغییر کنه
+            dto.Category = "SiteRule"; // دسته‌بندی نباید تغییر کنه
             await _lookupService.UpdateAsync(id, dto);
 
             return NoContent();
@@ -89,7 +89,7 @@ namespace MTA.Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var existing = await _lookupService.GetByIdAsync(id);
-            if (existing == null || existing.Category != "SiteRules")
+            if (existing == null || existing.Category != "SiteRule")
                 return NotFound();
 
             var deleted = await _lookupService.DeleteAsync(id);
