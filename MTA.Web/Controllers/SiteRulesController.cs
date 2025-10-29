@@ -58,10 +58,15 @@ namespace MTA.Web.Controllers
         // POST: api/siterules
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<LookupDto>> Create([FromBody] CreateLookupDto dto)
+        public async Task<ActionResult<LookupDto>> Create([FromBody] SiteRuleUpsertDto dto)
         {
-            dto.Category = "SiteRule"; // همیشه دسته‌بندی رو SiteRule می‌ذاریم
-            var created = await _lookupService.CreateAsync(dto);
+            var createDto = new CreateLookupDto
+            {
+                Category = "SiteRule",
+                Key = dto.Subject,
+                Value = dto.Text
+            };
+            var created = await _lookupService.CreateAsync(createDto);
 
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
@@ -70,14 +75,20 @@ namespace MTA.Web.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update(int id, [FromBody] LookupDto dto)
+        public async Task<IActionResult> Update(int id, [FromBody] SiteRuleUpsertDto dto)
         {
             var existing = await _lookupService.GetByIdAsync(id);
             if (existing == null || existing.Category != "SiteRule")
                 return NotFound();
 
-            dto.Category = "SiteRule"; // دسته‌بندی نباید تغییر کنه
-            await _lookupService.UpdateAsync(id, dto);
+            var updateDto = new LookupDto
+            {
+                Id = id,
+                Category = "SiteRule",
+                Key = dto.Subject,
+                Value = dto.Text
+            };
+            await _lookupService.UpdateAsync(id, updateDto);
 
             return NoContent();
         }
