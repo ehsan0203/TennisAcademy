@@ -17,10 +17,9 @@ public interface IPackageService
     /// <param name="searchTerm">Search term for title</param>
     /// <param name="minPrice">Minimum price filter</param>
     /// <param name="maxPrice">Maximum price filter</param>
-    /// <param name="expiresAfter">Filter packages expiring after this date</param>
-    /// <param name="expiresBefore">Filter packages expiring before this date</param>
+    /// <param name="durationUnitId">Filter by duration unit</param>
     /// <returns>Paginated list of packages</returns>
-    Task<PaginatedResult<PackageDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, decimal? minPrice = null, decimal? maxPrice = null, DateTime? expiresAfter = null, DateTime? expiresBefore = null);
+    Task<PaginatedResult<PackageDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, decimal? minPrice = null, decimal? maxPrice = null, int? durationUnitId = null);
     
     /// <summary>
     /// Get package by ID
@@ -76,12 +75,13 @@ public interface IPackageService
     Task<PackageDto> UpdateCreditsAsync(int id, int creditCount);
 
     /// <summary>
-    /// Update package expiration
+    /// Update package duration
     /// </summary>
     /// <param name="id">Package ID</param>
-    /// <param name="expirationDate">New expiration date</param>
+    /// <param name="duration">New duration value</param>
+    /// <param name="durationUnitId">Duration unit identifier</param>
     /// <returns>Updated package</returns>
-    Task<PackageDto> UpdateExpirationAsync(int id, DateTime expirationDate);
+    Task<PackageDto> UpdateDurationAsync(int id, int duration, int durationUnitId);
 }
 
 /// <summary>

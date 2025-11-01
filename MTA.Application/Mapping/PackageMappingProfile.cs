@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using AutoMapper;
 using MTA.Domain.Entities;
 using MTA.Application.DTOs;
@@ -16,18 +18,25 @@ public class PackageMappingProfile : BaseMappingProfile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
-            .ForMember(dest => dest.ExpirationDate, opt => opt.MapFrom(src => src.ExpirationDate))
             .ForMember(dest => dest.CreditCount, opt => opt.MapFrom(src => src.CreditCount))
-            .ForMember(dest => dest.UsedCreditCount, opt => opt.MapFrom(src => src.Tickets != null ? src.Tickets.Count : 0));
+            .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
+            .ForMember(dest => dest.DurationUnitId, opt => opt.MapFrom(src => src.DurationUnitId))
+            .ForMember(dest => dest.DurationUnitValue, opt => opt.MapFrom(src => src.DurationUnit != null ? src.DurationUnit.Value : null))
+            .ForMember(dest => dest.UsedCreditCount, opt => opt.MapFrom(src =>
+                src.PackageHistories != null
+                    ? src.PackageHistories.Sum(history => history.TotalCredits - history.RemainingCredits)
+                    : 0));
 
         CreateMap<PackageDto, Package>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
             .ForMember(dest => dest.CreditCount, opt => opt.MapFrom(src => src.CreditCount))
-            .ForMember(dest => dest.ExpirationDate, opt => opt.MapFrom(src => src.ExpirationDate))
+            .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
+            .ForMember(dest => dest.DurationUnitId, opt => opt.MapFrom(src => src.DurationUnitId))
             .ForMember(dest => dest.Tickets, opt => opt.Ignore())
-            .ForMember(dest => dest.PackageHistories, opt => opt.Ignore());
+            .ForMember(dest => dest.PackageHistories, opt => opt.Ignore())
+            .ForMember(dest => dest.DurationUnit, opt => opt.Ignore());
 
 
         // PackageHistory mappings

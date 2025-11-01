@@ -1,4 +1,3 @@
-using System;
 namespace MTA.Application.DTOs;
 
 /// <summary>
@@ -22,9 +21,19 @@ public class PackageDto : BaseDto
     public int CreditCount { get; set; }
 
     /// <summary>
-    /// Package expiration date defined by the administrator
+    /// Duration value of the package
     /// </summary>
-    public DateTime ExpirationDate { get; set; }
+    public int Duration { get; set; }
+
+    /// <summary>
+    /// Duration unit ID for this package
+    /// </summary>
+    public int DurationUnitId { get; set; }
+
+    /// <summary>
+    /// Duration unit value (e.g., Days, Months, Years)
+    /// </summary>
+    public string? DurationUnitValue { get; set; }
 
     /// <summary>
     /// Number of credits currently used from this package
@@ -50,14 +59,14 @@ public class CreatePackageDto
     public int CreditCount { get; set; }
 
     /// <summary>
-    /// Package expiration date defined by the administrator
+    /// Duration value of the package
     /// </summary>
-    public DateTime ExpirationDate { get; set; }
+    public int Duration { get; set; }
 
     /// <summary>
-    /// Number of credits currently used from this package
+    /// Duration unit ID for this package
     /// </summary>
-    public int UsedCreditCount { get; set; }
+    public int DurationUnitId { get; set; }
 }
 
 
@@ -71,8 +80,7 @@ public class PackageSearchDto
     public string? SearchTerm { get; set; }
     public decimal? MinPrice { get; set; }
     public decimal? MaxPrice { get; set; }
-    public DateTime? ExpiresAfter { get; set; }
-    public DateTime? ExpiresBefore { get; set; }
+    public int? DurationUnitId { get; set; }
 }
 
 /// <summary>
@@ -81,4 +89,13 @@ public class PackageSearchDto
 public class UpdateCreditsDto
 {
     public int CreditCount { get; set; }
+}
+
+/// <summary>
+/// DTO for updating package duration
+/// </summary>
+public class UpdateDurationDto
+{
+    public int Duration { get; set; }
+    public int DurationUnitId { get; set; }
 }

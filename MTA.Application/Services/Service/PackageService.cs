@@ -29,15 +29,15 @@ public class PackageService : IPackageService
         string? searchTerm = null,
         decimal? minPrice = null,
         decimal? maxPrice = null,
-        DateTime? expiresAfter = null,
-        DateTime? expiresBefore = null)
+        int? durationUnitId = null)
     {
         try
         {
             var query = _unitOfWork.Repository<Package>().GetQueryable()
+                .Include(p => p.DurationUnit)
                 .Include(p => p.Tickets)
                 .Include(p => p.PackageHistories)
-                .AsQueryable();
+                .AsNoTracking();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -54,21 +54,15 @@ public class PackageService : IPackageService
                 query = query.Where(p => p.Price <= maxPrice.Value);
             }
 
-            if (expiresAfter.HasValue)
+            if (durationUnitId.HasValue)
             {
-                query = query.Where(p => p.ExpirationDate >= expiresAfter.Value);
-            }
-
-            if (expiresBefore.HasValue)
-            {
-                query = query.Where(p => p.ExpirationDate <= expiresBefore.Value);
+                query = query.Where(p => p.DurationUnitId == durationUnitId.Value);
             }
 
             var totalCount = await query.CountAsync();
 
             var packages = await query
-                .OrderByDescending(p => p.ExpirationDate)
-                .ThenBy(p => p.Price)
+                .OrderBy(p => p.Price)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -88,7 +82,7 @@ public class PackageService : IPackageService
             _logger.LogError(
                 ex,
                 "Error getting packages with filters {@Filters}",
-                new { page, pageSize, searchTerm, minPrice, maxPrice, expiresAfter, expiresBefore });
+                new { page, pageSize, searchTerm, minPrice, maxPrice, durationUnitId });
             throw;
         }
     }
@@ -99,8 +93,10 @@ public class PackageService : IPackageService
         try
         {
             var package = await _unitOfWork.Repository<Package>().GetQueryable()
+                .Include(p => p.DurationUnit)
                 .Include(p => p.Tickets)
                 .Include(p => p.PackageHistories)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             return package != null ? MapToDto(package) : null;
@@ -118,10 +114,12 @@ public class PackageService : IPackageService
         try
         {
             var packages = await _unitOfWork.Repository<Package>().GetQueryable()
+                .Include(p => p.DurationUnit)
                 .Include(p => p.Tickets)
                 .Include(p => p.PackageHistories)
                 .Where(p => p.Price >= minPrice && p.Price <= maxPrice)
                 .OrderBy(p => p.Price)
+                .AsNoTracking()
                 .ToListAsync();
 
             return packages.Select(MapToDto);
@@ -143,9 +141,14 @@ public class PackageService : IPackageService
                 throw new InvalidOperationException("Credit count cannot be negative");
             }
 
-            if (packageDto.ExpirationDate <= DateTime.UtcNow)
+            if (packageDto.Duration <= 0)
             {
-                throw new InvalidOperationException("Expiration date must be in the future");
+                throw new InvalidOperationException("Duration must be greater than zero");
+            }
+
+            if (packageDto.DurationUnitId <= 0)
+            {
+                throw new InvalidOperationException("Duration unit must be specified");
             }
 
             var package = new Package
@@ -153,7 +156,8 @@ public class PackageService : IPackageService
                 Title = packageDto.Title,
                 Price = packageDto.Price,
                 CreditCount = packageDto.CreditCount,
-                ExpirationDate = packageDto.ExpirationDate
+                Duration = packageDto.Duration,
+                DurationUnitId = packageDto.DurationUnitId
             };
 
             await _unitOfWork.Repository<Package>().AddAsync(package);
@@ -184,15 +188,21 @@ public class PackageService : IPackageService
                 throw new InvalidOperationException("Credit count cannot be negative");
             }
 
-            if (packageDto.ExpirationDate <= DateTime.UtcNow)
+            if (packageDto.Duration <= 0)
             {
-                throw new InvalidOperationException("Expiration date must be in the future");
+                throw new InvalidOperationException("Duration must be greater than zero");
+            }
+
+            if (packageDto.DurationUnitId <= 0)
+            {
+                throw new InvalidOperationException("Duration unit must be specified");
             }
 
             package.Title = packageDto.Title;
             package.Price = packageDto.Price;
             package.CreditCount = packageDto.CreditCount;
-            package.ExpirationDate = packageDto.ExpirationDate;
+            package.Duration = packageDto.Duration;
+            package.DurationUnitId = packageDto.DurationUnitId;
             package.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.Repository<Package>().UpdateAsync(package);
@@ -305,7 +315,7 @@ public class PackageService : IPackageService
     }
 
     /// <inheritdoc />
-    public async Task<PackageDto> UpdateExpirationAsync(int id, DateTime expirationDate)
+    public async Task<PackageDto> UpdateDurationAsync(int id, int duration, int durationUnitId)
     {
         try
         {
@@ -315,12 +325,18 @@ public class PackageService : IPackageService
                 throw new InvalidOperationException($"Package with ID {id} not found");
             }
 
-            if (expirationDate <= DateTime.UtcNow.Date)
+            if (duration <= 0)
             {
-                throw new InvalidOperationException("Expiration date must be in the future");
+                throw new InvalidOperationException("Duration must be greater than zero");
             }
 
-            package.ExpirationDate = expirationDate;
+            if (durationUnitId <= 0)
+            {
+                throw new InvalidOperationException("Duration unit must be specified");
+            }
+
+            package.Duration = duration;
+            package.DurationUnitId = durationUnitId;
             package.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.Repository<Package>().UpdateAsync(package);
@@ -330,7 +346,7 @@ public class PackageService : IPackageService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error updating expiration for package with ID: {PackageId}", id);
+            _logger.LogError(ex, "Error updating duration for package with ID: {PackageId}", id);
             throw;
         }
     }
@@ -343,8 +359,10 @@ public class PackageService : IPackageService
             Title = package.Title,
             Price = package.Price,
             CreditCount = package.CreditCount,
-            ExpirationDate = package.ExpirationDate,
-            UsedCreditCount = package.Tickets?.Count ?? 0,
+            Duration = package.Duration,
+            DurationUnitId = package.DurationUnitId,
+            DurationUnitValue = package.DurationUnit?.Value,
+            UsedCreditCount = package.PackageHistories?.Sum(history => history.TotalCredits - history.RemainingCredits) ?? 0,
             CreatedAt = package.CreatedAt,
             UpdatedAt = package.UpdatedAt
         };

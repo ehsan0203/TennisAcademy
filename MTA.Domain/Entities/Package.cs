@@ -1,4 +1,4 @@
-using System;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace MTA.Domain.Entities;
 
 /// <summary>
@@ -8,8 +8,8 @@ namespace MTA.Domain.Entities;
 /// </summary>
 /// <remarks>
 /// Support packages enable students to receive personalized coaching through a
-/// ticket-based system. Each package includes a credit allowance and an expiration
-/// date defined by administrators. Credits are only consumed when a ticket is opened,
+/// ticket-based system. Each package includes a credit allowance and a duration
+/// defined by administrators. Credits are only consumed when a ticket is opened,
 /// and messaging within a ticket is unlimited until the ticket is closed.
 /// </remarks>
 public class Package : BaseEntity
@@ -24,9 +24,17 @@ public class Package : BaseEntity
     public int CreditCount { get; set; }
 
     /// <summary>
-    /// Date when this package expires and can no longer be used to create new tickets.
+    /// Duration value that determines how long the package remains active after purchase.
     /// </summary>
-    public DateTime ExpirationDate { get; set; }
+    public int Duration { get; set; }
+
+    /// <summary>
+    /// Duration unit reference (e.g. Day, Month, Year).
+    /// </summary>
+    public int DurationUnitId { get; set; }
+
+    [ForeignKey(nameof(DurationUnitId))]
+    public virtual Lookup DurationUnit { get; set; } = null!;
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 

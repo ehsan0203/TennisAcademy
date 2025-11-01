@@ -20,7 +20,12 @@ public class PackageConfiguration : IEntityTypeConfiguration<Package>
         builder.Property(package => package.CreditCount)
             .IsRequired();
 
-        builder.Property(package => package.ExpirationDate)
+        builder.Property(package => package.Duration)
             .IsRequired();
+
+        builder.HasOne(package => package.DurationUnit)
+            .WithMany()
+            .HasForeignKey(package => package.DurationUnitId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

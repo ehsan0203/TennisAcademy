@@ -397,8 +397,11 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<int>("CreditCount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DurationUnitId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -412,6 +415,8 @@ namespace MTA.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DurationUnitId");
 
                     b.ToTable("Packages");
                 });
@@ -897,6 +902,17 @@ namespace MTA.Infrastructure.Migrations
                     b.Navigation("Message");
                 });
 
+            modelBuilder.Entity("MTA.Domain.Entities.Package", b =>
+                {
+                    b.HasOne("MTA.Domain.Entities.Lookup", "DurationUnit")
+                        .WithMany()
+                        .HasForeignKey("DurationUnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DurationUnit");
+                });
+
             modelBuilder.Entity("MTA.Domain.Entities.PackageHistory", b =>
                 {
                     b.HasOne("MTA.Domain.Entities.Account", "Account")
@@ -1083,6 +1099,8 @@ namespace MTA.Infrastructure.Migrations
 
             modelBuilder.Entity("MTA.Domain.Entities.Package", b =>
                 {
+                    b.Navigation("DurationUnit");
+
                     b.Navigation("PackageHistories");
 
                     b.Navigation("Tickets");

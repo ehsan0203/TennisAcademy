@@ -11,22 +11,6 @@ namespace MTA.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Packages_Lookups_DurationUnitId",
-                table: "Packages");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Packages_DurationUnitId",
-                table: "Packages");
-
-            migrationBuilder.DropColumn(
-                name: "Duration",
-                table: "Packages");
-
-            migrationBuilder.DropColumn(
-                name: "DurationUnitId",
-                table: "Packages");
-
             migrationBuilder.DropColumn(
                 name: "MessageCount",
                 table: "Packages");
@@ -35,13 +19,6 @@ namespace MTA.Infrastructure.Migrations
                 name: "TicketCount",
                 table: "Packages",
                 newName: "CreditCount");
-
-            migrationBuilder.AddColumn<DateTime>(
-                name: "ExpirationDate",
-                table: "Packages",
-                type: "datetime2",
-                nullable: false,
-                defaultValueSql: "GETUTCDATE()");
 
             migrationBuilder.RenameColumn(
                 name: "RemainingTickets",
@@ -65,28 +42,10 @@ namespace MTA.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ExpirationDate",
-                table: "Packages");
-
             migrationBuilder.RenameColumn(
                 name: "CreditCount",
                 table: "Packages",
                 newName: "TicketCount");
-
-            migrationBuilder.AddColumn<int>(
-                name: "Duration",
-                table: "Packages",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<int>(
-                name: "DurationUnitId",
-                table: "Packages",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
 
             migrationBuilder.AddColumn<int>(
                 name: "MessageCount",
@@ -94,19 +53,6 @@ namespace MTA.Infrastructure.Migrations
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Packages_DurationUnitId",
-                table: "Packages",
-                column: "DurationUnitId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Packages_Lookups_DurationUnitId",
-                table: "Packages",
-                column: "DurationUnitId",
-                principalTable: "Lookups",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.DropColumn(
                 name: "TotalCredits",

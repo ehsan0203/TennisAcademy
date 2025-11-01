@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
@@ -33,12 +32,11 @@ public class PackageController : ControllerBase
         [FromQuery] string? searchTerm = null,
         [FromQuery] decimal? minPrice = null,
         [FromQuery] decimal? maxPrice = null,
-        [FromQuery] DateTime? expiresAfter = null,
-        [FromQuery] DateTime? expiresBefore = null)
+        [FromQuery] int? durationUnitId = null)
     {
         try
         {
-            var result = await _packageService.GetAllAsync(page, pageSize, searchTerm, minPrice, maxPrice, expiresAfter, expiresBefore);
+            var result = await _packageService.GetAllAsync(page, pageSize, searchTerm, minPrice, maxPrice, durationUnitId);
             return Ok(result);
         }
         catch (Exception ex)
@@ -221,15 +219,15 @@ public class PackageController : ControllerBase
     //}
 
     ///// <summary>
-    ///// Update package expiration date
+    ///// Update package duration configuration
     ///// </summary>
-    //[HttpPatch("{id}/expiration")]
+    //[HttpPatch("{id}/duration")]
     ////[Authorize(Roles = "Admin")]
-    //public async Task<ActionResult<PackageDto>> UpdateExpiration(int id, [FromBody] DateTime expirationDate)
+    //public async Task<ActionResult<PackageDto>> UpdateDuration(int id, [FromBody] UpdateDurationDto durationDto)
     //{
     //    try
     //    {
-    //        var updatedPackage = await _packageService.UpdateExpirationAsync(id, expirationDate);
+    //        var updatedPackage = await _packageService.UpdateDurationAsync(id, durationDto.Duration, durationDto.DurationUnitId);
     //        return Ok(updatedPackage);
     //    }
     //    catch (InvalidOperationException ex)
@@ -238,7 +236,7 @@ public class PackageController : ControllerBase
     //    }
     //    catch (Exception ex)
     //    {
-    //        _logger.LogError(ex, "Error updating expiration for package with ID: {PackageId}", id);
+    //        _logger.LogError(ex, "Error updating duration for package with ID: {PackageId}", id);
     //        return StatusCode(500, "Internal server error");
     //    }
     //}
@@ -262,8 +260,7 @@ public class PackageController : ControllerBase
                 searchDto.SearchTerm,
                 searchDto.MinPrice,
                 searchDto.MaxPrice,
-                searchDto.ExpiresAfter,
-                searchDto.ExpiresBefore);
+                searchDto.DurationUnitId);
             
             return Ok(result);
         }
