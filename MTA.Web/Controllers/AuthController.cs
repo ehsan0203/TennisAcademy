@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs.Auth;
 using MTA.Application.DTOs.User;
 using MTA.Application.Services;
+using System.Net;
 using System.Security.Claims;
+using MTA.Web.Models;
 
 namespace MTA.Web.Controllers;
 
@@ -89,6 +91,60 @@ public class AuthController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+        }
+    }
+
+    [HttpPost("[action]")]
+    [ProducesResponseType(typeof(CustomJsonResult<bool>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+    public async Task<ActionResult<CustomJsonResult<bool>>> ForgotPassword([FromBody] ForgotPasswordRequestDto requestDto)
+    {
+        try
+        {
+            await _authService.ForgotPasswordAsync(requestDto);
+            return Ok(CustomJsonResult<bool>.SuccessResult(true));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(CustomJsonResult<string>.Failure(ex.Message));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(CustomJsonResult<string>.Failure(ex.Message));
+        }
+    }
+
+    [Authorize]
+    [HttpPost("[action]")]
+    [ProducesResponseType(typeof(CustomJsonResult<bool>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), (int)HttpStatusCode.BadRequest)]
+    public async Task<ActionResult<CustomJsonResult<bool>>> ResetPassword([FromBody] ResetPasswordRequestDto requestDto)
+    {
+        try
+        {
+            var accountIdClaim = User.FindFirstValue("UserId");
+
+            if (!int.TryParse(accountIdClaim, out var accountId))
+            {
+                return BadRequest(CustomJsonResult<string>.Failure("Authenticated user context was not found."));
+            }
+
+            await _authService.ResetPasswordAsync(accountId, requestDto);
+            return Ok(CustomJsonResult<bool>.SuccessResult(true));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(CustomJsonResult<string>.Failure(ex.Message));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(CustomJsonResult<string>.Failure(ex.Message));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(CustomJsonResult<string>.Failure(ex.Message));
         }
     }
 

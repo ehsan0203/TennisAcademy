@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MTA.Application.DTOs.Auth;
@@ -15,17 +16,20 @@ public class AuthService : IAuthService
     private readonly IJwtService _jwtService;
     private readonly IConfiguration _configuration;
     private readonly RoleService _roleService;
+    private readonly IEmailService _emailService;
 
     public AuthService(
         IUnitOfWork unitOfWork,
         IJwtService jwtService,
         IConfiguration configuration,
-        RoleService roleService)
+        RoleService roleService,
+        IEmailService emailService)
     {
         _unitOfWork = unitOfWork;
         _jwtService = jwtService;
         _configuration = configuration;
         _roleService = roleService;
+        _emailService = emailService;
     }
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
@@ -199,6 +203,73 @@ public class AuthService : IAuthService
                 ImageUrl = string.IsNullOrEmpty(account.MediaFile?.Url) ? string.Empty : account.MediaFile.Url
             }
         };
+    }
+
+    public async Task<bool> ForgotPasswordAsync(ForgotPasswordRequestDto requestDto)
+    {
+        var accountRepository = _unitOfWork.Repository<Account>();
+        var normalizedEmail = requestDto.Email.ToLower();
+        var account = await accountRepository.FirstOrDefaultAsync(a => a.Email.ToLower() == normalizedEmail);
+
+        if (account == null)
+        {
+            throw new KeyNotFoundException("Account with the provided email was not found.");
+        }
+
+        var newPassword = GenerateSecurePassword();
+        account.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        account.UpdatedAt = DateTime.UtcNow;
+
+        await accountRepository.UpdateAsync(account);
+        await _unitOfWork.SaveChangesAsync();
+
+        await _emailService.SendPasswordResetAsync(account.Email, newPassword);
+
+        return true;
+    }
+
+    public async Task<bool> ResetPasswordAsync(int accountId, ResetPasswordRequestDto requestDto)
+    {
+        var accountRepository = _unitOfWork.Repository<Account>();
+        var account = await accountRepository.GetByIdAsync(accountId);
+
+        if (account == null)
+        {
+            throw new KeyNotFoundException("Account with the provided identifier was not found.");
+        }
+
+        if (!BCrypt.Net.BCrypt.Verify(requestDto.CurrentPassword, account.Password))
+        {
+            throw new InvalidOperationException("The current password is incorrect.");
+        }
+
+        if (BCrypt.Net.BCrypt.Verify(requestDto.NewPassword, account.Password))
+        {
+            throw new InvalidOperationException("The new password must be different from the current password.");
+        }
+
+        account.Password = BCrypt.Net.BCrypt.HashPassword(requestDto.NewPassword);
+        account.UpdatedAt = DateTime.UtcNow;
+
+        await accountRepository.UpdateAsync(account);
+        await _unitOfWork.SaveChangesAsync();
+
+        return true;
+    }
+
+    private static string GenerateSecurePassword(int length = 12)
+    {
+        const string allowedCharacters = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789!@#$%^&*";
+        Span<byte> randomBytes = stackalloc byte[length];
+        RandomNumberGenerator.Fill(randomBytes);
+
+        var chars = new char[length];
+        for (var i = 0; i < length; i++)
+        {
+            chars[i] = allowedCharacters[randomBytes[i] % allowedCharacters.Length];
+        }
+
+        return new string(chars);
     }
 
     public async Task<bool> RevokeTokenAsync(string refreshToken)

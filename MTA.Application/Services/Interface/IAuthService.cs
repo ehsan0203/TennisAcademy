@@ -41,4 +41,19 @@ public interface IAuthService
     /// <param name="token">JWT token to validate</param>
     /// <returns>True if valid</returns>
     Task<bool> ValidateTokenAsync(string token);
+
+    /// <summary>
+    /// Generates a new password for the provided email and sends it through the configured email provider.
+    /// </summary>
+    /// <param name="requestDto">Payload that contains the target email address.</param>
+    /// <returns>True if the password reset process succeeds.</returns>
+    Task<bool> ForgotPasswordAsync(ForgotPasswordRequestDto requestDto);
+
+    /// <summary>
+    /// Updates the password for the authenticated account.
+    /// </summary>
+    /// <param name="accountId">Identifier of the authenticated account.</param>
+    /// <param name="requestDto">Payload that contains the current and desired password values.</param>
+    /// <returns>True if the password is updated successfully.</returns>
+    Task<bool> ResetPasswordAsync(int accountId, ResetPasswordRequestDto requestDto);
 }

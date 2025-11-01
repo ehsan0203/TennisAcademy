@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -10,8 +11,11 @@ using MTA.Web;
 using MTA.Web.Attributes;
 using System.Security.Claims;
 using System.Text;
+using MTA.Infrastructure.Options;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -126,6 +130,9 @@ builder.Services.AddAuthorization(options =>
         policy.Requirements.Add(new RoleRequirement("Coach"));
     });
 });
+
+// Configure Mailgun options
+builder.Services.Configure<MailgunOptions>(builder.Configuration.GetSection("Mailgun"));
 
 // Add persistence services
 builder.Services.AddPersistenceServices(builder.Configuration);
