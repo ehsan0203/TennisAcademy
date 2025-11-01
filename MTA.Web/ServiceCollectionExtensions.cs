@@ -4,6 +4,7 @@ using MTA.Application.Services;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
 using MTA.Infrastructure.Repositories;
+using MTA.Infrastructure.Services;
 
 namespace MTA.Web
 {
@@ -29,10 +30,13 @@ namespace MTA.Web
             services.AddScoped<IUserCourseHistoryService,UserCourseHistoryService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddHttpClient<IEmailService, MailgunEmailService>();
             services.AddScoped<RoleService>();
             services.AddScoped<IValidator<IEnumerable<Role>>, GetStudentRoleValidator>();
             services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<ForgotPasswordRequestDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<ResetPasswordRequestDtoValidator>();
 
 
             return services;
