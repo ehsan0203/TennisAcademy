@@ -8,6 +8,7 @@ public interface IPaymentService
     Task<PaymentLinkResponseDto> CreateCoursePaymentLinkAsync(int accountId, int courseId, string successUrl, string? cancelUrl);
 
     Task<string?> GetOrderReferenceIdAsync(string orderId);
+    Task<PaymentOrderInfoDto?> GetOrderInfoAsync(string orderId);
     string ComputeWebhookSignature(string signatureKey, string notificationUrl, string body);
 
     Task<LocationDiagnosticsDto> VerifyLocationOwnershipAsync();

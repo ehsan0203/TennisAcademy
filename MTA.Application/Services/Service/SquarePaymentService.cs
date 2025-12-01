@@ -118,7 +118,8 @@ public class SquarePaymentService : IPaymentService
             {
                 Url = link.Url ?? string.Empty,
                 LinkId = link.Id ?? string.Empty,
-                ReferenceId = referenceId
+                ReferenceId = referenceId,
+                OrderId = link.OrderId ?? string.Empty
             };
         }
         catch (ApiException apiEx)
@@ -145,6 +146,44 @@ public class SquarePaymentService : IPaymentService
             }
 
             return response.Order.ReferenceId;
+        }
+        catch (ApiException apiEx)
+        {
+            _logger.LogError(apiEx, "Square SDK error retrieving order {OrderId}", orderId);
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error retrieving order {OrderId}", orderId);
+            return null;
+        }
+    }
+
+    public async Task<PaymentOrderInfoDto?> GetOrderInfoAsync(string orderId)
+    {
+        if (string.IsNullOrWhiteSpace(orderId)) return null;
+
+        try
+        {
+            var sqClient = BuildSquareClient();
+            var ordersApi = sqClient.OrdersApi;
+            var response = await ordersApi.RetrieveOrderAsync(orderId);
+            if (response?.Order == null)
+            {
+                _logger.LogWarning("Square order not found or empty: {OrderId}", orderId);
+                return null;
+            }
+
+            var state = response.Order.State ?? string.Empty;
+            var isPaid = string.Equals(state, "COMPLETED", StringComparison.OrdinalIgnoreCase);
+
+            return new PaymentOrderInfoDto
+            {
+                OrderId = orderId,
+                ReferenceId = response.Order.ReferenceId ?? string.Empty,
+                State = state,
+                IsPaid = isPaid
+            };
         }
         catch (ApiException apiEx)
         {

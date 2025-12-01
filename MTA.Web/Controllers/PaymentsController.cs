@@ -37,6 +37,12 @@ public class PaymentsController : ControllerBase
     {
         try
         {
+            var alreadyHas = await _packageHistoryService.UserHasActivePackageAsync(request.AccountId, packageId);
+            if (alreadyHas)
+            {
+                return Conflict(new { message = "User already has an active package" });
+            }
+
             var link = await _paymentService.CreatePackagePaymentLinkAsync(request.AccountId, packageId, request.SuccessUrl, request.CancelUrl);
             return Ok(link);
         }
@@ -71,6 +77,12 @@ public class PaymentsController : ControllerBase
     {
         try
         {
+            var alreadyHas = await _userCourseHistoryService.UserHasPurchasedCourseAsync(request.AccountId, courseId);
+            if (alreadyHas)
+            {
+                return Conflict(new { message = "User already owns this course" });
+            }
+
             var link = await _paymentService.CreateCoursePaymentLinkAsync(request.AccountId, courseId, request.SuccessUrl, request.CancelUrl);
             return Ok(link);
         }
@@ -136,6 +148,75 @@ public class PaymentsController : ControllerBase
             _logger.LogError(ex, "Error checking payment result for {ReferenceId}", referenceId);
             // Do not leak internal errors; keep a graceful pending result
             return Ok(result);
+        }
+    }
+
+    // Allows client-side confirmation using Square orderId (e.g., after redirect)
+    [HttpGet("square/complete")]
+    public async Task<ActionResult<PaymentResultDto>> CompleteSquareOrder([FromQuery] string orderId)
+    {
+        if (string.IsNullOrWhiteSpace(orderId))
+        {
+            return BadRequest("Missing orderId");
+        }
+
+        try
+        {
+            var orderInfo = await _paymentService.GetOrderInfoAsync(orderId);
+            if (orderInfo == null || string.IsNullOrWhiteSpace(orderInfo.ReferenceId))
+            {
+                return Ok(new PaymentResultDto
+                {
+                    ReferenceId = string.Empty,
+                    Status = "pending"
+                });
+            }
+
+            var parsed = ParseReference(orderInfo.ReferenceId);
+            if (parsed == null)
+            {
+                return Ok(new PaymentResultDto
+                {
+                    ReferenceId = orderInfo.ReferenceId,
+                    Status = "invalid"
+                });
+            }
+
+            var (type, itemId, accountId) = parsed.Value;
+            var result = new PaymentResultDto
+            {
+                ReferenceId = orderInfo.ReferenceId,
+                Type = type,
+                ItemId = itemId,
+                AccountId = accountId,
+                Status = "pending"
+            };
+
+            if (!orderInfo.IsPaid)
+            {
+                _logger.LogInformation("Square order not completed yet. Order={OrderId}, State={State}", orderInfo.OrderId, orderInfo.State);
+                return Ok(result);
+            }
+
+            await HandleSuccessfulReferenceAsync(orderInfo.ReferenceId);
+
+            if (type.Equals("package", StringComparison.OrdinalIgnoreCase))
+            {
+                var hasActive = await _packageHistoryService.UserHasActivePackageAsync(accountId, itemId);
+                result.Status = hasActive ? "success" : "pending";
+            }
+            else if (type.Equals("course", StringComparison.OrdinalIgnoreCase))
+            {
+                var purchased = await _userCourseHistoryService.UserHasPurchasedCourseAsync(accountId, itemId);
+                result.Status = purchased ? "success" : "pending";
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error completing Square order {OrderId}", orderId);
+            return Ok(new PaymentResultDto { ReferenceId = string.Empty, Status = "pending" });
         }
     }
 
@@ -213,6 +294,9 @@ public class PaymentsController : ControllerBase
 
         if (type.Equals("package", StringComparison.OrdinalIgnoreCase))
         {
+            var hasActive = await _packageHistoryService.UserHasActivePackageAsync(accountId, itemId);
+            if (hasActive) return;
+
             await _packageHistoryService.CreateAsync(new CreatePackageHistoryDto
             {
                 PackageId = itemId,
@@ -222,6 +306,9 @@ public class PaymentsController : ControllerBase
         }
         else if (type.Equals("course", StringComparison.OrdinalIgnoreCase))
         {
+            var purchased = await _userCourseHistoryService.UserHasPurchasedCourseAsync(accountId, itemId);
+            if (purchased) return;
+
             await _userCourseHistoryService.CreateAsync(new CreateUserCourseHistoryDto
             {
                 CourseId = itemId,
