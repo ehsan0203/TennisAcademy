@@ -30,6 +30,7 @@ namespace MTA.Web
             services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<RoleService>();
+            services.AddScoped<IPaymentService, SquarePaymentService>();
             services.AddScoped<IValidator<IEnumerable<Role>>, GetStudentRoleValidator>();
             services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
