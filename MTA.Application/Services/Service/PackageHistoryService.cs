@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MTA.Application.DTOs;
 using MTA.Domain.Entities;
@@ -133,10 +133,11 @@ public class PackageHistoryService : IPackageHistoryService
     public async Task<bool> UserHasActivePackageAsync(int accountId, int packageId)
     {
         var currentDate = DateTime.UtcNow;
-        var activePackage = await _unitOfWork.Repository<PackageHistory>().GetAllAsync(ph => 
-            ph.AccountId == accountId && 
-            ph.PackageId == packageId && 
-            ph.ExpiredDate >= currentDate);
+        var activePackage = await _unitOfWork.Repository<PackageHistory>().GetAllAsync(ph =>
+            ph.AccountId == accountId &&
+            ph.PackageId == packageId &&
+            ph.ExpiredDate >= currentDate &&
+            ph.RemainingTickets > 0);
         return activePackage.Any();
     }
 
@@ -156,59 +157,69 @@ public class PackageHistoryService : IPackageHistoryService
 
     public async Task<PackageHistoryDto> CreateAsync(CreatePackageHistoryDto dto)
     {
-        // پیدا کردن پکیج
         var package = await _unitOfWork.Repository<Package>()
             .GetQueryable()
+            .Include(p => p.DurationUnit)
             .FirstOrDefaultAsync(p => p.Id == dto.PackageId);
 
         if (package == null)
             throw new KeyNotFoundException("Package not found");
 
-        // پیدا کردن اکانت
         var account = await _unitOfWork.Repository<Account>()
             .GetQueryable()
-            .Include(a => a.UserProfile) // فرض می‌کنیم UserProfile حاوی FirstName و LastName است
+            .Include(a => a.UserProfile)
             .FirstOrDefaultAsync(a => a.Id == dto.AccountId);
 
         if (account == null)
             throw new KeyNotFoundException("Account not found");
 
-        // ایجاد PackageHistory
+        var now = DateTime.UtcNow;
+
+        var existingActive = await _unitOfWork.Repository<PackageHistory>()
+            .GetQueryable()
+            .Include(ph => ph.Package)
+            .Include(ph => ph.Account)
+            .Where(ph => ph.AccountId == account.Id &&
+                         ph.PackageId == package.Id &&
+                         ph.ExpiredDate >= now)
+            .OrderByDescending(ph => ph.ExpiredDate)
+            .FirstOrDefaultAsync();
+
+        if (existingActive != null)
+        {
+            var baseDate = existingActive.ExpiredDate > now ? existingActive.ExpiredDate : now;
+
+            existingActive.RemainingTickets += package.TicketCount;
+            existingActive.RemainingMessages = 0;
+            existingActive.ExpiredDate = CalculateExpiryDate(baseDate, package);
+            existingActive.PurchasePrice += package.Price;
+            existingActive.UpdatedAt = now;
+            existingActive.Package ??= package;
+            existingActive.Account ??= account;
+
+            var updated = await _unitOfWork.Repository<PackageHistory>().UpdateAsync(existingActive);
+            await _unitOfWork.SaveChangesAsync();
+
+            return MapToDto(updated, account);
+        }
+
         var packageHistory = new PackageHistory
         {
             PackageId = package.Id,
             AccountId = account.Id,
             Package = package,
             Account = account,
-            CreatedAt = DateTime.UtcNow,
-            ExpiredDate = DateTime.UtcNow.AddMonths(package.Duration), // مثال: Duration ماه
+            CreatedAt = now,
+            ExpiredDate = CalculateExpiryDate(now, package),
             RemainingTickets = package.TicketCount,
-            RemainingMessages = package.MessageCount,
+            RemainingMessages = 0,
             PurchasePrice = package.Price
         };
 
-        // ذخیره در دیتابیس
         var created = await _unitOfWork.Repository<PackageHistory>().AddAsync(packageHistory);
         await _unitOfWork.SaveChangesAsync();
 
-        // تبدیل به DTO
-        var result = new PackageHistoryDto
-        {
-            Id = created.Id,
-            PackageId = package.Id,
-            PackageTitle = package.Title,
-            PackagePrice = packageHistory.PurchasePrice,
-            RemainingTickets = created.RemainingTickets,
-            RemainingMessages = created.RemainingMessages,
-            ExpiredDate = created.ExpiredDate,
-            AccountId = account.Id,
-            UserFirstName = account.UserProfile?.FirstName,
-            UserLastName = account.UserProfile?.LastName,
-            UserEmail = account.Email,
-            IsExpired = created.ExpiredDate < DateTime.UtcNow
-        };
-
-        return result;
+        return MapToDto(created, account);
     }
 
 
@@ -224,7 +235,7 @@ public class PackageHistoryService : IPackageHistoryService
         // Update only allowed fields
         existingPackageHistory.ExpiredDate = packageHistoryDto.ExpiredDate;
         existingPackageHistory.RemainingTickets = packageHistoryDto.RemainingTickets;
-        existingPackageHistory.RemainingMessages = packageHistoryDto.RemainingMessages;
+        existingPackageHistory.RemainingMessages = 0;
         existingPackageHistory.PackageId = packageHistoryDto.PackageId;
         existingPackageHistory.AccountId = packageHistoryDto.AccountId;
         existingPackageHistory.PurchasePrice = packageHistoryDto.PackagePrice;
@@ -278,7 +289,7 @@ public class PackageHistoryService : IPackageHistoryService
         if (packageHistory == null)
             throw new ArgumentException($"Package history with ID {id} not found");
 
-        packageHistory.RemainingMessages = remainingMessages;
+        packageHistory.RemainingMessages = 0;
         packageHistory.UpdatedAt = DateTime.UtcNow;
 
         var updatedPackageHistory = await _unitOfWork.Repository<PackageHistory>().UpdateAsync(packageHistory);
@@ -323,16 +334,14 @@ public class PackageHistoryService : IPackageHistoryService
         
         // Calculate totals
         var totalTicketsSold = allPackageHistories.Sum(ph => ph.RemainingTickets);
-        var totalMessagesSold = allPackageHistories.Sum(ph => ph.RemainingMessages);
+        var totalMessagesSold = 0;
 
         // Calculate averages
         var averageTicketsPerPackage = allPackageHistories.Count() > 0
             ? (double)totalTicketsSold / allPackageHistories.Count()
             : 0;
 
-        var averageMessagesPerPackage = allPackageHistories.Count() > 0
-            ? (double)totalMessagesSold / allPackageHistories.Count()
-            : 0;
+        var averageMessagesPerPackage = 0d;
 
         // Revenue calculations would need actual package price data
         var totalRevenue = 0m; // Placeholder
@@ -348,7 +357,7 @@ public class PackageHistoryService : IPackageHistoryService
             TotalTicketsSold = totalTicketsSold,
             TotalMessagesSold = totalMessagesSold,
             TotalTicketsUsed = 0, // Would need to calculate from package data
-            TotalMessagesUsed = 0, // Would need to calculate from package data
+            TotalMessagesUsed = 0, // No message limits
             AverageTicketsPerPackage = averageTicketsPerPackage,
             AverageMessagesPerPackage = averageMessagesPerPackage,
             PackagesThisMonth = packagesThisMonth,
@@ -393,7 +402,7 @@ public class PackageHistoryService : IPackageHistoryService
         var expiredPackages = packageHistories.Count(ph => ph.ExpiredDate < currentDate);
         
         var totalTicketsPurchased = packageHistories.Sum(ph => ph.RemainingTickets);
-        var totalMessagesPurchased = packageHistories.Sum(ph => ph.RemainingMessages);
+        var totalMessagesPurchased = 0;
         
         var nextExpiryDate = packageHistories
             .Where(ph => ph.ExpiredDate >= currentDate)
@@ -408,11 +417,11 @@ public class PackageHistoryService : IPackageHistoryService
             ExpiryDate = ph.ExpiredDate,
             IsExpired = ph.ExpiredDate < currentDate,
             TotalTickets = ph.RemainingTickets, // Would need to get from Package entity
-            TotalMessages = ph.RemainingMessages, // Would need to get from Package entity
+            TotalMessages = 0,
             UsedTickets = 0, // Would need to calculate
-            UsedMessages = 0, // Would need to calculate
+            UsedMessages = 0, // No message limits
             RemainingTickets = ph.RemainingTickets,
-            RemainingMessages = ph.RemainingMessages,
+            RemainingMessages = 0,
             UsagePercentage = 0 // Would need to calculate
         }).ToList();
         
@@ -428,11 +437,43 @@ public class PackageHistoryService : IPackageHistoryService
             TotalTicketsPurchased = totalTicketsPurchased,
             TotalMessagesPurchased = totalMessagesPurchased,
             TotalTicketsUsed = 0, // Would need to calculate
-            TotalMessagesUsed = 0, // Would need to calculate
+            TotalMessagesUsed = 0, // No message limits
             RemainingTickets = packageHistories.Sum(ph => ph.RemainingTickets),
-            RemainingMessages = packageHistories.Sum(ph => ph.RemainingMessages),
+            RemainingMessages = 0,
             NextExpiryDate = nextExpiryDate,
             PackageUsage = packageUsage
         };
     }
+
+    private static DateTime CalculateExpiryDate(DateTime startDate, Package package)
+    {
+        return package.DurationUnit?.Key switch
+        {
+            "Day" => startDate.AddDays(package.Duration),
+            "Week" => startDate.AddDays(7 * package.Duration),
+            _ => startDate.AddMonths(package.Duration)
+        };
+    }
+
+    private PackageHistoryDto MapToDto(PackageHistory history, Account account)
+    {
+        return new PackageHistoryDto
+        {
+            Id = history.Id,
+            PackageId = history.PackageId,
+            PackageTitle = history.Package?.Title,
+            PackagePrice = history.PurchasePrice,
+            RemainingTickets = history.RemainingTickets,
+            RemainingMessages = 0,
+            ExpiredDate = history.ExpiredDate,
+            AccountId = history.AccountId,
+            UserFirstName = account.UserProfile?.FirstName,
+            UserLastName = account.UserProfile?.LastName,
+            UserEmail = account.Email,
+            IsExpired = history.ExpiredDate < DateTime.UtcNow,
+            TotalTickets = history.Package?.TicketCount ?? history.RemainingTickets,
+            TotalMessages = 0
+        };
+    }
 }
+

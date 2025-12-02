@@ -189,16 +189,11 @@ public class AccountService : IAccountService
             .Select(uch => uch.CourseId)
             .ToList();
 
-        var activePackage = account.PackageHistory
-            .Where(p => p.ExpiredDate > DateTime.UtcNow)
-            .OrderByDescending(p => p.ExpiredDate)
-            .FirstOrDefault();
+        var activePackages = account.PackageHistory
+            .Where(p => p.ExpiredDate > DateTime.UtcNow && p.RemainingTickets > 0)
+            .ToList();
 
-        int remainingCredit = 0;
-        if (activePackage != null)
-        {
-            remainingCredit = activePackage.RemainingTickets;
-        }
+        int remainingCredit = activePackages.Sum(p => p.RemainingTickets);
 
         var profile = account.UserProfile;
 

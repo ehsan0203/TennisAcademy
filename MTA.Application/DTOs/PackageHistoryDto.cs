@@ -16,7 +16,7 @@ public class PackageHistoryDto : BaseDto
     public int RemainingTickets { get; set; }
     
     /// <summary>
-    /// Number of remaining messages
+    /// Deprecated: message limits removed, always 0
     /// </summary>
     public int RemainingMessages { get; set; }
     
@@ -41,7 +41,7 @@ public class PackageHistoryDto : BaseDto
     public int TotalTickets { get; set; }
     
     /// <summary>
-    /// Total number of messages in the package
+    /// Deprecated: message limits removed, always 0
     /// </summary>
     public int TotalMessages { get; set; }
     

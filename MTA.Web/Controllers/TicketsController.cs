@@ -184,15 +184,16 @@ public class TicketsController : ControllerBase
             var createdTicket = await _unitOfWork.Repository<Ticket>().AddAsync(ticket);
 
             activePackage.RemainingTickets = Math.Max(0, activePackage.RemainingTickets - 1);
-            activePackage.RemainingMessages = activePackage.Package.MessageCount;
+            activePackage.UpdatedAt = DateTime.UtcNow;
 
-            _unitOfWork.Repository<PackageHistory>().UpdateAsync(activePackage);
+            await _unitOfWork.Repository<PackageHistory>().UpdateAsync(activePackage);
             await _unitOfWork.SaveChangesAsync();
 
             var ticketWithNav = await _unitOfWork.Repository<Ticket>()
                 .GetQueryable()
                 .Include(t => t.Status)
                 .Include(t => t.Package)
+                .Include(t => t.Messages)
                 .Include(t => t.Account)
                     .ThenInclude(a => a.UserProfile)
                 .FirstOrDefaultAsync(t => t.Id == createdTicket.Id);
@@ -211,7 +212,7 @@ public class TicketsController : ControllerBase
                 PackageTitle = ticketWithNav.Package?.Title,
                 UserFirstName = ticketWithNav.Account?.UserProfile?.FirstName,
                 UserLastName = ticketWithNav.Account?.UserProfile?.LastName,
-                MessageCount = ticketWithNav.Package?.MessageCount ?? 0,
+                MessageCount = ticketWithNav.Messages?.Count ?? 0,
                 CreatedAt = ticketWithNav.CreatedAt,
                 UpdatedAt = ticketWithNav.UpdatedAt
             };

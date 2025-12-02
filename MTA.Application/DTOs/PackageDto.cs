@@ -21,7 +21,7 @@ public class PackageDto : BaseDto
     public int TicketCount { get; set; }
     
     /// <summary>
-    /// Number of messages included in this package
+    /// Deprecated: message count is unlimited and always 0
     /// </summary>
     public int MessageCount { get; set; }
     
@@ -46,7 +46,7 @@ public class PackageDto : BaseDto
     public int UsedTicketCount { get; set; }
     
     /// <summary>
-    /// Number of messages currently used from this package
+    /// Number of messages currently used from this package (informational only)
     /// </summary>
     public int UsedMessageCount { get; set; }
 }
@@ -69,7 +69,7 @@ public class CreatePackageDto
     public int TicketCount { get; set; }
 
     /// <summary>
-    /// Number of messages included in this package
+    /// Deprecated: message count is unlimited and always 0
     /// </summary>
     public int MessageCount { get; set; }
 
@@ -94,7 +94,7 @@ public class CreatePackageDto
     public int UsedTicketCount { get; set; }
 
     /// <summary>
-    /// Number of messages currently used from this package
+    /// Number of messages currently used from this package (informational only)
     /// </summary>
     public int UsedMessageCount { get; set; }
 }
@@ -119,6 +119,7 @@ public class PackageSearchDto
 public class UpdateCapacityDto
 {
     public int TicketCount { get; set; }
+    /// Deprecated: message count is unlimited and always 0
     public int MessageCount { get; set; }
 }
 

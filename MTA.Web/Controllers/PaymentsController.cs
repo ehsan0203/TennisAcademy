@@ -37,12 +37,6 @@ public class PaymentsController : ControllerBase
     {
         try
         {
-            var alreadyHas = await _packageHistoryService.UserHasActivePackageAsync(request.AccountId, packageId);
-            if (alreadyHas)
-            {
-                return Conflict(new { message = "User already has an active package" });
-            }
-
             var link = await _paymentService.CreatePackagePaymentLinkAsync(request.AccountId, packageId, request.SuccessUrl, request.CancelUrl);
             return Ok(link);
         }
@@ -294,9 +288,6 @@ public class PaymentsController : ControllerBase
 
         if (type.Equals("package", StringComparison.OrdinalIgnoreCase))
         {
-            var hasActive = await _packageHistoryService.UserHasActivePackageAsync(accountId, itemId);
-            if (hasActive) return;
-
             await _packageHistoryService.CreateAsync(new CreatePackageHistoryDto
             {
                 PackageId = itemId,

@@ -172,7 +172,7 @@ public class PackageService : IPackageService
                 Title = packageDto.Title,
                 Price = packageDto.Price,
                 TicketCount = packageDto.TicketCount,
-                MessageCount = packageDto.MessageCount,
+                MessageCount = 0,
                 Duration = packageDto.Duration,
                 DurationUnitId = packageDto.DurationUnitId
             };
@@ -188,7 +188,7 @@ public class PackageService : IPackageService
                        Title = package.Title,
                        Price = package.Price,
                        TicketCount = package.TicketCount,
-                       MessageCount = package.MessageCount,
+                       MessageCount = 0,
                        Duration = package.Duration,
                        DurationUnitId = package.DurationUnitId
                    };
@@ -229,7 +229,7 @@ public class PackageService : IPackageService
             package.Title = packageDto.Title;
             package.Price = packageDto.Price;
             package.TicketCount = packageDto.TicketCount;
-            package.MessageCount = packageDto.MessageCount;
+            package.MessageCount = 0;
             package.Duration = packageDto.Duration;
             package.DurationUnitId = packageDto.DurationUnitId;
             package.UpdatedAt = DateTime.UtcNow;
@@ -330,13 +330,13 @@ public class PackageService : IPackageService
                 throw new InvalidOperationException($"Package with ID {id} not found");
             }
 
-            if (ticketCount < 0 || messageCount < 0)
+            if (ticketCount < 0)
             {
-                throw new InvalidOperationException("Ticket count and message count cannot be negative");
+                throw new InvalidOperationException("Ticket count cannot be negative");
             }
 
             package.TicketCount = ticketCount;
-            package.MessageCount = messageCount;
+            package.MessageCount = 0;
             package.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.Repository<Package>().UpdateAsync(package);
@@ -405,7 +405,7 @@ public class PackageService : IPackageService
             Title = package.Title,
             Price = package.Price,
             TicketCount = package.TicketCount,
-            MessageCount = package.MessageCount,
+            MessageCount = 0,
             Duration = package.Duration,
             DurationUnitId = package.DurationUnitId,
             DurationUnitValue = package.DurationUnit?.Value,
