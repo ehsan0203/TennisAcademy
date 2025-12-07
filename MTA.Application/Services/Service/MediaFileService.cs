@@ -13,6 +13,13 @@ namespace MTA.Application.Services;
 /// </summary>
 public class MediaFileService : IMediaFileService
 {
+	private static readonly HashSet<string> ExclusiveVideoPlacements = new(StringComparer.OrdinalIgnoreCase)
+	{
+		"WelcomeVideo",
+		"CoursePage",
+		"TrainingPage"
+	};
+
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
 	private readonly IFileStorageService _fileStorageService;
@@ -120,6 +127,11 @@ public class MediaFileService : IMediaFileService
 				throw new ArgumentException($"Invalid MediaPlacement: {mediaFileDto.PlacementName}");
 		}
 
+		var isVideoUpload = string.Equals(typeEntity.Key, "Video", StringComparison.OrdinalIgnoreCase);
+		var enforceExclusivePlacement = isVideoUpload
+			&& placementEntity != null
+			&& ExclusiveVideoPlacements.Contains(placementEntity.Key);
+
 		var mediaFile = _mapper.Map<MediaFile>(mediaFileDto);
 		mediaFile.TypeId = typeEntity.Id;
 
@@ -136,6 +148,11 @@ public class MediaFileService : IMediaFileService
 
 		var created = await _unitOfWork.Repository<MediaFile>().AddAsync(mediaFile);
 		await _unitOfWork.SaveChangesAsync();
+
+		if (enforceExclusivePlacement)
+		{
+			await RemoveExistingPlacementVideosAsync(placementEntity!.Id, typeEntity.Id, created.Id);
+		}
 
 		if (mediaFileDto.LessonId.HasValue)
 		{
@@ -205,6 +222,11 @@ public class MediaFileService : IMediaFileService
 				throw new ArgumentException($"Invalid MediaPlacement: {mediaFileDto.PlacementName}");
 		}
 
+		var isVideoUpload = string.Equals(typeEntity.Key, "Video", StringComparison.OrdinalIgnoreCase);
+		var enforceExclusivePlacement = isVideoUpload
+			&& placementEntity != null
+			&& ExclusiveVideoPlacements.Contains(placementEntity.Key);
+
 		// -------------------------------
 		// به‌روزرسانی فایل در صورت ارسال
 		// -------------------------------
@@ -229,6 +251,11 @@ public class MediaFileService : IMediaFileService
 
 		var updated = await _unitOfWork.Repository<MediaFile>().UpdateAsync(existing);
 		await _unitOfWork.SaveChangesAsync();
+
+		if (enforceExclusivePlacement && placementEntity != null)
+		{
+			await RemoveExistingPlacementVideosAsync(placementEntity.Id, typeEntity.Id, existing.Id);
+		}
 
 		// If a new lesson/message link is provided, update those entities to reference this media
 		if (mediaFileDto.LessonId.HasValue)
@@ -265,7 +292,33 @@ public class MediaFileService : IMediaFileService
         }
 
 
-        return _mapper.Map<MediaFileDto>(updated);
+		return _mapper.Map<MediaFileDto>(updated);
+	}
+
+
+	/// <summary>
+	/// Ensures only one video exists per exclusive placement by deleting older entries.
+	/// </summary>
+	private async Task RemoveExistingPlacementVideosAsync(int placementId, int videoTypeId, int? currentMediaId = null)
+	{
+		var mediaRepository = _unitOfWork.Repository<MediaFile>();
+		var existingVideos = await mediaRepository.GetQueryable()
+			.Where(m => m.TypeId == videoTypeId
+						&& m.PlacementId == placementId
+						&& (!currentMediaId.HasValue || m.Id != currentMediaId.Value))
+			.ToListAsync();
+
+		if (!existingVideos.Any())
+			return;
+
+		foreach (var video in existingVideos)
+		{
+			if (!string.IsNullOrEmpty(video.Url))
+				await _fileStorageService.DeleteFileAsync(video.Url);
+		}
+
+		await mediaRepository.DeleteRangeAsync(existingVideos);
+		await _unitOfWork.SaveChangesAsync();
 	}
 
 
