@@ -25,6 +25,11 @@ public interface IMediaFileService
     Task<MediaFileDto?> GetByIdAsync(int id);
 
     /// <summary>
+    /// Get all GIF media files (image/gif) for reuse
+    /// </summary>
+    Task<IEnumerable<MediaFileDto>> GetGifsAsync();
+
+    /// <summary>
     /// Create new media file (handles file upload)
     /// </summary>
     Task<MediaFileDto> CreateAsync(IFormFile file, MediaFileUploadDto mediaFileDto);

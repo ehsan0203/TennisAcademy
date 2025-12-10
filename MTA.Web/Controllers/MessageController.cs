@@ -110,6 +110,10 @@ public class MessageController : ControllerBase
             var createdMessage = await _messageService.CreateAsync(messageDto);
             return CreatedAtAction(nameof(GetMessage), new { id = createdMessage.Id }, createdMessage);
         }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
         catch (Exception ex)
         {
             return StatusCode(500, $"Internal server error: {ex.Message}");

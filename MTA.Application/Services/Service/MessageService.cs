@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
@@ -204,9 +204,26 @@ public class MessageService : IMessageService
         {
             var message = _mapper.Map<Message>(messageDto);
 
-            // -------------------------------
-            // ذخیره فایل اگر وجود دارد
-            // -------------------------------
+            // Link any existing media files (e.g., GIFs) without re-uploading
+            if (messageDto.MediaFileIds != null && messageDto.MediaFileIds.Any())
+            {
+                var distinctIds = messageDto.MediaFileIds.Distinct().ToList();
+                var existingIds = await _unitOfWork.Repository<MediaFile>().GetQueryable()
+                    .Where(mf => distinctIds.Contains(mf.Id))
+                    .Select(mf => mf.Id)
+                    .ToListAsync();
+
+                var missingIds = distinctIds.Except(existingIds).ToList();
+                if (missingIds.Any())
+                    throw new ArgumentException($"Media files not found for IDs: {string.Join(", ", missingIds)}");
+
+                foreach (var mediaId in distinctIds)
+                {
+                    message.MediaFiles.Add(new MessageMediaFile { MediaFileId = mediaId });
+                }
+            }
+
+            // Upload new attachments when provided
             if (messageDto.MediaFiles != null && messageDto.MediaFiles.Any())
             {
                 foreach (var file in messageDto.MediaFiles)
@@ -222,24 +239,20 @@ public class MessageService : IMessageService
                 }
             }
 
-            message.CreatedAt = DateTime.UtcNow;
-
             var createdMessage = await _unitOfWork.Repository<Message>().AddAsync(message);
             await _unitOfWork.SaveChangesAsync();
 
-            return new MessageDto
-            {
-                Id = createdMessage.Id,
-                Text = createdMessage.Text,
-                IsRead = createdMessage.IsRead,
-                TicketId = createdMessage.TicketId,
-                SenderId = createdMessage.SenderId,
-                MediaFiles = createdMessage.MediaFiles.Select(mf => new MediaFileDto
-                {
-                    Id = mf.MediaFile.Id,
-                    Url = mf.MediaFile.Url
-                }).ToList()
-            };
+            var createdWithIncludes = await _unitOfWork.Repository<Message>().GetQueryable()
+                .Include(m => m.MediaFiles)
+                    .ThenInclude(mm => mm.MediaFile)
+                .Include(m => m.Ticket)
+                .Include(m => m.Sender)
+                    .ThenInclude(s => s.UserProfile)
+                .FirstOrDefaultAsync(m => m.Id == createdMessage.Id);
+
+            return createdWithIncludes != null
+                ? _mapper.Map<MessageDto>(createdWithIncludes)
+                : _mapper.Map<MessageDto>(createdMessage);
         }
         catch (Exception ex)
         {
@@ -253,72 +266,86 @@ public class MessageService : IMessageService
         try
         {
             var existingMessage = await _unitOfWork.Repository<Message>()
-			.GetQueryable()
-			.Include(m => m.MediaFiles)
-				.ThenInclude(mf => mf.MediaFile)
-			.FirstOrDefaultAsync(m => m.Id == id);
+                .GetQueryable()
+                .Include(m => m.MediaFiles)
+                    .ThenInclude(mf => mf.MediaFile)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (existingMessage == null)
                 throw new ArgumentException($"Message with ID {id} not found");
 
-            // -------------------------------
-            // آپدیت یا ایجاد MediaFile
-            // -------------------------------
-            if (messageDto.NewMediaFiles != null && messageDto.NewMediaFiles.Any())
+            var hasNewMediaFiles = messageDto.NewMediaFiles != null && messageDto.NewMediaFiles.Any();
+            var hasExistingMediaIds = messageDto.MediaFileIds != null && messageDto.MediaFileIds.Any();
+
+            if (hasNewMediaFiles || hasExistingMediaIds)
             {
-                // حذف تمام MediaFile های قبلی
                 if (existingMessage.MediaFiles != null && existingMessage.MediaFiles.Any())
                 {
-                    _unitOfWork.Repository<MessageMediaFile>().DeleteRangeAsync(existingMessage.MediaFiles);
+                    await _unitOfWork.Repository<MessageMediaFile>().DeleteRangeAsync(existingMessage.MediaFiles);
                     existingMessage.MediaFiles.Clear();
                 }
 
-                foreach (var file in messageDto.NewMediaFiles)
+                if (hasExistingMediaIds)
                 {
-                    var mediaFileDto = new MediaFileUploadDto
-                    {
-                        MediaType = "Message",
-                        PlacementName = "Attachment",
-                        Title = $"Message {messageDto.TicketId}"
-                    };
+                    var distinctIds = messageDto.MediaFileIds!.Distinct().ToList();
+                    var existingIds = await _unitOfWork.Repository<MediaFile>().GetQueryable()
+                        .Where(mf => distinctIds.Contains(mf.Id))
+                        .Select(mf => mf.Id)
+                        .ToListAsync();
 
-                    // ایجاد فایل جدید
-                    var mediaFile = await _mediaFileService.CreateAsync(file, mediaFileDto);
+                    var missingIds = distinctIds.Except(existingIds).ToList();
+                    if (missingIds.Any())
+                        throw new ArgumentException($"Media files not found for IDs: {string.Join(", ", missingIds)}");
 
-                    // اضافه کردن به کالکشن پیام
-                    existingMessage.MediaFiles.Add(new MessageMediaFile
+                    foreach (var mediaId in distinctIds)
                     {
-                        MediaFileId = mediaFile.Id
-                    });
+                        existingMessage.MediaFiles.Add(new MessageMediaFile
+                        {
+                            MediaFileId = mediaId
+                        });
+                    }
+                }
+
+                if (hasNewMediaFiles)
+                {
+                    foreach (var file in messageDto.NewMediaFiles!)
+                    {
+                        var mediaFileDto = new MediaFileUploadDto
+                        {
+                            MediaType = "Message",
+                            PlacementName = "Attachment",
+                            Title = $"Message {messageDto.TicketId}"
+                        };
+
+                        var mediaFile = await _mediaFileService.CreateAsync(file, mediaFileDto);
+
+                        existingMessage.MediaFiles.Add(new MessageMediaFile
+                        {
+                            MediaFileId = mediaFile.Id
+                        });
+                    }
                 }
             }
 
-            // -------------------------------
-            // آپدیت پراپرتی‌های ساده
-            // -------------------------------
             existingMessage.Text = messageDto.Text;
             existingMessage.IsRead = messageDto.IsRead;
             existingMessage.TicketId = messageDto.TicketId;
             existingMessage.SenderId = messageDto.SenderId;
-            existingMessage.UpdatedAt = DateTime.UtcNow;
 
-            // ذخیره تغییرات
-            var updatedMessage = await _unitOfWork.Repository<Message>().UpdateAsync(existingMessage);
+            await _unitOfWork.Repository<Message>().UpdateAsync(existingMessage);
             await _unitOfWork.SaveChangesAsync();
 
-            return new MessageDto
-            {
-                Id = updatedMessage.Id,
-                Text = updatedMessage.Text,
-                IsRead = updatedMessage.IsRead,
-                TicketId = updatedMessage.TicketId,
-                SenderId = updatedMessage.SenderId,
-                MediaFiles = updatedMessage.MediaFiles.Select(mf => new MediaFileDto
-                {
-                    Id = mf.MediaFile.Id,
-                    Url = mf.MediaFile.Url
-                }).ToList()
-            };
+            var updatedWithIncludes = await _unitOfWork.Repository<Message>().GetQueryable()
+                .Include(m => m.MediaFiles)
+                    .ThenInclude(mm => mm.MediaFile)
+                .Include(m => m.Ticket)
+                .Include(m => m.Sender)
+                    .ThenInclude(s => s.UserProfile)
+                .FirstOrDefaultAsync(m => m.Id == existingMessage.Id);
+
+            return updatedWithIncludes != null
+                ? _mapper.Map<MessageDto>(updatedWithIncludes)
+                : _mapper.Map<MessageDto>(existingMessage);
         }
         catch (Exception ex)
         {
@@ -326,7 +353,6 @@ public class MessageService : IMessageService
             throw;
         }
     }
-
 
     /// <summary>
     /// Delete message

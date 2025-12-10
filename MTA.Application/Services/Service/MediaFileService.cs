@@ -104,6 +104,20 @@ public class MediaFileService : IMediaFileService
 		return mediaFile != null ? _mapper.Map<MediaFileDto>(mediaFile) : null;
 	}
 
+    public async Task<IEnumerable<MediaFileDto>> GetGifsAsync()
+    {
+        var gifs = await _unitOfWork.Repository<MediaFile>().GetQueryable()
+            .Include(m => m.Type)
+            .Include(m => m.Placement)
+            .Where(m =>
+                m.Type.Key == "Video" &&
+				m.Placement.Value == "Gif")
+            .OrderByDescending(m => m.CreatedAt)
+            .ToListAsync();
+
+        return gifs.Select(_mapper.Map<MediaFileDto>);
+    }
+
 	public async Task<MediaFileDto> CreateAsync(IFormFile file, MediaFileUploadDto mediaFileDto)
 	{
 		if (file == null || file.Length == 0)

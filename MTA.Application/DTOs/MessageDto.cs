@@ -73,37 +73,51 @@ public class CreateMessageDto
     public int SenderId { get; set; }
 
     /// <summary>
-    /// Single media file reference for this message
+    /// IDs of existing MediaFiles to attach (e.g., GIFs already uploaded)
     /// </summary>
-    public List<IFormFile>? MediaFiles { get; set; }
-    }
-
-    public class UpdateMessageDto : BaseDto
-    {
-        /// <summary>
-        /// Text content of the message
-        /// </summary>
-        public required string Text { get; set; }
-
-        /// <summary>
-        /// Whether the message has been read
-        /// </summary>
-        public bool IsRead { get; set; }
-
-        /// <summary>
-        /// Ticket ID that this message belongs to
-        /// </summary>
-        public int TicketId { get; set; }
-
-        /// <summary>
-        /// Sender ID of the message
-        /// </summary>
-        public int SenderId { get; set; }
+    public List<int>? MediaFileIds { get; set; }
 
     /// <summary>
-    /// Single media file reference for this message
+    /// Media files to upload and attach to the message
+    /// </summary>
+    public List<IFormFile>? MediaFiles { get; set; }
+}
+
+public class UpdateMessageDto : BaseDto
+{
+    /// <summary>
+    /// Text content of the message
+    /// </summary>
+    public required string Text { get; set; }
+
+    /// <summary>
+    /// Whether the message has been read
+    /// </summary>
+    public bool IsRead { get; set; }
+
+    /// <summary>
+    /// Ticket ID that this message belongs to
+    /// </summary>
+    public int TicketId { get; set; }
+
+    /// <summary>
+    /// Sender ID of the message
+    /// </summary>
+    public int SenderId { get; set; }
+
+    /// <summary>
+    /// IDs of existing MediaFiles to attach (e.g., GIFs already uploaded)
+    /// </summary>
+    public List<int>? MediaFileIds { get; set; }
+
+    /// <summary>
+    /// Existing media file metadata (populated on read)
     /// </summary>
     public List<MediaFileDto>? MediaFiles { get; set; }
+
+    /// <summary>
+    /// New media files to upload and replace attachments with
+    /// </summary>
     public List<IFormFile>? NewMediaFiles { get; set; }
 }
 

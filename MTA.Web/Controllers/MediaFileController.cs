@@ -77,6 +77,16 @@ namespace MTA.Web.Controllers
         }
         #endregion
 
+        #region GIFs
+        [HttpGet("gifs")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetGifs()
+        {
+            var gifs = await _mediaFileService.GetGifsAsync();
+            return Ok(gifs);
+        }
+        #endregion
+
         #region Update / Replace File
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
