@@ -181,6 +181,17 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.Use(async (ctx, next) =>
+{
+    if (HttpMethods.IsOptions(ctx.Request.Method))
+    {
+        var origin = ctx.Request.Headers.Origin.ToString();
+        var path = ctx.Request.Path.ToString();
+        Console.WriteLine($"[CORS-OPTIONS] {path} Origin={origin}");
+    }
+    await next();
+});
+
 app.UseCors("FrontendWithCredentials");
 
 
