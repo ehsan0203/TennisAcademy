@@ -178,8 +178,10 @@ var app = builder.Build();
 
 
 app.UseHttpsRedirection();
-app.UseCors("FrontendWithCredentials");
 app.UseStaticFiles();
+
+app.UseRouting();
+app.UseCors("FrontendWithCredentials");
 
 
 // Add authentication and authorization middleware
