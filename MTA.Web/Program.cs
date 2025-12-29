@@ -144,7 +144,6 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins(allowedCorsOrigins)
                   .AllowAnyMethod()
-                  .AllowAnyOrigin()
                   .AllowAnyHeader()
                   .AllowCredentials();
         }
@@ -153,7 +152,6 @@ builder.Services.AddCors(options =>
             // Fallback: echo any origin to avoid wildcard with credentials; tighten via configuration.
             policy.SetIsOriginAllowed(_ => true)
                   .AllowAnyMethod()
-                  .AllowAnyOrigin()
                   .AllowAnyHeader()
                   .AllowCredentials();
         }
