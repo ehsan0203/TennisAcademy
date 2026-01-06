@@ -324,6 +324,7 @@ public class TicketsController : ControllerBase
         try
         {
             var tickets = await _context.Tickets
+                .Include(x=>x.Status)
                 .Include(t => t.Account)
                     .ThenInclude(a => a.UserProfile) 
                 .Include(t => t.Messages)
