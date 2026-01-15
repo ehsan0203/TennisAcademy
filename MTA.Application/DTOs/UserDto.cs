@@ -154,6 +154,8 @@ namespace MTA.Application.DTOs.User
         public string Email { get; set; } = null!;
         public bool IsActive { get; set; }
         public string? ProfileImageUrl { get; set; }
+        public int RoleId { get; set; }
+        public string RoleTitle { get; set; } = string.Empty;
 
         // UserProfile fields
         public string FirstName { get; set; } = null!;

@@ -175,6 +175,7 @@ public class AccountService : IAccountService
     {
         var account = await _unitOfWork.Accounts.GetQueryable()
             .Include(a => a.MediaFile)
+            .Include(a => a.Role)
             .Include(a => a.UserProfile)
                 .ThenInclude(a=>a.SkillLevel)
             .Include(u => u.UserCourseHistory)
@@ -208,6 +209,8 @@ public class AccountService : IAccountService
             Email = account.Email,
             IsActive = account.IsActive,
             ProfileImageUrl = account.ProfileImagePath ?? account.MediaFile?.Url,
+            RoleId = account.RoleId,
+            RoleTitle = account.Role?.Title ?? string.Empty,
             FirstName = profile?.FirstName ?? string.Empty,
             LastName = profile?.LastName ?? string.Empty,
             DateOfBirth = profile?.DateOfBirth ?? DateTime.MinValue,
