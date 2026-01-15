@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using MTA.Application.DTOs;
 
 namespace MTA.Application.Services;
@@ -15,7 +17,7 @@ public interface IPackageService
     /// <param name="searchTerm">Search term for title</param>
     /// <param name="minPrice">Minimum price filter</param>
     /// <param name="maxPrice">Maximum price filter</param>
-    /// <param name="durationUnitId">Filter by duration unit ID</param>
+    /// <param name="durationUnitId">Filter by duration unit</param>
     /// <returns>Paginated list of packages</returns>
     Task<PaginatedResult<PackageDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, decimal? minPrice = null, decimal? maxPrice = null, int? durationUnitId = null);
     
@@ -33,13 +35,6 @@ public interface IPackageService
     /// <param name="maxPrice">Maximum price</param>
     /// <returns>List of packages</returns>
     Task<IEnumerable<PackageDto>> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice);
-    
-    /// <summary>
-    /// Get packages by duration unit
-    /// </summary>
-    /// <param name="durationUnitId">Duration unit ID</param>
-    /// <returns>List of packages</returns>
-    Task<IEnumerable<PackageDto>> GetByDurationUnitAsync(int durationUnitId);
     
     /// <summary>
     /// Create new package
@@ -72,20 +67,19 @@ public interface IPackageService
     Task<PackageDto> UpdatePriceAsync(int id, decimal price);
     
     /// <summary>
-    /// Update package capacity
+    /// Update package credit allowance
     /// </summary>
     /// <param name="id">Package ID</param>
-    /// <param name="ticketCount">New ticket count</param>
-    /// <param name="messageCount">New message count</param>
+    /// <param name="creditCount">New credit count</param>
     /// <returns>Updated package</returns>
-    Task<PackageDto> UpdateCapacityAsync(int id, int ticketCount, int messageCount);
-    
+    Task<PackageDto> UpdateCreditsAsync(int id, int creditCount);
+
     /// <summary>
     /// Update package duration
     /// </summary>
     /// <param name="id">Package ID</param>
-    /// <param name="duration">New duration</param>
-    /// <param name="durationUnitId">New duration unit ID</param>
+    /// <param name="duration">New duration value</param>
+    /// <param name="durationUnitId">Duration unit identifier</param>
     /// <returns>Updated package</returns>
     Task<PackageDto> UpdateDurationAsync(int id, int duration, int durationUnitId);
 }
@@ -97,8 +91,8 @@ public class PackageStatisticsDto
 {
     public int TotalPackages { get; set; }
     public decimal TotalRevenue { get; set; }
-    public int TotalTicketsSold { get; set; }
-    public int TotalMessagesSold { get; set; }
+    public int TotalCreditsSold { get; set; }
+    public int TotalCreditsUsed { get; set; }
     public double AveragePackagePrice { get; set; }
     public int PackagesThisMonth { get; set; }
     public int PackagesLastMonth { get; set; }

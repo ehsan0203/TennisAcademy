@@ -1,3 +1,4 @@
+using System;
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -58,8 +59,7 @@ public class TicketsController : ControllerBase
                 UserFirstName = t.Account?.UserProfile?.FirstName,
                 UserLastName = t.Account?.UserProfile?.LastName,
                 PackageId = t.PackageId,
-                PackageTitle = t.Package?.Title,
-                MessageCount = t.Messages?.Count ?? 0
+                PackageTitle = t.Package?.Title
             });
 
             return Ok(ticketDtos);
@@ -108,7 +108,6 @@ public class TicketsController : ControllerBase
                 UserLastName = ticket.Account.UserProfile?.LastName,
                 PackageId = ticket.PackageId,
                 PackageTitle = ticket.Package?.Title,
-                MessageCount = ticket.Messages?.Count ?? 0,
             };
 
             return Ok(ticketDto);
@@ -166,12 +165,12 @@ public class TicketsController : ControllerBase
                 return NotFound("Account not found.");
 
             var activePackage = account.PackageHistory
-                .Where(ph => ph.ExpiredDate > DateTime.UtcNow && ph.RemainingTickets > 0)
+                .Where(ph => ph.ExpiredDate > DateTime.UtcNow && ph.RemainingCredits > 0)
                 .OrderBy(ph => ph.ExpiredDate)
                 .FirstOrDefault();
 
             if (activePackage == null)
-                return BadRequest("No active package with remaining tickets found.");
+                return BadRequest("No active package with remaining credits found.");
 
             var ticket = new Ticket
             {
@@ -183,8 +182,7 @@ public class TicketsController : ControllerBase
 
             var createdTicket = await _unitOfWork.Repository<Ticket>().AddAsync(ticket);
 
-            activePackage.RemainingTickets = Math.Max(0, activePackage.RemainingTickets - 1);
-            activePackage.RemainingMessages = activePackage.Package.MessageCount;
+            activePackage.RemainingCredits = Math.Max(0, activePackage.RemainingCredits - 1);
 
             _unitOfWork.Repository<PackageHistory>().UpdateAsync(activePackage);
             await _unitOfWork.SaveChangesAsync();
@@ -211,7 +209,6 @@ public class TicketsController : ControllerBase
                 PackageTitle = ticketWithNav.Package?.Title,
                 UserFirstName = ticketWithNav.Account?.UserProfile?.FirstName,
                 UserLastName = ticketWithNav.Account?.UserProfile?.LastName,
-                MessageCount = ticketWithNav.Package?.MessageCount ?? 0,
                 CreatedAt = ticketWithNav.CreatedAt,
                 UpdatedAt = ticketWithNav.UpdatedAt
             };
@@ -334,12 +331,11 @@ public class TicketsController : ControllerBase
                 Id = t.Id,
                 Topic = t.Topic,
                 StatusId = t.StatusId,
-                StatusValue = t.Status?.Value, 
+                StatusValue = t.Status?.Value,
                 UserFirstName = t.Account.UserProfile?.FirstName,
                 UserLastName = t.Account.UserProfile?.LastName,
                 CreatedAt = t.CreatedAt,
-                UpdatedAt = t.UpdatedAt,
-                MessageCount = t.Messages?.Count ?? 0
+                UpdatedAt = t.UpdatedAt
             });
 
             return Ok(ticketDtos);

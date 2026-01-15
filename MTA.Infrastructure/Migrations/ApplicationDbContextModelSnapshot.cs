@@ -394,20 +394,17 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("CreditCount")
+                        .HasColumnType("int");
+
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
                     b.Property<int>("DurationUnitId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MessageCount")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("TicketCount")
-                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -447,10 +444,10 @@ namespace MTA.Infrastructure.Migrations
                     b.Property<decimal>("PurchasePrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("RemainingMessages")
+                    b.Property<int>("RemainingCredits")
                         .HasColumnType("int");
 
-                    b.Property<int>("RemainingTickets")
+                    b.Property<int>("TotalCredits")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -1102,6 +1099,8 @@ namespace MTA.Infrastructure.Migrations
 
             modelBuilder.Entity("MTA.Domain.Entities.Package", b =>
                 {
+                    b.Navigation("DurationUnit");
+
                     b.Navigation("PackageHistories");
 
                     b.Navigation("Tickets");

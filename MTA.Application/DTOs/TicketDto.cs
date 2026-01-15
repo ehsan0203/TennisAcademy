@@ -45,10 +45,6 @@ public class TicketDto : BaseDto
     /// </summary>
     public string? PackageTitle { get; set; }
     
-    /// <summary>
-    /// Number of messages in this ticket
-    /// </summary>
-    public int MessageCount { get; set; }
 }
 
 public class CreateTicketDto

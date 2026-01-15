@@ -17,10 +17,7 @@ public class PackageConfiguration : IEntityTypeConfiguration<Package>
         builder.Property(package => package.Price)
             .HasColumnType("decimal(18,2)");
 
-        builder.Property(package => package.TicketCount)
-            .IsRequired();
-
-        builder.Property(package => package.MessageCount)
+        builder.Property(package => package.CreditCount)
             .IsRequired();
 
         builder.Property(package => package.Duration)

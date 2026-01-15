@@ -87,24 +87,6 @@ public class PackageController : ControllerBase
     //    }
     //}
 
-    ///// <summary>
-    ///// Get packages by duration unit
-    ///// </summary>
-    //[HttpGet("by-duration-unit/{durationUnitId}")]
-    //public async Task<ActionResult<IEnumerable<PackageDto>>> GetPackagesByDurationUnit(int durationUnitId)
-    //{
-    //    try
-    //    {
-    //        var packages = await _packageService.GetByDurationUnitAsync(durationUnitId);
-    //        return Ok(packages);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error getting packages by duration unit ID: {DurationUnitId}", durationUnitId);
-    //        return StatusCode(500, "Internal server error");
-    //    }
-    //}
-
     /// <summary>
     /// Create new package
     /// </summary>
@@ -214,15 +196,15 @@ public class PackageController : ControllerBase
     //}
 
     ///// <summary>
-    ///// Update package capacity
+    ///// Update package credits
     ///// </summary>
-    //[HttpPatch("{id}/capacity")]
+    //[HttpPatch("{id}/credits")]
     ////[Authorize(Roles = "Admin")]
-    //public async Task<ActionResult<PackageDto>> UpdateCapacity(int id, [FromBody] UpdateCapacityDto capacityDto)
+    //public async Task<ActionResult<PackageDto>> UpdateCredits(int id, [FromBody] UpdateCreditsDto creditsDto)
     //{
     //    try
     //    {
-    //        var updatedPackage = await _packageService.UpdateCapacityAsync(id, capacityDto.TicketCount, capacityDto.MessageCount);
+    //        var updatedPackage = await _packageService.UpdateCreditsAsync(id, creditsDto.CreditCount);
     //        return Ok(updatedPackage);
     //    }
     //    catch (InvalidOperationException ex)
@@ -231,13 +213,13 @@ public class PackageController : ControllerBase
     //    }
     //    catch (Exception ex)
     //    {
-    //        _logger.LogError(ex, "Error updating capacity for package with ID: {PackageId}", id);
+    //        _logger.LogError(ex, "Error updating credits for package with ID: {PackageId}", id);
     //        return StatusCode(500, "Internal server error");
     //    }
     //}
 
     ///// <summary>
-    ///// Update package duration
+    ///// Update package duration configuration
     ///// </summary>
     //[HttpPatch("{id}/duration")]
     ////[Authorize(Roles = "Admin")]
@@ -273,8 +255,8 @@ public class PackageController : ControllerBase
         try
         {
             var result = await _packageService.GetAllAsync(
-                searchDto.Page, 
-                searchDto.PageSize, 
+                searchDto.Page,
+                searchDto.PageSize,
                 searchDto.SearchTerm,
                 searchDto.MinPrice,
                 searchDto.MaxPrice,

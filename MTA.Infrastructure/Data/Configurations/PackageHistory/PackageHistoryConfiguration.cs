@@ -13,10 +13,10 @@ public class PackageHistoryConfiguration : IEntityTypeConfiguration<PackageHisto
         builder.Property(history => history.ExpiredDate)
             .IsRequired();
 
-        builder.Property(history => history.RemainingTickets)
+        builder.Property(history => history.TotalCredits)
             .IsRequired();
 
-        builder.Property(history => history.RemainingMessages)
+        builder.Property(history => history.RemainingCredits)
             .IsRequired();
 
         builder.Property(history => history.PurchasePrice)
