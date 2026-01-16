@@ -2,13 +2,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
+using MTA.Domain.Constants;
+using MTA.Web.Attributes;
 using Microsoft.Extensions.Logging;
 
 namespace MTA.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize]
+[Authorize]
 public class LessonController : ControllerBase
 {
     private readonly ILessonService _lessonService;
@@ -88,7 +90,7 @@ public class LessonController : ControllerBase
     /// Create new lesson
     /// </summary>
     [HttpPost]
-    //[Authorize(Roles = "Admin")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     public async Task<ActionResult<LessonDto>> CreateLesson([FromForm] CreateLessonDto lessonDto)
     {
         try
@@ -114,7 +116,7 @@ public class LessonController : ControllerBase
     /// Update existing lesson
     /// </summary>
     [HttpPut("{id}")]
-   // [Authorize(Roles = "Admin")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     public async Task<ActionResult<LessonDto>> UpdateLesson(int id, [FromForm] UpdateLessonDto lessonDto)
     {
         try
@@ -143,7 +145,7 @@ public class LessonController : ControllerBase
     /// Delete lesson
     /// </summary>
     [HttpDelete("{id}")]
-    //[Authorize(Roles = "Admin")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     public async Task<ActionResult> DeleteLesson(int id)
     {
         try
@@ -173,7 +175,7 @@ public class LessonController : ControllerBase
     /// Change lesson course
     /// </summary>
     [HttpPatch("{id}/course")]
-    //[Authorize(Roles = "Admin")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     public async Task<ActionResult<LessonDto>> ChangeCourse(int id, [FromBody] int courseId)
     {
         try
@@ -196,7 +198,7 @@ public class LessonController : ControllerBase
     /// Update lesson order
     /// </summary>
     [HttpPatch("{id}/order")]
-    //[Authorize(Roles = "Admin")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     public async Task<ActionResult<LessonDto>> UpdateOrder(int id, [FromBody] int order)
     {
         try

@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
 using Microsoft.Extensions.Logging;
+using MTA.Domain.Constants;
+using MTA.Web.Attributes;
 
 namespace MTA.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize]
+[Authorize]
 public class PackageController : ControllerBase
 {
     private readonly IPackageService _packageService;
@@ -26,6 +28,7 @@ public class PackageController : ControllerBase
     /// Get all packages with pagination and filtering
     /// </summary>
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<PaginatedResult<PackageDto>>> GetPackages(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
@@ -50,6 +53,7 @@ public class PackageController : ControllerBase
     /// Get package by ID
     /// </summary>
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public async Task<ActionResult<PackageDto>> GetPackage(int id)
     {
         try
@@ -109,7 +113,7 @@ public class PackageController : ControllerBase
     /// Create new package
     /// </summary>
     [HttpPost]
-    //[Authorize(Roles = "Admin")]
+    [AuthorizeRole(RoleNames.Admin)]
     public async Task<ActionResult<PackageDto>> CreatePackage([FromBody] CreatePackageDto packageDto)
     {
         try
@@ -135,7 +139,7 @@ public class PackageController : ControllerBase
     /// Update existing package
     /// </summary>
     [HttpPut("{id}")]
-    //[Authorize(Roles = "Admin")]
+    [AuthorizeRole(RoleNames.Admin)]
     public async Task<ActionResult<PackageDto>> UpdatePackage(int id, [FromBody] PackageDto packageDto)
     {
         try
@@ -164,7 +168,7 @@ public class PackageController : ControllerBase
     /// Delete package
     /// </summary>
     [HttpDelete("{id}")]
-    //[Authorize(Roles = "Admin")]
+    [AuthorizeRole(RoleNames.Admin)]
     public async Task<ActionResult> DeletePackage(int id)
     {
         try

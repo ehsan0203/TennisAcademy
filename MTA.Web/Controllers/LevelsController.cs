@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
+using MTA.Domain.Constants;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
 using MTA.Web.Attributes;
@@ -14,7 +15,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-//[Authorize(Policy = "RolesAdminCoach")]
+[Authorize]
 public class LevelsController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -104,6 +105,7 @@ public class LevelsController : ControllerBase
     /// <response code="403">If the user doesn't have required role</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPost]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -143,6 +145,7 @@ public class LevelsController : ControllerBase
     /// <response code="404">If the skill level was not found</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpPut("{id}")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -183,6 +186,7 @@ public class LevelsController : ControllerBase
     /// <response code="404">If the skill level was not found</response>
     /// <response code="500">If there was an internal server error</response>
     [HttpDelete("{id}")]
+    [AuthorizeRole(RoleNames.Admin, RoleNames.Coach)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

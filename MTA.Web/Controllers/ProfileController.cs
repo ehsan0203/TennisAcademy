@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs.User;
@@ -10,6 +11,7 @@ namespace MTA.Web.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize]
     public class ProfileController : ControllerBase
     {
         private readonly IAccountService _accountService;

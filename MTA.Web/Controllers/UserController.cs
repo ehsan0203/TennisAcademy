@@ -5,12 +5,14 @@ using MTA.Application.DTOs.User;
 using MTA.Application.Services;
 using MTA.Domain.Entities;
 using System.Security.Claims;
+using MTA.Domain.Constants;
+using MTA.Web.Attributes;
 
 namespace MTA.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize]
+[Authorize]
 public class UserController : ControllerBase
 {
     private readonly IUserProfileService _userProfileService;
@@ -33,7 +35,7 @@ public class UserController : ControllerBase
     /// Get all users with pagination and simple filtering
     /// </summary>
     [HttpGet]
-    //[Authorize(Roles = "Admin")]
+    [AuthorizeRole(RoleNames.Admin)]
     public async Task<ActionResult<PaginatedResult<AccountDto>>> GetUsers(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
@@ -68,6 +70,7 @@ public class UserController : ControllerBase
     /// Get user details by ID
     /// </summary>
     [HttpGet("{id}")]
+    [AuthorizeRole(RoleNames.Admin)]
     public async Task<ActionResult<AccountDto>> GetUser(int id)
     {
         try
@@ -96,6 +99,7 @@ public class UserController : ControllerBase
     /// Update user
     /// </summary>
     [HttpPut("{id}")]
+    [AuthorizeRole(RoleNames.Admin)]
     public async Task<ActionResult<UserProfileDto>> UpdateUser(int id, [FromForm] UpdateUserProfileDto updateDto)
     {
         try
@@ -125,7 +129,7 @@ public class UserController : ControllerBase
     /// Delete or deactivate user
     /// </summary>
     [HttpDelete("{id}")]
-    //[Authorize(Roles = "Admin")]
+    [AuthorizeRole(RoleNames.Admin)]
     public async Task<ActionResult> DeleteUser(int id)
     {
         try
@@ -151,6 +155,7 @@ public class UserController : ControllerBase
     /// Update user avatar
     /// </summary>
     [HttpPatch("{id}/avatar")]
+    [AuthorizeRole(RoleNames.Admin)]
     public async Task<ActionResult<UserProfileDto>> UpdateAvatar(int id, [FromBody] string ImageUrl)
     {
         try

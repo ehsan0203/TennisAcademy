@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
+using MTA.Domain.Constants;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
 using MTA.Web.Attributes;
@@ -14,7 +15,7 @@ namespace MTA.Web.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-//[Authorize(Roles = "Admin")]
+[AuthorizeRole(RoleNames.Admin)]
 public class RolesController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;

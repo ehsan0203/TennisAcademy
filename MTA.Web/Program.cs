@@ -8,6 +8,7 @@ using MTA.Infrastructure.Data;
 using MTA.Infrastructure.Persistence;
 using MTA.Web;
 using MTA.Web.Attributes;
+using MTA.Web.Extensions;
 using System.Security.Claims;
 using System.Text;
 
@@ -102,31 +103,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Authorization
-// 1. Register the custom authorization handler
-builder.Services.AddScoped<IAuthorizationHandler, CustomAuthorizationHandler>();
-
 builder.Services.AddValidatorsFromAssemblyContaining<RoleValidator>();
 
-// 2. Register custom policy provider
-builder.Services.AddSingleton<IAuthorizationPolicyProvider, CustomAuthorizationPolicyProvider>();
-
-
-
-// 3. (Optional) Add default policies if needed
-builder.Services.AddAuthorization(options =>
-{
-    // Example default policy
-    options.AddPolicy("RoleAdmin", policy =>
-    {
-        policy.Requirements.Add(new RoleRequirement("Admin"));
-    });
-
-    options.AddPolicy("RoleCoach", policy =>
-    {
-        policy.Requirements.Add(new RoleRequirement("Coach"));
-    });
-});
+builder.Services.AddRoleBasedAuthorization();
 
 // Add persistence services
 builder.Services.AddPersistenceServices(builder.Configuration);
