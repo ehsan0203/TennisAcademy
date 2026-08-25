@@ -9,6 +9,7 @@ public class PackageHistoryConfiguration : IEntityTypeConfiguration<PackageHisto
     public void Configure(EntityTypeBuilder<PackageHistory> builder)
     {
         builder.HasKey(history => history.Id);
+        builder.HasQueryFilter(history => !history.IsDeleted);
 
         builder.Property(history => history.ExpiredDate)
             .IsRequired();

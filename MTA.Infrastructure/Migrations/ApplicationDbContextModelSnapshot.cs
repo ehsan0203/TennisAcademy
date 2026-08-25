@@ -73,7 +73,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Accounts", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Course", b =>
@@ -124,7 +124,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.FAQCategory", b =>
@@ -158,7 +158,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FAQCategories");
+                    b.ToTable("FAQCategories", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Lesson", b =>
@@ -199,7 +199,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("MediaFileId");
 
-                    b.ToTable("Lessons");
+                    b.ToTable("Lessons", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Level", b =>
@@ -226,7 +226,7 @@ namespace MTA.Infrastructure.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("Levels");
+                    b.ToTable("Levels", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Lookup", b =>
@@ -263,7 +263,7 @@ namespace MTA.Infrastructure.Migrations
                     b.HasIndex("Category", "Key")
                         .IsUnique();
 
-                    b.ToTable("Lookups");
+                    b.ToTable("Lookups", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.MediaFile", b =>
@@ -309,7 +309,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("MediaFiles");
+                    b.ToTable("MediaFiles", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Message", b =>
@@ -351,7 +351,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("TicketId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.MessageMediaFile", b =>
@@ -380,7 +380,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("MessageId");
 
-                    b.ToTable("MessageMediaFile");
+                    b.ToTable("MessageMediaFile", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Package", b =>
@@ -421,7 +421,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("DurationUnitId");
 
-                    b.ToTable("Packages");
+                    b.ToTable("Packages", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.PackageHistory", b =>
@@ -462,7 +462,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("PackageHistories");
+                    b.ToTable("PackageHistories", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Permission", b =>
@@ -493,7 +493,7 @@ namespace MTA.Infrastructure.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("Permissions");
+                    b.ToTable("Permissions", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.PermissionsRole", b =>
@@ -522,7 +522,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("PermissionsRoles");
+                    b.ToTable("PermissionsRoles", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.QuestionFAQ", b =>
@@ -559,7 +559,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("QuestionFAQs");
+                    b.ToTable("QuestionFAQs", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.RefreshToken", b =>
@@ -593,7 +593,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Role", b =>
@@ -620,7 +620,7 @@ namespace MTA.Infrastructure.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Ticket", b =>
@@ -669,7 +669,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Tickets", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.UserCourseHistory", b =>
@@ -709,7 +709,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("UserCourseHistories");
+                    b.ToTable("UserCourseHistories", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.UserProfile", b =>
@@ -766,7 +766,7 @@ namespace MTA.Infrastructure.Migrations
 
                     b.HasIndex("SkillLevelId");
 
-                    b.ToTable("UserProfiles");
+                    b.ToTable("UserProfiles", (string)null);
                 });
 
             modelBuilder.Entity("MTA.Domain.Entities.Account", b =>

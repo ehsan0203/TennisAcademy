@@ -9,6 +9,7 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
     public void Configure(EntityTypeBuilder<Message> builder)
     {
         builder.HasKey(message => message.Id);
+        builder.HasQueryFilter(message => !message.IsDeleted);
 
         builder.Property(message => message.Text)
             .IsRequired()

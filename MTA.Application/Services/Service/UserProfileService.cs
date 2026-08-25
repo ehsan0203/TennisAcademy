@@ -1,4 +1,4 @@
-﻿using MTA.Application.DTOs;
+using MTA.Application.DTOs;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -23,17 +23,18 @@ public class UserProfileService : IUserProfileService
 
     #region CRUD
 
-    public async Task<UserProfileDto?> GetByIdAsync(int id)
+    public async Task<UserProfileDto?> GetByIdAsync(int id, CancellationToken ct = default)
     {
         try
         {
             var userProfile = await _unitOfWork.UserProfiles.GetQueryable()
+                .AsNoTracking()
                 .Include(up => up.Account)
                 .ThenInclude(a => a.Role)
                 .Include(up => up.Account)
                 .ThenInclude(a => a.Status)
                 .Include(up => up.SkillLevel)
-                .FirstOrDefaultAsync(up => up.Id == id);
+                .FirstOrDefaultAsync(up => up.Id == id, ct);
 
             return userProfile != null ? MapToDto(userProfile) : null;
         }
@@ -44,17 +45,18 @@ public class UserProfileService : IUserProfileService
         }
     }
 
-    public async Task<UserProfileDto?> GetByAccountIdAsync(int accountId)
+    public async Task<UserProfileDto?> GetByAccountIdAsync(int accountId, CancellationToken ct = default)
     {
         try
         {
             var userProfile = await _unitOfWork.UserProfiles.GetQueryable()
+                .AsNoTracking()
                 .Include(up => up.Account)
                 .ThenInclude(a => a.Role)
                 .Include(up => up.Account)
                 .ThenInclude(a => a.Status)
                 .Include(up => up.SkillLevel)
-                .FirstOrDefaultAsync(up => up.AccountId == accountId);
+                .FirstOrDefaultAsync(up => up.AccountId == accountId, ct);
 
             return userProfile != null ? MapToDto(userProfile) : null;
         }
@@ -65,7 +67,7 @@ public class UserProfileService : IUserProfileService
         }
     }
 
-    public async Task<UserProfileDto> CreateAsync(UserProfileDto userProfileDto)
+    public async Task<UserProfileDto> CreateAsync(UserProfileDto userProfileDto, CancellationToken ct = default)
     {
         try
         {
@@ -76,13 +78,13 @@ public class UserProfileService : IUserProfileService
                 DateOfBirth = userProfileDto.DateOfBirth,
                 Experience = userProfileDto.Experience,
                 AccountId = userProfileDto.AccountId,
-                SkillLevelId = userProfileDto.SkillLevelId 
+                SkillLevelId = userProfileDto.SkillLevelId
             };
 
-            await _unitOfWork.UserProfiles.AddAsync(userProfile);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.UserProfiles.AddAsync(userProfile, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
-            return await GetByIdAsync(userProfile.Id) ?? userProfileDto;
+            return await GetByIdAsync(userProfile.Id, ct) ?? userProfileDto;
         }
         catch (Exception ex)
         {
@@ -91,9 +93,10 @@ public class UserProfileService : IUserProfileService
         }
     }
 
-    public async Task<PagedResult<UserProfileDto>> QueryAsync(UserSearchDto queryDto)
+    public async Task<PagedResult<UserProfileDto>> QueryAsync(UserSearchDto queryDto, CancellationToken ct = default)
     {
-        var query = _unitOfWork.UserProfiles.GetQueryable();
+        var query = _unitOfWork.UserProfiles.GetQueryable()
+            .AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(queryDto.SearchTerm))
         {
@@ -117,7 +120,7 @@ public class UserProfileService : IUserProfileService
             query = query.Where(u => u.Account.IsActive == queryDto.IsActive.Value);
         }
 
-        int total = await query.CountAsync();
+        int total = await query.CountAsync(ct);
 
         var items = await query
             .Include(u => u.Account)
@@ -139,7 +142,7 @@ public class UserProfileService : IUserProfileService
                 SkillLevelValue = u.SkillLevel != null ? u.SkillLevel.Title : null,
                 AccountId = u.AccountId
             })
-            .ToListAsync();
+            .ToListAsync(ct);
 
         return new PagedResult<UserProfileDto>
         {
@@ -151,9 +154,9 @@ public class UserProfileService : IUserProfileService
     }
 
 
-    public async Task<UserProfileDto?> UpdateAsync(int id, UpdateUserProfileDto dto)
+    public async Task<UserProfileDto?> UpdateAsync(int id, UpdateUserProfileDto dto, CancellationToken ct = default)
     {
-        var user = await _unitOfWork.UserProfiles.GetByIdAsync(id);
+        var user = await _unitOfWork.UserProfiles.GetByIdAsync(id, ct);
         if (user is null) return null;
 
         Account? account = null;
@@ -161,7 +164,7 @@ public class UserProfileService : IUserProfileService
 
         if (dto.StatusId.HasValue || dto.RoleId.HasValue)
         {
-            account = await _unitOfWork.Accounts.GetByIdAsync(user.AccountId);
+            account = await _unitOfWork.Accounts.GetByIdAsync(user.AccountId, ct);
         }
 
         if (account is not null)
@@ -180,7 +183,7 @@ public class UserProfileService : IUserProfileService
 
             if (shouldUpdateAccount)
             {
-                await _unitOfWork.Accounts.UpdateAsync(account);
+                await _unitOfWork.Accounts.UpdateAsync(account, ct);
             }
         }
 
@@ -212,28 +215,23 @@ public class UserProfileService : IUserProfileService
             user.HealthDescription = dto.HealthDescription;
         }
 
-        user.UpdatedAt = DateTime.UtcNow;
+        await _unitOfWork.UserProfiles.UpdateAsync(user, ct);
 
-        // اگر ریپازیتوری async است:
-        await _unitOfWork.UserProfiles.UpdateAsync(user);
-        // اگر Sync بود، از این استفاده کن:
-        // _unitOfWork.UserProfiles.Update(user);
+        await _unitOfWork.SaveChangesAsync(ct);
 
-        await _unitOfWork.SaveChangesAsync();
-
-        return await GetByIdAsync(id);
+        return await GetByIdAsync(id, ct);
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
     {
         try
         {
-            var userProfile = await _unitOfWork.UserProfiles.GetByIdAsync(id);
+            var userProfile = await _unitOfWork.UserProfiles.GetByIdAsync(id, ct);
             if (userProfile == null)
                 return false;
 
-            _unitOfWork.UserProfiles.DeleteAsync(userProfile.Id);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.UserProfiles.DeleteAsync(userProfile.Id, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
             return true;
         }
@@ -248,26 +246,25 @@ public class UserProfileService : IUserProfileService
 
     #region Partial Updates
 
-    public async Task<UserProfileDto?> UpdateAvatarAsync(int id, string imageUrl)
+    public async Task<UserProfileDto?> UpdateAvatarAsync(int id, string imageUrl, CancellationToken ct = default)
     {
         try
         {
-            var userProfile = await _unitOfWork.UserProfiles.GetByIdAsync(id);
+            var userProfile = await _unitOfWork.UserProfiles.GetByIdAsync(id, ct);
             if (userProfile == null)
                 return null;
 
             // Update the account image
-            var account = await _unitOfWork.Accounts.GetByIdAsync(userProfile.AccountId);
+            var account = await _unitOfWork.Accounts.GetByIdAsync(userProfile.AccountId, ct);
             if (account != null)
             {
                 account.MediaFile.Url = imageUrl;
-                account.UpdatedAt = DateTime.UtcNow;
-                _unitOfWork.Accounts.UpdateAsync(account);
+                await _unitOfWork.Accounts.UpdateAsync(account, ct);
             }
 
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(ct);
 
-            return await GetByIdAsync(id);
+            return await GetByIdAsync(id, ct);
         }
         catch (Exception ex)
         {
@@ -276,21 +273,20 @@ public class UserProfileService : IUserProfileService
         }
     }
 
-    public async Task<UserProfileDto?> UpdateSkillLevelAsync(int id, int skillLevelId)
+    public async Task<UserProfileDto?> UpdateSkillLevelAsync(int id, int skillLevelId, CancellationToken ct = default)
     {
         try
         {
-            var userProfile = await _unitOfWork.UserProfiles.GetByIdAsync(id);
+            var userProfile = await _unitOfWork.UserProfiles.GetByIdAsync(id, ct);
             if (userProfile == null)
                 return null;
 
             userProfile.SkillLevelId = skillLevelId;
-            userProfile.UpdatedAt = DateTime.UtcNow;
 
-            _unitOfWork.UserProfiles.UpdateAsync(userProfile);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.UserProfiles.UpdateAsync(userProfile, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
-            return await GetByIdAsync(id);
+            return await GetByIdAsync(id, ct);
         }
         catch (Exception ex)
         {
@@ -299,21 +295,20 @@ public class UserProfileService : IUserProfileService
         }
     }
 
-    public async Task<UserProfileDto?> UpdateExperienceAsync(int id, int experience)
+    public async Task<UserProfileDto?> UpdateExperienceAsync(int id, int experience, CancellationToken ct = default)
     {
         try
         {
-            var userProfile = await _unitOfWork.UserProfiles.GetByIdAsync(id);
+            var userProfile = await _unitOfWork.UserProfiles.GetByIdAsync(id, ct);
             if (userProfile == null)
                 return null;
 
             userProfile.Experience = experience;
-            userProfile.UpdatedAt = DateTime.UtcNow;
 
-            _unitOfWork.UserProfiles.UpdateAsync(userProfile);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.UserProfiles.UpdateAsync(userProfile, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
-            return await GetByIdAsync(id);
+            return await GetByIdAsync(id, ct);
         }
         catch (Exception ex)
         {

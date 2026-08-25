@@ -9,6 +9,7 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
     public void Configure(EntityTypeBuilder<RefreshToken> builder)
     {
         builder.HasKey(token => token.Id);
+        builder.HasQueryFilter(token => !token.IsDeleted);
 
         builder.Property(token => token.Token)
             .IsRequired();

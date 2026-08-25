@@ -17,22 +17,25 @@ public class MessageService : IMessageService
 	private readonly IMapper _mapper;
     private readonly IMediaFileService _mediaFileService;
     private readonly ILogger<MediaFileService> _logger;
+    private readonly IChatNotifier _chatNotifier;
 
 
-    public MessageService(IUnitOfWork unitOfWork, IMapper mapper, IMediaFileService mediaFileService, ILogger<MediaFileService> logger)
+    public MessageService(IUnitOfWork unitOfWork, IMapper mapper, IMediaFileService mediaFileService, ILogger<MediaFileService> logger, IChatNotifier chatNotifier)
 	{
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
 		_mediaFileService = mediaFileService;
 		_logger = logger;
+		_chatNotifier = chatNotifier;
 	}
 
 	/// <summary>
 	/// Get all messages with optional filtering
 	/// </summary>
-	public async Task<PaginatedResult<MessageDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? ticketId = null, int? senderId = null, bool? isRead = null)
+	public async Task<PaginatedResult<MessageDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? ticketId = null, int? senderId = null, bool? isRead = null, CancellationToken ct = default)
 	{
         var query = _unitOfWork.Repository<Message>().GetQueryable()
+            .AsNoTracking()
             .Include(m => m.MediaFiles)
                 .ThenInclude(mm => mm.MediaFile)
             .Include(m => m.Ticket)
@@ -62,14 +65,14 @@ public class MessageService : IMessageService
 		}
 
 		// Get total count
-		var totalCount = await query.CountAsync();
+		var totalCount = await query.CountAsync(ct);
 
 		// Apply pagination
 		var messages = await query
 			.OrderByDescending(m => m.CreatedAt)
 			.Skip((page - 1) * pageSize)
 			.Take(pageSize)
-			.ToListAsync();
+			.ToListAsync(ct);
 
 		// Map to DTOs with additional data
 		var messageDtos = messages.Select(m => _mapper.Map<MessageDto>(m)).ToList();
@@ -84,13 +87,14 @@ public class MessageService : IMessageService
 	}
 
 
-    public async Task<List<MediaFileDto>> GetMessageFilesAsync(int messageId)
+    public async Task<List<MediaFileDto>> GetMessageFilesAsync(int messageId, CancellationToken ct = default)
     {
         // پیام و فایل‌های مربوطه را لود می‌کنیم
         var message = await _unitOfWork.Repository<Message>().GetQueryable()
+            .AsNoTracking()
             .Include(m => m.MediaFiles)
                 .ThenInclude(mm => mm.MediaFile)
-            .FirstOrDefaultAsync(m => m.Id == messageId);
+            .FirstOrDefaultAsync(m => m.Id == messageId, ct);
 
         if (message == null)
             throw new ArgumentException($"Message with ID {messageId} not found");
@@ -114,15 +118,16 @@ public class MessageService : IMessageService
     /// <summary>
     /// Get message by ID
     /// </summary>
-    public async Task<MessageDto?> GetByIdAsync(int id)
+    public async Task<MessageDto?> GetByIdAsync(int id, CancellationToken ct = default)
 	{
         var message = await _unitOfWork.Repository<Message>().GetQueryable()
-            .Include(m => m.MediaFiles)             
-                .ThenInclude(mm => mm.MediaFile)  
+            .AsNoTracking()
+            .Include(m => m.MediaFiles)
+                .ThenInclude(mm => mm.MediaFile)
             .Include(m => m.Ticket)
             .Include(m => m.Sender)
                 .ThenInclude(a => a.UserProfile)
-            .FirstOrDefaultAsync(m => m.Id == id);
+            .FirstOrDefaultAsync(m => m.Id == id, ct);
 
         return message != null ? _mapper.Map<MessageDto>(message) : null;
 	}
@@ -130,13 +135,14 @@ public class MessageService : IMessageService
 	/// <summary>
 	/// Get messages by ticket ID
 	/// </summary>
-	public async Task<IEnumerable<MessageDto>> GetByTicketAsync(int ticketId)
+	public async Task<IEnumerable<MessageDto>> GetByTicketAsync(int ticketId, CancellationToken ct = default)
 	{
         var messages = await _unitOfWork.Repository<Message>().GetQueryable()
-            .Include(m => m.MediaFiles)              
-                .ThenInclude(mm => mm.MediaFile)    
+            .AsNoTracking()
+            .Include(m => m.MediaFiles)
+                .ThenInclude(mm => mm.MediaFile)
             .Where(m => m.TicketId == ticketId)
-            .ToListAsync();
+            .ToListAsync(ct);
 
         return messages.Select(m => _mapper.Map<MessageDto>(m));
 	}
@@ -144,16 +150,17 @@ public class MessageService : IMessageService
     /// <summary>
     /// Get messages by sender ID
     /// </summary>
-    public async Task<IEnumerable<MessageDto>> GetBySenderAsync(int senderId)
+    public async Task<IEnumerable<MessageDto>> GetBySenderAsync(int senderId, CancellationToken ct = default)
     {
         var messages = await _unitOfWork.Repository<Message>().GetQueryable()
-            .Include(m => m.MediaFiles)              
-                .ThenInclude(mm => mm.MediaFile)    
+            .AsNoTracking()
+            .Include(m => m.MediaFiles)
+                .ThenInclude(mm => mm.MediaFile)
             .Include(m => m.Ticket)
             .Include(m => m.Sender)
                 .ThenInclude(s => s.UserProfile)
             .Where(m => m.SenderId == senderId)
-            .ToListAsync();
+            .ToListAsync(ct);
 
         return messages.Select(m => _mapper.Map<MessageDto>(m));
     }
@@ -162,16 +169,17 @@ public class MessageService : IMessageService
     /// <summary>
     /// Get unread messages
     /// </summary>
-    public async Task<IEnumerable<MessageDto>> GetUnreadMessagesAsync()
+    public async Task<IEnumerable<MessageDto>> GetUnreadMessagesAsync(CancellationToken ct = default)
     {
         var messages = await _unitOfWork.Repository<Message>().GetQueryable()
-            .Include(m => m.MediaFiles)               
-                .ThenInclude(mm => mm.MediaFile)    
+            .AsNoTracking()
+            .Include(m => m.MediaFiles)
+                .ThenInclude(mm => mm.MediaFile)
             .Include(m => m.Ticket)
             .Include(m => m.Sender)
                 .ThenInclude(s => s.UserProfile)
             .Where(m => !m.IsRead)
-            .ToListAsync();
+            .ToListAsync(ct);
 
         return messages.Select(m => _mapper.Map<MessageDto>(m));
     }
@@ -180,16 +188,17 @@ public class MessageService : IMessageService
     /// <summary>
     /// Get unread messages by ticket ID
     /// </summary>
-    public async Task<IEnumerable<MessageDto>> GetUnreadMessagesByTicketAsync(int ticketId)
+    public async Task<IEnumerable<MessageDto>> GetUnreadMessagesByTicketAsync(int ticketId, CancellationToken ct = default)
     {
         var messages = await _unitOfWork.Repository<Message>().GetQueryable()
-            .Include(m => m.MediaFiles)             
-                .ThenInclude(mm => mm.MediaFile)   
+            .AsNoTracking()
+            .Include(m => m.MediaFiles)
+                .ThenInclude(mm => mm.MediaFile)
             .Include(m => m.Ticket)
             .Include(m => m.Sender)
                 .ThenInclude(s => s.UserProfile)
             .Where(m => m.TicketId == ticketId && !m.IsRead)
-            .ToListAsync();
+            .ToListAsync(ct);
 
         return messages.Select(m => _mapper.Map<MessageDto>(m));
     }
@@ -198,7 +207,7 @@ public class MessageService : IMessageService
     /// <summary>
     /// Create new message
     /// </summary>
-    public async Task<MessageDto> CreateAsync(CreateMessageDto messageDto)
+    public async Task<MessageDto> CreateAsync(CreateMessageDto messageDto, CancellationToken ct = default)
     {
         try
         {
@@ -211,7 +220,7 @@ public class MessageService : IMessageService
                 var existingIds = await _unitOfWork.Repository<MediaFile>().GetQueryable()
                     .Where(mf => distinctIds.Contains(mf.Id))
                     .Select(mf => mf.Id)
-                    .ToListAsync();
+                    .ToListAsync(ct);
 
                 var missingIds = distinctIds.Except(existingIds).ToList();
                 if (missingIds.Any())
@@ -230,8 +239,8 @@ public class MessageService : IMessageService
                 {
                     var mediaFileDto = new MediaFileUploadDto
                     {
-                        MediaType = "Message",
-                        PlacementName = "Attachment",
+                        MediaType = InferMediaType(file),
+                        PlacementName = null,
                         Title = $"Message {messageDto.TicketId}"
                     };
                     var mediaFile = await _mediaFileService.CreateAsync(file, mediaFileDto);
@@ -239,8 +248,8 @@ public class MessageService : IMessageService
                 }
             }
 
-            var createdMessage = await _unitOfWork.Repository<Message>().AddAsync(message);
-            await _unitOfWork.SaveChangesAsync();
+            var createdMessage = await _unitOfWork.Repository<Message>().AddAsync(message, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
             var createdWithIncludes = await _unitOfWork.Repository<Message>().GetQueryable()
                 .Include(m => m.MediaFiles)
@@ -248,11 +257,14 @@ public class MessageService : IMessageService
                 .Include(m => m.Ticket)
                 .Include(m => m.Sender)
                     .ThenInclude(s => s.UserProfile)
-                .FirstOrDefaultAsync(m => m.Id == createdMessage.Id);
+                .FirstOrDefaultAsync(m => m.Id == createdMessage.Id, ct);
 
-            return createdWithIncludes != null
+            var resultDto = createdWithIncludes != null
                 ? _mapper.Map<MessageDto>(createdWithIncludes)
                 : _mapper.Map<MessageDto>(createdMessage);
+
+            await _chatNotifier.NotifyMessageCreatedAsync(messageDto.TicketId, resultDto, ct);
+            return resultDto;
         }
         catch (Exception ex)
         {
@@ -261,7 +273,7 @@ public class MessageService : IMessageService
         }
     }
 
-    public async Task<MessageDto> UpdateAsync(int id, UpdateMessageDto messageDto)
+    public async Task<MessageDto> UpdateAsync(int id, UpdateMessageDto messageDto, CancellationToken ct = default)
     {
         try
         {
@@ -269,7 +281,7 @@ public class MessageService : IMessageService
                 .GetQueryable()
                 .Include(m => m.MediaFiles)
                     .ThenInclude(mf => mf.MediaFile)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id, ct);
 
             if (existingMessage == null)
                 throw new ArgumentException($"Message with ID {id} not found");
@@ -291,7 +303,7 @@ public class MessageService : IMessageService
                     var existingIds = await _unitOfWork.Repository<MediaFile>().GetQueryable()
                         .Where(mf => distinctIds.Contains(mf.Id))
                         .Select(mf => mf.Id)
-                        .ToListAsync();
+                        .ToListAsync(ct);
 
                     var missingIds = distinctIds.Except(existingIds).ToList();
                     if (missingIds.Any())
@@ -332,8 +344,8 @@ public class MessageService : IMessageService
             existingMessage.TicketId = messageDto.TicketId;
             existingMessage.SenderId = messageDto.SenderId;
 
-            await _unitOfWork.Repository<Message>().UpdateAsync(existingMessage);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.Repository<Message>().UpdateAsync(existingMessage, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
             var updatedWithIncludes = await _unitOfWork.Repository<Message>().GetQueryable()
                 .Include(m => m.MediaFiles)
@@ -341,7 +353,7 @@ public class MessageService : IMessageService
                 .Include(m => m.Ticket)
                 .Include(m => m.Sender)
                     .ThenInclude(s => s.UserProfile)
-                .FirstOrDefaultAsync(m => m.Id == existingMessage.Id);
+                .FirstOrDefaultAsync(m => m.Id == existingMessage.Id, ct);
 
             return updatedWithIncludes != null
                 ? _mapper.Map<MessageDto>(updatedWithIncludes)
@@ -357,78 +369,89 @@ public class MessageService : IMessageService
     /// <summary>
     /// Delete message
     /// </summary>
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
 	{
-		var message = await _unitOfWork.Repository<Message>().GetByIdAsync(id);
+		var message = await _unitOfWork.Repository<Message>().GetByIdAsync(id, ct);
 		if (message == null)
 			return false;
 
-		await _unitOfWork.Repository<Message>().DeleteAsync(message.Id);
-		await _unitOfWork.SaveChangesAsync();
-		
+		await _unitOfWork.Repository<Message>().DeleteAsync(message.Id, ct);
+		await _unitOfWork.SaveChangesAsync(ct);
+
 		return true;
 	}
 
 	/// <summary>
 	/// Mark message as read
 	/// </summary>
-	public async Task<MessageDto> MarkAsReadAsync(int id)
+	public async Task<MessageDto> MarkAsReadAsync(int id, CancellationToken ct = default)
 	{
-		var message = await _unitOfWork.Repository<Message>().GetByIdAsync(id);
+		var message = await _unitOfWork.Repository<Message>().GetByIdAsync(id, ct);
 		if (message == null)
 			throw new ArgumentException($"Message with ID {id} not found");
 
 		message.IsRead = true;
-		message.UpdatedAt = DateTime.UtcNow;
 
-		var updatedMessage = await _unitOfWork.Repository<Message>().UpdateAsync(message);
-		await _unitOfWork.SaveChangesAsync();
-		
+		var updatedMessage = await _unitOfWork.Repository<Message>().UpdateAsync(message, ct);
+		await _unitOfWork.SaveChangesAsync(ct);
+
 		return _mapper.Map<MessageDto>(updatedMessage);
 	}
 
 	/// <summary>
 	/// Mark message as unread
 	/// </summary>
-	public async Task<MessageDto> MarkAsUnreadAsync(int id)
+	public async Task<MessageDto> MarkAsUnreadAsync(int id, CancellationToken ct = default)
 	{
-		var message = await _unitOfWork.Repository<Message>().GetByIdAsync(id);
+		var message = await _unitOfWork.Repository<Message>().GetByIdAsync(id, ct);
 		if (message == null)
 			throw new ArgumentException($"Message with ID {id} not found");
 
 		message.IsRead = false;
-		message.UpdatedAt = DateTime.UtcNow;
 
-		var updatedMessage = await _unitOfWork.Repository<Message>().UpdateAsync(message);
-		await _unitOfWork.SaveChangesAsync();
-		
+		var updatedMessage = await _unitOfWork.Repository<Message>().UpdateAsync(message, ct);
+		await _unitOfWork.SaveChangesAsync(ct);
+
 		return _mapper.Map<MessageDto>(updatedMessage);
 	}
 
 	/// <summary>
 	/// Mark all messages in ticket as read
 	/// </summary>
-	public async Task<int> MarkAllAsReadByTicketAsync(int ticketId)
+	public async Task<int> MarkAllAsReadByTicketAsync(int ticketId, CancellationToken ct = default)
 	{
-		var messages = await _unitOfWork.Repository<Message>().GetAllAsync(m => m.TicketId == ticketId && !m.IsRead);
-		
+		var messages = await _unitOfWork.Repository<Message>().GetAllAsync(m => m.TicketId == ticketId && !m.IsRead, ct: ct);
+
 		foreach (var message in messages)
 		{
 			message.IsRead = true;
-			message.UpdatedAt = DateTime.UtcNow;
-			await _unitOfWork.Repository<Message>().UpdateAsync(message);
+			await _unitOfWork.Repository<Message>().UpdateAsync(message, ct);
 		}
-		
-		await _unitOfWork.SaveChangesAsync();
+
+		await _unitOfWork.SaveChangesAsync(ct);
 		return messages.Count();
 	}
 
 	/// <summary>
 	/// Get messages by date range
 	/// </summary>
-	public async Task<IEnumerable<MessageDto>> GetByDateRangeAsync(DateTime startDate, DateTime endDate)
+	public async Task<IEnumerable<MessageDto>> GetByDateRangeAsync(DateTime startDate, DateTime endDate, CancellationToken ct = default)
 	{
-		var messages = await _unitOfWork.Repository<Message>().GetAllAsync(m => m.CreatedAt >= startDate && m.CreatedAt <= endDate);
+		var messages = await _unitOfWork.Repository<Message>().GetAllAsync(m => m.CreatedAt >= startDate && m.CreatedAt <= endDate, ct: ct);
 		return messages.Select(m => _mapper.Map<MessageDto>(m));
+	}
+
+	private static string InferMediaType(Microsoft.AspNetCore.Http.IFormFile file)
+	{
+		var ct = (file.ContentType ?? string.Empty).ToLowerInvariant();
+		var ext = System.IO.Path.GetExtension(file.FileName ?? string.Empty).ToLowerInvariant();
+
+		if (ct.StartsWith("image/") || ext is ".gif" or ".png" or ".jpg" or ".jpeg" or ".webp" or ".bmp" or ".svg")
+			return ct.Contains("gif") || ext == ".gif" ? "Video" : "Image";
+		if (ct.StartsWith("video/") || ext is ".mp4" or ".mov" or ".webm" or ".mkv" or ".avi")
+			return "Video";
+		if (ct.StartsWith("audio/") || ext is ".mp3" or ".wav" or ".ogg" or ".m4a")
+			return "Audio";
+		return "Document";
 	}
 }

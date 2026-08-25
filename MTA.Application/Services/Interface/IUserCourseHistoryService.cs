@@ -2,104 +2,20 @@ using MTA.Application.DTOs;
 
 namespace MTA.Application.Services;
 
-/// <summary>
-/// Service interface for UserCourseHistory operations
-/// </summary>
 public interface IUserCourseHistoryService
 {
-    /// <summary>
-    /// Get all user course histories with optional filtering
-    /// </summary>
-    /// <param name="page">Page number</param>
-    /// <param name="pageSize">Page size</param>
-    /// <param name="accountId">Filter by account ID</param>
-    /// <param name="courseId">Filter by course ID</param>
-    /// <returns>Paginated list of user course histories</returns>
-    Task<PaginatedResult<UserCourseHistoryDetailDto>> GetAllAsync(int page = 1, int pageSize = 10, int? accountId = null, int? courseId = null);
-    
-    /// <summary>
-    /// Get user course history by ID
-    /// </summary>
-    /// <param name="id">User course history ID</param>
-    /// <returns>User course history details</returns>
-    Task<UserCourseHistoryDetailDto?> GetByIdAsync(int id);
-    
-    /// <summary>
-    /// Get user course histories by account ID
-    /// </summary>
-    /// <param name="accountId">Account ID</param>
-    /// <returns>List of user course histories</returns>
-    Task<IEnumerable<UserCourseHistoryDetailDto>> GetByAccountAsync(int accountId);
-    
-    /// <summary>
-    /// Get user course histories by course ID
-    /// </summary>
-    /// <param name="courseId">Course ID</param>
-    /// <returns>List of user course histories</returns>
-    Task<IEnumerable<UserCourseHistoryDetailDto>> GetByCourseAsync(int courseId);
-    
-    /// <summary>
-    /// Check if user has purchased course
-    /// </summary>
-    /// <param name="accountId">Account ID</param>
-    /// <param name="courseId">Course ID</param>
-    /// <returns>True if user has purchased course</returns>
-    Task<bool> UserHasPurchasedCourseAsync(int accountId, int courseId);
-    
-    /// <summary>
-    /// Create new user course history
-    /// </summary>
-    /// <param name="userCourseHistoryDto">User course history data</param>
-    /// <returns>Created user course history</returns>
-    Task<UpdateUserCourseHistoryDto> CreateAsync(CreateUserCourseHistoryDto userCourseHistoryDto);
-    
-    /// <summary>
-    /// Update existing user course history
-    /// </summary>
-    /// <param name="id">User course history ID</param>
-    /// <param name="userCourseHistoryDto">Updated user course history data</param>
-    /// <returns>Updated user course history</returns>
-    Task<UpdateUserCourseHistoryDto> UpdateAsync(int id, UpdateUserCourseHistoryDto userCourseHistoryDto);
-    
-    /// <summary>
-    /// Delete user course history
-    /// </summary>
-    /// <param name="id">User course history ID</param>
-    /// <returns>True if deleted successfully</returns>
-    Task<bool> DeleteAsync(int id);
-    
-    /// <summary>
-    /// Get user course history statistics
-    /// </summary>
-    /// <returns>User course history statistics</returns>
-    Task<UserCourseHistoryStatisticsDto> GetStatisticsAsync();
-    
-    /// <summary>
-    /// Get user course histories by date range
-    /// </summary>
-    /// <param name="startDate">Start date</param>
-    /// <param name="endDate">End date</param>
-    /// <returns>List of user course histories</returns>
-    Task<IEnumerable<UserCourseHistoryDetailDto>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
-    
-    ///// <summary>
-    ///// Get popular courses (by purchase count)
-    ///// </summary>
-    ///// <param name="count">Number of courses to return</param>
-    ///// <returns>List of popular courses</returns>
-    //Task<IEnumerable<CourseDto>> GetPopularCoursesAsync(int count = 10);
-    
-    ///// <summary>
-    ///// Get user learning progress
-    ///// </summary>
-    ///// <param name="accountId">Account ID</param>
-    ///// <returns>User learning progress</returns>
-    //Task<UserLearningProgressDto> GetUserLearningProgressAsync(int accountId);
+    Task<PaginatedResult<UserCourseHistoryDetailDto>> GetAllAsync(int page = 1, int pageSize = 10, int? accountId = null, int? courseId = null, CancellationToken ct = default);
+    Task<UserCourseHistoryDetailDto?> GetByIdAsync(int id, CancellationToken ct = default);
+    Task<IEnumerable<UserCourseHistoryDetailDto>> GetByAccountAsync(int accountId, CancellationToken ct = default);
+    Task<IEnumerable<UserCourseHistoryDetailDto>> GetByCourseAsync(int courseId, CancellationToken ct = default);
+    Task<bool> UserHasPurchasedCourseAsync(int accountId, int courseId, CancellationToken ct = default);
+    Task<UpdateUserCourseHistoryDto> CreateAsync(CreateUserCourseHistoryDto userCourseHistoryDto, CancellationToken ct = default);
+    Task<UpdateUserCourseHistoryDto> UpdateAsync(int id, UpdateUserCourseHistoryDto userCourseHistoryDto, CancellationToken ct = default);
+    Task<bool> DeleteAsync(int id, CancellationToken ct = default);
+    Task<UserCourseHistoryStatisticsDto> GetStatisticsAsync(CancellationToken ct = default);
+    Task<IEnumerable<UserCourseHistoryDetailDto>> GetByDateRangeAsync(DateTime startDate, DateTime endDate, CancellationToken ct = default);
 }
 
-/// <summary>
-/// User course history statistics DTO
-/// </summary>
 public class UserCourseHistoryStatisticsDto
 {
     public int TotalPurchases { get; set; }
@@ -114,9 +30,6 @@ public class UserCourseHistoryStatisticsDto
     public decimal RevenueLastMonth { get; set; }
 }
 
-/// <summary>
-/// User learning progress DTO
-/// </summary>
 public class UserLearningProgressDto
 {
     public int AccountId { get; set; }
@@ -126,14 +39,11 @@ public class UserLearningProgressDto
     public int TotalCoursesCompleted { get; set; }
     public int TotalLessonsCompleted { get; set; }
     public decimal TotalSpent { get; set; }
-    public double CompletionRate { get; set; } // percentage
+    public double CompletionRate { get; set; }
     public DateTime LastActivityDate { get; set; }
     public List<CourseProgressDto> CourseProgress { get; set; } = new();
 }
 
-/// <summary>
-/// Course progress DTO
-/// </summary>
 public class CourseProgressDto
 {
     public int CourseId { get; set; }

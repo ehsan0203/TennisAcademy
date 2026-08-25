@@ -48,9 +48,9 @@ public class SquarePaymentService : IPaymentService
         ? "https://connect.squareupsandbox.com"
         : "https://connect.squareup.com";
 
-    public async Task<PaymentLinkResponseDto> CreatePackagePaymentLinkAsync(int accountId, int packageId, string successUrl, string? cancelUrl)
+    public async Task<PaymentLinkResponseDto> CreatePackagePaymentLinkAsync(int accountId, int packageId, string successUrl, string? cancelUrl, CancellationToken ct = default)
     {
-        var package = await _unitOfWork.Repository<Package>().GetByIdAsync(packageId)
+        var package = await _unitOfWork.Repository<Package>().GetByIdAsync(packageId, ct)
             ?? throw new KeyNotFoundException("Package not found");
 
         var referenceId = $"package:{packageId}:account:{accountId}";
@@ -60,9 +60,9 @@ public class SquarePaymentService : IPaymentService
         return await CreatePaymentLinkInternalAsync(name, amountCents, referenceId, successUrl, cancelUrl);
     }
 
-    public async Task<PaymentLinkResponseDto> CreateCoursePaymentLinkAsync(int accountId, int courseId, string successUrl, string? cancelUrl)
+    public async Task<PaymentLinkResponseDto> CreateCoursePaymentLinkAsync(int accountId, int courseId, string successUrl, string? cancelUrl, CancellationToken ct = default)
     {
-        var course = await _unitOfWork.Repository<Course>().GetByIdAsync(courseId)
+        var course = await _unitOfWork.Repository<Course>().GetByIdAsync(courseId, ct)
             ?? throw new KeyNotFoundException("Course not found");
 
         var referenceId = $"course:{courseId}:account:{accountId}";
@@ -130,7 +130,7 @@ public class SquarePaymentService : IPaymentService
         }
     }
 
-    public async Task<string?> GetOrderReferenceIdAsync(string orderId)
+    public async Task<string?> GetOrderReferenceIdAsync(string orderId, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(orderId)) return null;
 
@@ -159,7 +159,7 @@ public class SquarePaymentService : IPaymentService
         }
     }
 
-    public async Task<PaymentOrderInfoDto?> GetOrderInfoAsync(string orderId)
+    public async Task<PaymentOrderInfoDto?> GetOrderInfoAsync(string orderId, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(orderId)) return null;
 
@@ -217,7 +217,7 @@ public class SquarePaymentService : IPaymentService
         return Convert.ToBase64String(hash);
     }
 
-    public async Task<LocationDiagnosticsDto> VerifyLocationOwnershipAsync()
+    public async Task<LocationDiagnosticsDto> VerifyLocationOwnershipAsync(CancellationToken ct = default)
     {
         var result = new LocationDiagnosticsDto
         {

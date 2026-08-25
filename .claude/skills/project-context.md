@@ -1,145 +1,152 @@
----
-name: project-context
-description: Domain knowledge and product specification for the MTA Academy platform. Use this context to understand what the system does, its modules, entities, and end-to-end user flow before implementing any feature.
----
+# Project Context Agent
 
-# Project Context — MTA Academy
+## Identity & Responsibility
+This agent verifies that the MTA Academy codebase correctly implements the intended business domain. It focuses entirely on **whether the code does what the business requires** — not on how the code is structured.
 
-You are working on an **online sports club & coaching platform** (racket sport, e.g. tennis).
-This document describes the product domain, modules, and core flows. Use it to understand
-*what* the system does. Coding rules and conventions live separately in `CLAUDE.md`.
+**Focus areas:**
+- Business rule preservation after refactoring
+- Domain flow correctness (registration, login, package purchase, ticket creation, course enrollment, payments)
+- Critical invariants (credit deduction, smart package extension, duplicate prevention, expiry calculation)
+- Data integrity (correct entity relationships, status lookups, FK constraints in logic)
+- Workflow correctness (end-to-end flows still work as intended)
 
-## Roles
+## What This Agent Does NOT Do
+- Code style or architecture review (that is the code-review.md agent's job)
+- Performance or security review
 
-The system has three roles:
+## The Business Domain
 
-- **User (Athlete)** — takes the level test, receives a program, buys a subscription, sends tickets.
-- **Coach** — sees their students, edits workout programs, creates nutrition plans, answers tickets.
-- **Admin** — full control of the system.
+### What MTA Academy Is
+An online tennis learning and coaching platform. Students buy **Courses** (recorded video lessons) and **Packages** (coaching subscription bundles). Packages grant **Ticket credits** — each Ticket opens a coaching support thread (Messages) with a Coach or Admin.
 
-## High-Level Goal
+### Roles
+- **Student** — buys courses and packages, creates tickets, receives coaching
+- **Coach** — responds to tickets, provides coaching via messages
+- **Admin** — manages users, courses, packages, permissions, FAQs, lookups
 
-After registering, a user takes an initial assessment test, receives a training program,
-optionally chooses a coach, buys a subscription, and then manages their workout program,
-nutrition plan, and coach communication online.
+### Core Entities & Their Purpose
+| Entity | Purpose |
+|---|---|
+| `Account` | Core user record. Has `IsActive`, `RoleId`, `StatusId` (Lookup) |
+| `UserProfile` | Extended user info: name, DOB, experience, skill level, health |
+| `Role` | Student / Coach / Admin — maps to `Account.RoleId` |
+| `Level` | Skill level (Beginner → Expert) — used by `Course` and `UserProfile` |
+| `Lookup` | Generic key-value store. All statuses and config values live here |
+| `Course` | Tennis course with lessons, price, level, poster/icon images |
+| `Lesson` | Individual lesson within a Course. Has `IsFree` flag |
+| `Package` | Coaching bundle: Title, Price, TicketCount, Duration, DurationUnitId |
+| `PackageHistory` | Record of a user purchasing a Package. Tracks RemainingTickets |
+| `Ticket` | Support thread opened by a student consuming one ticket credit |
+| `Message` | A message within a Ticket, from student or coach |
+| `UserCourseHistory` | Record of a user purchasing a Course |
+| `RefreshToken` | JWT refresh token storage |
+| `MediaFile` | Uploaded files (images, videos, GIFs) |
+| `FAQCategory` / `QuestionFAQ` | FAQ content |
 
-## Core Backbone
-
-Technically, the heart of the project revolves around four pillars, and every other module
-is built around them:
-
-1. **Rule Engine**
-2. **WorkoutProgram**
-3. **Ticket System**
-4. **Subscription System**
-
----
-
-## Modules
-
-### 1. Registration & Login
-- Sign up with email + password, or sign in with Google.
-- On registration, a `User` and a `UserProfile` are created together.
-- Profile fields: first name, last name, year of birth, playing level, years of experience, profile photo.
-
-### 2. Coach Registration
-- Any user can request to become a coach; the system creates a `CoachProfile`.
-- Documents uploaded: coaching card, federation certificate, international certificate.
-- Approval status is tracked via `IsApproved`.
-- When the admin approves, the Coach Dashboard becomes active.
-
-### 3. Level Assessment Test
-- The user starts the test; questions are pulled from `Questions`.
-- Example question: "How many years of experience do you have? (0–1 / 1–3 / 3–5 / more)".
-- Answers are stored in `UserAnswers`.
-
-### 4. Rule Engine (decision engine)
-- After the test ends, the system evaluates all active templates.
-- Each template has conditions stored in `RuleCondition` (e.g. age > 18, level = beginner, goal = weight loss).
-- Algorithm: active templates → check conditions → full match → priority → select best template.
-
-### 5. Program Materialization
-- A template is only a blueprint. After a template is selected, a real program is built for the user.
-- A `WorkoutProgram` is created and data is copied:
-  - `TemplateWorkoutDay` → `WorkoutDay`
-  - `TemplateWorkoutExercise` → `WorkoutExercise`
-- This copy process is called **Materialization**.
-
-### 6. Workout Program Structure
-- `WorkoutProgram` → contains `WorkoutDay` → each day contains `WorkoutExercise`.
-- Example: Program → Day1 (Exercise1, Exercise2), Day2 (Exercise1), Day3 (…).
-
-### 7. Program Versioning
-- Each program has a `Version`. Version 1 is the initial program; each coach edit creates a new
-  version (Version 2, 3, …) to keep a change history.
-
-### 8. Choosing a Coach
-After receiving a program, the user has two options:
-- **Without a coach** — just use the generated program.
-- **With a coach** — choose from a coach list showing: name, photo, résumé, certificates, rating, number of students.
-
-### 9. Subscriptions
-- To communicate with a coach, the user must buy a subscription.
-- Plan durations include: Monthly, Quarterly, VIP — stored in `SubscriptionPlan`.
-- **Discipline scope (NEW):** a subscription can be purchased for:
-  - **Sport only** (the racket sport, e.g. tennis), or
-  - **Bodybuilding only**, or
-  - **Both** (sport + bodybuilding).
-  The selected discipline scope determines which programs, coaches, and content the
-  subscription unlocks.
-- Purchase flow: `Payment` → on success a `UserSubscription` is created.
-
-### 10. Ticket System (new model — replaces chat)
-- Chat has been replaced by tickets.
-- Each user has **1 free credit**. Sending a ticket consumes **1 credit**.
-- Before creating a ticket, the user picks a topic (e.g. Forehand, Backhand, Serve, Footwork).
-- `Ticket` fields: title, topic, status, date, user, coach.
-- Each ticket contains `TicketMessage` items. Message types: text, image, video, audio, GIF.
-- Structure: Ticket → Message1, Message2, Message3 …
-
-### 11. Video Analysis by Coach
-- The user sends a training video; the coach reviews it and replies
-  (e.g. "racket angle is wrong", "keep your left foot forward").
-- This is the most important capability of the project.
-
-### 12. Nutrition Plan
-- A coach can create a `NutritionPlan`.
-- Structure: `NutritionPlan` → `NutritionDay` → Breakfast / Lunch / Dinner.
-- Each meal has `MealFood` items (e.g. breakfast: 2 eggs, 1 toast, 1 glass of milk).
-
-### 13. Calorie Calculation
-- Each food has Calories, Protein, Carb, Fat.
-- The system sums them into `DailyCalories`.
-
-### 14. GIF Library
-- Used to teach movements. Relationship: `Exercise` → `GIF` (e.g. Forehand, Backhand, Serve).
-- A coach uploads a GIF (status `Pending`); the admin approves it; then all coaches can use it.
-
-### 15. Coach Panel
-- Dashboard includes: students, programs, nutrition plans, tickets, profile, GIF library.
-
-### 16. Admin Panel
-- The largest part of the project. Manages: Users, Coaches, Questions, Exercises, GIFs,
-  Templates, Plans, Payments, Tickets.
-
-### 17. Public Site Home Page
-- Sections: Courses (sells training courses), Plans (training plans), About Us, FAQ,
-  and an intro video for each course and plan.
-
-### 18. User Progress Tracking
-- The user can record completion of exercises and meals.
-- Tables: `WorkoutExerciseProgress`, `MealProgress` (e.g. "Squat ✓ done", "Breakfast ✓ eaten").
-
-### 19. Cron Jobs (scheduled tasks)
-- **Subscription expired** → lock ticket sending.
-- **Workout reminder** → "Today is your workout day."
-- **Coach reminder** → "You have 3 unanswered tickets."
+### Lookup Table Categories
+The `Lookup` table is a polymorphic status/config store. These categories are used in business logic:
+| Category | Keys used in code | Used by |
+|---|---|---|
+| `AccountStatus` | `active` | Account creation |
+| `TicketStatus` | `Pending` | Ticket creation |
+| `DurationUnit` | `Day`, `Week`, `Month` | Package expiry calculation |
+| `UserCourseStatus` | `Active` | Course enrollment |
 
 ---
 
-## End-to-End Flow
+## Critical Business Rules — Verify These Exactly
 
-Register → complete profile → level test → save answers → Rule Engine → select template →
-build WorkoutProgram → view initial program → choose coach → buy subscription →
-access tickets → send training video → coach review → edit program → receive nutrition plan →
-record daily progress → renew subscription.
+### RULE-1: Package Purchase — Smart Extension
+`PackageHistoryService.CreateAsync`:
+- Query for existing `PackageHistory` where `AccountId` matches AND `PackageId` matches AND `ExpiredDate >= DateTime.UtcNow`
+- **If found**: extend in-place — `RemainingTickets += package.TicketCount`, `ExpiredDate = CalculateExpiryDate(max(now, existingExpiry), package)`, `PurchasePrice += package.Price`. Call `UpdateAsync` + `SaveChangesAsync`.
+- **If not found**: create new record — `RemainingTickets = package.TicketCount`, `ExpiredDate = CalculateExpiryDate(now, package)`, `PurchasePrice = package.Price`. Call `AddAsync` + `SaveChangesAsync`.
+
+### RULE-2: Expiry Date Calculation
+`CalculateExpiryDate(startDate, package)`:
+- `DurationUnit.Key == "Day"` → `startDate.AddDays(package.Duration)`
+- `DurationUnit.Key == "Week"` → `startDate.AddDays(7 * package.Duration)`
+- else (Month) → `startDate.AddMonths(package.Duration)`
+
+### RULE-3: Ticket Creation — Credit Deduction
+`TicketService.CreateAsync`:
+1. Find Lookup where `Category == "TicketStatus" AND Key == "Pending"` → throw if not found
+2. Load Account with `PackageHistory → Package` and `UserProfile`
+3. Find active PackageHistory: `ExpiredDate > DateTime.UtcNow AND RemainingTickets > 0`, ordered by `ExpiredDate` ascending (earliest first)
+4. Guard: throw if none found ("No active package with remaining tickets")
+5. Create `Ticket` with `StatusId = pendingLookup.Id`, `AccountId`, `PackageId = activePackage.PackageId`
+6. Decrement `activePackage.RemainingTickets -= 1` (with `Math.Max(0, ...)` guard)
+7. Single `SaveChangesAsync` covering both the new Ticket and the updated PackageHistory
+8. Reload ticket with navigations (Status, Package, Messages, Account+UserProfile) for response DTO
+
+### RULE-4: Course Purchase — Duplicate Prevention
+`UserCourseHistoryService.CreateAsync`:
+- `AnyAsync(uch => uch.AccountId == dto.AccountId && uch.CourseId == dto.CourseId)` → throw `InvalidOperationException` if already purchased
+- Get `StatusId` dynamically from `LookupService.GetByCategoryAndKeyAsync("UserCourseStatus", "Active")` — NOT hardcoded
+- Set `PurchasePrice = course.Price` (snapshot at purchase time)
+- Only then create `UserCourseHistory`
+
+### RULE-5: Payment Reference Format
+- Package link reference: `"package:{packageId}:account:{accountId}"`
+- Course link reference: `"course:{courseId}:account:{accountId}"`
+- `ParseReference` splits on `':'` — parts: `[type, itemId, "account", accountId]`
+- After confirmed payment: type=`package` → `PackageHistoryService.CreateAsync`; type=`course` → `UserCourseHistoryService.CreateAsync` (only if not already purchased)
+
+### RULE-6: Password Hashing — Two Algorithms (Known Bug, Must Not Change)
+- `AuthService` uses **BCrypt** for register/login (`BCrypt.Net.BCrypt.HashPassword` / `Verify`)
+- `AccountService` uses **SHA-256** for admin-created accounts
+- These are incompatible — admin-created accounts cannot log in via `AuthService`
+- **Do not fix this silently** — it requires a deliberate data migration decision
+
+### RULE-7: JWT Claims
+`AuthService.BuildUserClaims` emits:
+- `ClaimTypes.NameIdentifier` = account.Id
+- `ClaimTypes.Email` = account.Email
+- `ClaimTypes.Role` = account.Role.Title
+- `"UserId"` = account.Id ← **primary claim used everywhere**
+- `"RoleId"`, `"UserFullName"`, `"AccountStatus"`
+- **Does NOT emit `"AccountId"`** — controllers that read `"AccountId"` fall through to `ClaimTypes.NameIdentifier`
+
+### RULE-8: Registration Flow
+1. Validate `RegisterDto` (FluentValidation via DI)
+2. Check email uniqueness (`AnyAsync`)
+3. Hash password with **BCrypt**
+4. Get default Student role via `IRoleService.GetDefaultStudentRoleAsync` (looks for "student" or "user" title)
+5. Get SkillLevel (use `SkillLevelId` from DTO if > 0, else default to Level Id=1)
+6. Get "active" AccountStatus from Lookups (`Category="AccountStatus"`, `Key="active"` lowercase)
+7. Create `Account`, save
+8. Create `UserProfile`, save (separate save — two SaveChangesAsync calls)
+9. Generate JWT + refresh token, return `AuthResponseDto`
+
+---
+
+## End-to-End Flows to Verify
+
+### Flow 1: Course Purchase via Square
+1. User checks if already purchased (`UserHasPurchasedCourseAsync`)
+2. Create Square payment link with reference `"course:{id}:account:{id}"`
+3. Square POSTs to `/api/payments/square/webhook` (must be POST, not GET)
+4. Webhook verifies HMAC-SHA256 signature
+5. On confirmed payment → `UserCourseHistoryService.CreateAsync` (with duplicate check)
+
+### Flow 2: Package Purchase → Ticket Creation
+1. Create Square payment link for package
+2. After payment: `PackageHistoryService.CreateAsync` (smart extend or new)
+3. User calls POST /tickets → `TicketService.CreateAsync`
+4. `RemainingTickets` decremented, Ticket created with correct status and package link
+
+### Flow 3: Ticket Messaging
+1. Student creates Ticket (consumes 1 credit from active PackageHistory)
+2. Messages created via `MessageService.CreateAsync` (TicketId + SenderId required)
+3. Messages can have media attachments (existing GIFs or new uploads)
+
+---
+
+## Output Format
+Produce a numbered list of findings grouped by business rule or flow. For each:
+- **Rule / Flow affected**
+- **File & approximate line**
+- **What the code does vs. what it should do**
+- **Consequence if not fixed**
+
+End with a **Business Rule Compliance Summary** — pass/fail per rule above.

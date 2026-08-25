@@ -16,10 +16,12 @@ public class Ticket : BaseEntity
 
     public int AccountId { get; set; }
     [ForeignKey("AccountId")]
+    [InverseProperty(nameof(Domain.Entities.Account.Tickets))]
     public virtual Account Account { get; set; } = null!;
 
     public int PackageId { get; set; }
     [ForeignKey("PackageId")]
+    [InverseProperty(nameof(Domain.Entities.Package.Tickets))]
     public virtual Package Package { get; set; }
 
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();

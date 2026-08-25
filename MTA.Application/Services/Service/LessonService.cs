@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MTA.Application.DTOs;
@@ -30,11 +30,12 @@ public class LessonService : ILessonService
 	/// <summary>
 	/// Get all lessons with optional filtering
 	/// </summary>
-	public async Task<PaginatedResult<LessonDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? courseId = null, bool? isFree = null)
+	public async Task<PaginatedResult<LessonDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? courseId = null, bool? isFree = null, CancellationToken ct = default)
 	{
 		try
 		{
 			var query = _unitOfWork.Repository<Lesson>().GetQueryable()
+				.AsNoTracking()
 				.Include(l => l.Course)
 				.Include(l => l.MediaFile)
 				.AsQueryable();
@@ -42,8 +43,8 @@ public class LessonService : ILessonService
 			// Apply filters
 			if (!string.IsNullOrWhiteSpace(searchTerm))
 			{
-				query = query.Where(l => 
-					l.Title.Contains(searchTerm) || 
+				query = query.Where(l =>
+					l.Title.Contains(searchTerm) ||
 					(l.Description != null && l.Description.Contains(searchTerm)));
 			}
 
@@ -58,14 +59,14 @@ public class LessonService : ILessonService
 			}
 
 			// Get total count
-			var totalCount = await query.CountAsync();
+			var totalCount = await query.CountAsync(ct);
 
 			// Apply pagination and ordering
 			var lessons = await query
 				.OrderBy(l => l.CourseId)
 				.Skip((page - 1) * pageSize)
 				.Take(pageSize)
-				.ToListAsync();
+				.ToListAsync(ct);
 
 			// Map to DTOs
 			var lessonDtos = lessons.Select(MapToDto).ToList();
@@ -80,7 +81,7 @@ public class LessonService : ILessonService
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "Error getting lessons with page {Page}, pageSize {PageSize}, searchTerm {SearchTerm}, courseId {CourseId}, isFree {IsFree}", 
+			_logger.LogError(ex, "Error getting lessons with page {Page}, pageSize {PageSize}, searchTerm {SearchTerm}, courseId {CourseId}, isFree {IsFree}",
 				page, pageSize, searchTerm, courseId, isFree);
 			throw;
 		}
@@ -89,14 +90,15 @@ public class LessonService : ILessonService
 	/// <summary>
 	/// Get lesson by ID
 	/// </summary>
-	public async Task<LessonDto?> GetByIdAsync(int id)
+	public async Task<LessonDto?> GetByIdAsync(int id, CancellationToken ct = default)
 	{
 		try
 		{
 			var lesson = await _unitOfWork.Repository<Lesson>().GetQueryable()
+				.AsNoTracking()
 				.Include(l => l.Course)
 				.Include(l => l.MediaFile)
-				.FirstOrDefaultAsync(l => l.Id == id);
+				.FirstOrDefaultAsync(l => l.Id == id, ct);
 
 			return lesson != null ? MapToDto(lesson) : null;
 		}
@@ -110,15 +112,16 @@ public class LessonService : ILessonService
 	/// <summary>
 	/// Get lessons by course ID
 	/// </summary>
-	public async Task<IEnumerable<LessonDto>> GetByCourseAsync(int courseId)
+	public async Task<IEnumerable<LessonDto>> GetByCourseAsync(int courseId, CancellationToken ct = default)
 	{
 		try
 		{
 			var lessons = await _unitOfWork.Repository<Lesson>().GetQueryable()
+				.AsNoTracking()
 				.Include(l => l.Course)
 				.Include(l => l.MediaFile)
 				.Where(l => l.CourseId == courseId)
-				.ToListAsync();
+				.ToListAsync(ct);
 
 			return lessons.Select(MapToDto);
 		}
@@ -132,12 +135,12 @@ public class LessonService : ILessonService
 	/// <summary>
 	/// Create new lesson
 	/// </summary>
-	public async Task<LessonDto> CreateAsync(CreateLessonDto lessonDto)
+	public async Task<LessonDto> CreateAsync(CreateLessonDto lessonDto, CancellationToken ct = default)
 	{
 		try
 		{
 			// Validate course exists
-			var course = await _unitOfWork.Repository<Course>().GetByIdAsync(lessonDto.CourseId);
+			var course = await _unitOfWork.Repository<Course>().GetByIdAsync(lessonDto.CourseId, ct);
 			if (course == null)
 			{
 				throw new InvalidOperationException($"Course with ID {lessonDto.CourseId} not found");
@@ -158,12 +161,11 @@ public class LessonService : ILessonService
 				Description = lessonDto.Description,
 				IsFree = lessonDto.IsFree,
 				CourseId = lessonDto.CourseId,
-				MediaFileId = posterMedia.Id,
-				CreatedAt = DateTime.UtcNow
+				MediaFileId = posterMedia.Id
 			};
 
-			await _unitOfWork.Repository<Lesson>().AddAsync(lesson);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.Repository<Lesson>().AddAsync(lesson, ct);
+			await _unitOfWork.SaveChangesAsync(ct);
 
 			// Map directly to LessonDto (using AutoMapper or manual mapping)
 			return _mapper.Map<LessonDto>(lesson);
@@ -182,17 +184,17 @@ public class LessonService : ILessonService
     /// <summary>
     /// Update existing lesson
     /// </summary>
-    public async Task<LessonDto> UpdateAsync(int id, UpdateLessonDto lessonDto)
+    public async Task<LessonDto?> UpdateAsync(int id, UpdateLessonDto lessonDto, CancellationToken ct = default)
     {
         try
         {
-            var lesson = await _unitOfWork.Repository<Lesson>().GetByIdAsync(id);
+            var lesson = await _unitOfWork.Repository<Lesson>().GetByIdAsync(id, ct);
             if (lesson == null)
-                throw new InvalidOperationException($"Lesson with ID {id} not found");
+                return null;
 
             if (lessonDto.CourseId != lesson.CourseId)
             {
-                var course = await _unitOfWork.Repository<Course>().GetByIdAsync(lessonDto.CourseId);
+                var course = await _unitOfWork.Repository<Course>().GetByIdAsync(lessonDto.CourseId, ct);
                 if (course == null)
                     throw new InvalidOperationException($"Course with ID {lessonDto.CourseId} not found");
             }
@@ -239,10 +241,8 @@ public class LessonService : ILessonService
             if (lessonDto.CourseId != 0)
                 lesson.CourseId = lessonDto.CourseId;
 
-            lesson.UpdatedAt = DateTime.UtcNow;
-
-            await _unitOfWork.Repository<Lesson>().UpdateAsync(lesson);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.Repository<Lesson>().UpdateAsync(lesson, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
             return _mapper.Map<LessonDto>(lesson);
         }
@@ -256,11 +256,11 @@ public class LessonService : ILessonService
     /// <summary>
     /// Delete lesson
     /// </summary>
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
 	{
 		try
 		{
-			var lesson = await _unitOfWork.Repository<Lesson>().GetByIdAsync(id);
+			var lesson = await _unitOfWork.Repository<Lesson>().GetByIdAsync(id, ct);
 			if (lesson == null)
 			{
 				return false;
@@ -272,8 +272,8 @@ public class LessonService : ILessonService
 				throw new InvalidOperationException($"Cannot delete lesson '{lesson.Title}' as it has an associated media file");
 			}
 
-			await _unitOfWork.Repository<Lesson>().DeleteAsync(id);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.Repository<Lesson>().DeleteAsync(id, ct);
+			await _unitOfWork.SaveChangesAsync(ct);
 
 			return true;
 		}
@@ -287,30 +287,29 @@ public class LessonService : ILessonService
 	/// <summary>
 	/// Change lesson course
 	/// </summary>
-	public async Task<LessonDto> ChangeCourseAsync(int id, int courseId)
+	public async Task<LessonDto> ChangeCourseAsync(int id, int courseId, CancellationToken ct = default)
 	{
 		try
 		{
-			var lesson = await _unitOfWork.Repository<Lesson>().GetByIdAsync(id);
+			var lesson = await _unitOfWork.Repository<Lesson>().GetByIdAsync(id, ct);
 			if (lesson == null)
 			{
 				throw new InvalidOperationException($"Lesson with ID {id} not found");
 			}
 
 			// Validate new course exists
-			var course = await _unitOfWork.Repository<Course>().GetByIdAsync(courseId);
+			var course = await _unitOfWork.Repository<Course>().GetByIdAsync(courseId, ct);
 			if (course == null)
 			{
 				throw new InvalidOperationException($"Course with ID {courseId} not found");
 			}
 
 			lesson.CourseId = courseId;
-			lesson.UpdatedAt = DateTime.UtcNow;
 
-			_unitOfWork.Repository<Lesson>().UpdateAsync(lesson);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.Repository<Lesson>().UpdateAsync(lesson, ct);
+			await _unitOfWork.SaveChangesAsync(ct);
 
-			return await GetByIdAsync(id) ?? throw new InvalidOperationException("Failed to retrieve updated lesson");
+			return await GetByIdAsync(id, ct) ?? throw new InvalidOperationException("Failed to retrieve updated lesson");
 		}
 		catch (Exception ex)
 		{
@@ -322,22 +321,20 @@ public class LessonService : ILessonService
 	/// <summary>
 	/// Update lesson order
 	/// </summary>
-	public async Task<LessonDto> UpdateOrderAsync(int id, int order)
+	public async Task<LessonDto> UpdateOrderAsync(int id, int order, CancellationToken ct = default)
 	{
 		try
 		{
-			var lesson = await _unitOfWork.Repository<Lesson>().GetByIdAsync(id);
+			var lesson = await _unitOfWork.Repository<Lesson>().GetByIdAsync(id, ct);
 			if (lesson == null)
 			{
 				throw new InvalidOperationException($"Lesson with ID {id} not found");
 			}
 
-			lesson.UpdatedAt = DateTime.UtcNow;
+			await _unitOfWork.Repository<Lesson>().UpdateAsync(lesson, ct);
+			await _unitOfWork.SaveChangesAsync(ct);
 
-			_unitOfWork.Repository<Lesson>().UpdateAsync(lesson);
-			await _unitOfWork.SaveChangesAsync();
-
-			return await GetByIdAsync(id) ?? new LessonDto { Id = id, Title = lesson.Title, CourseId = lesson.CourseId };
+			return await GetByIdAsync(id, ct) ?? new LessonDto { Id = id, Title = lesson.Title, CourseId = lesson.CourseId };
 		}
 		catch (Exception ex)
 		{

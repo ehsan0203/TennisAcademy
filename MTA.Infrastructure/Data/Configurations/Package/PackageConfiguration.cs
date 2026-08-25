@@ -9,6 +9,7 @@ public class PackageConfiguration : IEntityTypeConfiguration<Package>
     public void Configure(EntityTypeBuilder<Package> builder)
     {
         builder.HasKey(package => package.Id);
+        builder.HasQueryFilter(package => !package.IsDeleted);
 
         builder.Property(package => package.Title)
             .IsRequired()

@@ -1,53 +1,28 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MTA.Application.DTOs;
-using MTA.Domain.Entities;
-using MTA.Domain.Interfaces;
+using MTA.Application.Services;
+using MTA.Web.Models;
 
 namespace MTA.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class StatisticsController : ControllerBase
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<StatisticsController> _logger;
+    private readonly IStatisticsService _statisticsService;
 
-    public StatisticsController(IUnitOfWork unitOfWork, ILogger<StatisticsController> logger)
+    public StatisticsController(IStatisticsService statisticsService)
     {
-        _unitOfWork = unitOfWork;
-        _logger = logger;
+        _statisticsService = statisticsService;
     }
 
     [HttpGet("system")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<SystemStatisticsDto>> GetSystemStatistics()
+    [ProducesResponseType(typeof(CustomJsonResult<SystemStatisticsDto>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<SystemStatisticsDto>> GetSystemStatistics(CancellationToken ct)
     {
-        try
-        {
-            var pendingStatusId = await _unitOfWork.Repository<Lookup>()
-                .GetQueryable()
-                .Where(l => l.Category == "TicketStatus" && l.Key == "Pending")
-                .Select(l => (int?)l.Id)
-                .FirstOrDefaultAsync();
-
-            var stats = new SystemStatisticsDto
-            {
-                RegisteredUsers = await _unitOfWork.Repository<Account>().CountAsync(),
-                PurchasedCourses = await _unitOfWork.Repository<UserCourseHistory>().CountAsync(),
-                PurchasedPackages = await _unitOfWork.Repository<PackageHistory>().CountAsync(),
-                PendingTickets = pendingStatusId.HasValue
-                    ? await _unitOfWork.Repository<Ticket>().CountAsync(t => t.StatusId == pendingStatusId.Value)
-                    : 0
-            };
-
-            return Ok(stats);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error retrieving system statistics");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to load system statistics");
-        }
+        var stats = await _statisticsService.GetSystemStatisticsAsync(ct);
+        return CustomJsonResult<SystemStatisticsDto>.SuccessResult(stats);
     }
 }

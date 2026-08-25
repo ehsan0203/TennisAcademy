@@ -1,16 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using MTA.Domain.Entities;
+using MTA.Infrastructure.Interceptors;
 
 namespace MTA.Infrastructure.Data;
 
-/// <summary>
-/// Entity Framework Core DbContext for the application
-/// </summary>
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+    private readonly AuditInterceptor? _auditInterceptor;
 
-    // DbSet properties
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options,
+        AuditInterceptor? auditInterceptor = null)
+        : base(options)
+    {
+        _auditInterceptor = auditInterceptor;
+    }
+
     public DbSet<Level> Levels { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<Permission> Permissions { get; set; }
@@ -33,7 +38,6 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 }

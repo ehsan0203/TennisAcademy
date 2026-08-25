@@ -9,6 +9,7 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
     public void Configure(EntityTypeBuilder<Ticket> builder)
     {
         builder.HasKey(ticket => ticket.Id);
+        builder.HasQueryFilter(ticket => !ticket.IsDeleted);
 
         builder.Property(ticket => ticket.Topic)
             .IsRequired()

@@ -1,355 +1,102 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MTA.Application.DTOs;
-using MTA.Domain.Entities;
-using MTA.Domain.Interfaces;
-using MTA.Infrastructure.Data;
+using MTA.Application.Services;
+using MTA.Web.Models;
 using System.Security.Claims;
 
 namespace MTA.Web.Controllers;
 
-/// <summary>
-/// Controller for managing support tickets
-/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
+[Authorize]
 public class TicketsController : ControllerBase
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly ApplicationDbContext _context;
+    private readonly ITicketService _ticketService;
 
-    public TicketsController(IUnitOfWork unitOfWork, ApplicationDbContext context)
+    public TicketsController(ITicketService ticketService)
     {
-        _unitOfWork = unitOfWork;
-        _context = context;
+        _ticketService = ticketService;
     }
 
-    /// <summary>
-    /// Gets all support tickets with user information
-    /// </summary>
-    /// <returns>List of all tickets with user details</returns>
-    /// <response code="200">Returns the list of tickets</response>
-    /// <response code="500">If there was an internal server error</response>
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<TicketDto>>> GetTickets()
+    [ProducesResponseType(typeof(CustomJsonResult<PaginatedResult<TicketDto>>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<PaginatedResult<TicketDto>>> GetTickets(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? searchTerm = null,
+        [FromQuery] int? statusId = null,
+        [FromQuery] int? accountId = null,
+        [FromQuery] int? packageId = null,
+        CancellationToken ct = default)
     {
-        try
-        {
-            var tickets = await _context.Tickets
-                .Include(t => t.Package)
-                .Include(t => t.Package.PackageHistories)
-                .Include(t => t.Messages)
-                .Include(t => t.Account)
-                    .ThenInclude(a => a.UserProfile)
-                .Include(t => t.Status)
-                .ToListAsync();
-
-            var ticketDtos = tickets.Select(t => new TicketDto
-            {
-                Id = t.Id,
-                Topic = t.Topic,
-                StatusId = t.StatusId,
-                StatusValue = t.Status?.Value,
-                AccountId = t.AccountId,
-                UserFirstName = t.Account?.UserProfile?.FirstName,
-                UserLastName = t.Account?.UserProfile?.LastName,
-                PackageId = t.PackageId,
-                PackageTitle = t.Package?.Title,
-                MessageCount = t.Messages?.Count ?? 0
-            });
-
-            return Ok(ticketDtos);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
+        var result = await _ticketService.GetAllAsync(page, pageSize, searchTerm, statusId, accountId, packageId, ct);
+        return CustomJsonResult<PaginatedResult<TicketDto>>.SuccessResult(result);
     }
 
-
-    /// <summary>
-    /// Gets a specific ticket by ID with full details
-    /// </summary>
-    /// <param name="id">The ID of the ticket</param>
-    /// <returns>The requested ticket with full details</returns>
-    /// <response code="200">Returns the requested ticket</response>
-    /// <response code="404">If the ticket was not found</response>
-    /// <response code="500">If there was an internal server error</response>
     [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<TicketDto>> GetTicket(int id)
+    [ProducesResponseType(typeof(CustomJsonResult<TicketDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<TicketDto>> GetTicket(int id, CancellationToken ct)
     {
-        try
-        {
-            var ticket = await _context.Tickets
-                .Include(t => t.Account)
-                    .ThenInclude(a => a.UserProfile)
-                .Include(t => t.Package)
-                .Include(t => t.Messages)
-                .FirstOrDefaultAsync(t => t.Id == id);
-
-            if (ticket == null)
-                return NotFound($"Ticket with ID {id} not found");
-
-            var ticketDto = new TicketDto
-            {
-                Id = ticket.Id,
-                Topic = ticket.Topic,
-                StatusId = ticket.StatusId,
-                StatusValue = ticket.Status?.Value, 
-                AccountId = ticket.AccountId,
-                UserFirstName = ticket.Account.UserProfile?.FirstName,
-                UserLastName = ticket.Account.UserProfile?.LastName,
-                PackageId = ticket.PackageId,
-                PackageTitle = ticket.Package?.Title,
-                MessageCount = ticket.Messages?.Count ?? 0,
-            };
-
-            return Ok(ticketDto);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
+        var ticket = await _ticketService.GetByIdAsync(id, ct);
+        return ticket is null
+            ? CustomJsonResult<TicketDto>.NotFound($"Ticket with ID {id} not found")
+            : CustomJsonResult<TicketDto>.SuccessResult(ticket);
     }
 
-
-    /// <summary> 
-    /// /// Creates a new support ticket 
-    /// /// </summary> 
-    /// /// <param name="ticketDto">The ticket data</param> 
-    /// /// <returns>The created ticket</returns> 
-    /// /// <response code="201">Returns the newly created ticket</response> 
-    /// /// <response code="400">If the ticket data is invalid</response> 
-    /// /// <response code="500">If there was an internal server error</response>
-    /// 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<TicketDto>> CreateTicket([FromBody] CreateTicketDto ticketDto)
+    [ProducesResponseType(typeof(CustomJsonResult<TicketDto>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status401Unauthorized)]
+    public async Task<CustomJsonResult<TicketDto>> CreateTicket([FromBody] CreateTicketDto ticketDto, CancellationToken ct)
     {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(ticketDto.Topic))
-                return BadRequest("Topic is required");
+        // Reading the current user ID from claims is controller territory (RULE-7: primary claim is "UserId" fallback NameIdentifier)
+        var claimValue = User.FindFirst("UserId")?.Value ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!int.TryParse(claimValue, out var accountId))
+            return CustomJsonResult<TicketDto>.Unauthorized("Account ID not found in token.");
 
-            var accountIdClaim = User.FindFirst("AccountId")?.Value
-                ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (accountIdClaim == null)
-                return Unauthorized("Account ID not found in token.");
-
-            int accountId = int.Parse(accountIdClaim);
-
-            var openStatus = await _unitOfWork.Repository<Lookup>()
-                .GetQueryable()
-                .FirstOrDefaultAsync(l => l.Category == "TicketStatus" && l.Key == "Pending");
-
-            if (openStatus == null)
-                return StatusCode(500, "Ticket status 'Open' not found in database.");
-
-            var account = await _unitOfWork.Repository<Account>()
-                .GetQueryable()
-                .Include(a => a.PackageHistory)
-                    .ThenInclude(ph => ph.Package)
-                .Include(a => a.UserProfile)
-                .FirstOrDefaultAsync(a => a.Id == accountId);
-
-            if (account == null)
-                return NotFound("Account not found.");
-
-            var activePackage = account.PackageHistory
-                .Where(ph => ph.ExpiredDate > DateTime.UtcNow && ph.RemainingTickets > 0)
-                .OrderBy(ph => ph.ExpiredDate)
-                .FirstOrDefault();
-
-            if (activePackage == null)
-                return BadRequest("No active package with remaining tickets found.");
-
-            var ticket = new Ticket
-            {
-                Topic = ticketDto.Topic,
-                StatusId = openStatus.Id,
-                AccountId = account.Id,
-                PackageId = activePackage.PackageId
-            };
-
-            var createdTicket = await _unitOfWork.Repository<Ticket>().AddAsync(ticket);
-
-            activePackage.RemainingTickets = Math.Max(0, activePackage.RemainingTickets - 1);
-            activePackage.UpdatedAt = DateTime.UtcNow;
-
-            await _unitOfWork.Repository<PackageHistory>().UpdateAsync(activePackage);
-            await _unitOfWork.SaveChangesAsync();
-
-            var ticketWithNav = await _unitOfWork.Repository<Ticket>()
-                .GetQueryable()
-                .Include(t => t.Status)
-                .Include(t => t.Package)
-                .Include(t => t.Messages)
-                .Include(t => t.Account)
-                    .ThenInclude(a => a.UserProfile)
-                .FirstOrDefaultAsync(t => t.Id == createdTicket.Id);
-
-            if (ticketWithNav == null)
-                return StatusCode(500, "Ticket could not be loaded after creation.");
-
-            var resultDto = new TicketDto
-            {
-                Id = ticketWithNav.Id,
-                Topic = ticketWithNav.Topic,
-                StatusId = ticketWithNav.StatusId,
-                StatusValue = ticketWithNav.Status?.Value,
-                AccountId = ticketWithNav.AccountId,
-                PackageId = ticketWithNav.PackageId,
-                PackageTitle = ticketWithNav.Package?.Title,
-                UserFirstName = ticketWithNav.Account?.UserProfile?.FirstName,
-                UserLastName = ticketWithNav.Account?.UserProfile?.LastName,
-                MessageCount = ticketWithNav.Messages?.Count ?? 0,
-                CreatedAt = ticketWithNav.CreatedAt,
-                UpdatedAt = ticketWithNav.UpdatedAt
-            };
-
-            return CreatedAtAction(nameof(GetTicket), new { id = resultDto.Id }, resultDto);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
+        var dto = new CreateTicketDto { Topic = ticketDto.Topic, AccountId = accountId };
+        var created = await _ticketService.CreateAsync(dto, ct);
+        return CustomJsonResult<TicketDto>.Created(created);
     }
 
-
-    /// <summary>
-    /// Updates an existing ticket status
-    /// </summary>
-    /// <param name="id">The ID of the ticket to update</param>
-    /// <param name="ticketDto">The updated ticket data</param>
-    /// <returns>No content on success</returns>
-    /// <response code="204">If the ticket was updated successfully</response>
-    /// <response code="400">If the ticket data is invalid</response>
-    /// <response code="404">If the ticket was not found</response>
-    /// <response code="500">If there was an internal server error</response>
     [HttpPut("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateTicket(int id, [FromBody] TicketDto ticketDto)
+    [ProducesResponseType(typeof(CustomJsonResult<TicketDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<TicketDto>> UpdateTicket(int id, [FromBody] TicketDto ticketDto, CancellationToken ct)
     {
-        try
-        {
-            // ????? ?????????? ???? StatusId
-            if (ticketDto.StatusId <= 0)
-            {
-                return BadRequest("Valid StatusId is required");
-            }
-
-            var existingTicket = await _unitOfWork.Repository<Ticket>().GetByIdAsync(id);
-            if (existingTicket == null)
-            {
-                return NotFound($"Ticket with ID {id} not found");
-            }
-
-            existingTicket.StatusId = ticketDto.StatusId;
-            existingTicket.UpdatedAt = DateTime.UtcNow;
-
-            await _unitOfWork.Repository<Ticket>().UpdateAsync(existingTicket);
-            await _unitOfWork.SaveChangesAsync();
-
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
+        var updated = await _ticketService.UpdateAsync(id, ticketDto, ct);
+        return CustomJsonResult<TicketDto>.SuccessResult(updated);
     }
 
-
-    /// <summary>
-    /// Deletes a ticket
-    /// </summary>
-    /// <param name="id">The ID of the ticket to delete</param>
-    /// <returns>No content on success</returns>
-    /// <response code="204">If the ticket was deleted successfully</response>
-    /// <response code="404">If the ticket was not found</response>
-    /// <response code="500">If there was an internal server error</response>
     [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteTicket(int id)
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<string>> DeleteTicket(int id, CancellationToken ct)
     {
-        try
-        {
-            var ticket = await _unitOfWork.Repository<Ticket>().GetByIdAsync(id);
-            if (ticket == null)
-            {
-                return NotFound($"Ticket with ID {id} not found");
-            }
-
-            var deleted = await _unitOfWork.Repository<Ticket>().DeleteAsync(id);
-            if (deleted)
-            {
-                await _unitOfWork.SaveChangesAsync();
-                return NoContent();
-            }
-
-            return StatusCode(500, "Failed to delete ticket");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
+        var deleted = await _ticketService.DeleteAsync(id, ct);
+        return deleted
+            ? CustomJsonResult<string>.NoContent()
+            : CustomJsonResult<string>.NotFound($"Ticket with ID {id} not found");
     }
 
-    /// <summary>
-    /// Gets tickets by user ID
-    /// </summary>
-    /// <param name="userId">The ID of the user</param>
-    /// <returns>List of tickets for the specified user</returns>
-    /// <response code="200">Returns the list of user tickets</response>
-    /// <response code="500">If there was an internal server error</response>
     [HttpGet("user/{userId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<TicketDto>>> GetTicketsByUser(int userId)
+    [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<TicketDto>>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<IEnumerable<TicketDto>>> GetTicketsByUser(int userId, CancellationToken ct)
     {
-        try
-        {
-            var tickets = await _context.Tickets
-                .Include(x=>x.Status)
-                .Include(t => t.Account)
-                    .ThenInclude(a => a.UserProfile) 
-                .Include(t => t.Messages)
-                .Where(t => t.AccountId == userId)
-                .ToListAsync();
-
-            var ticketDtos = tickets.Select(t => new TicketDto
-            {
-                Id = t.Id,
-                Topic = t.Topic,
-                StatusId = t.StatusId,
-                StatusValue = t.Status?.Value, 
-                UserFirstName = t.Account.UserProfile?.FirstName,
-                UserLastName = t.Account.UserProfile?.LastName,
-                CreatedAt = t.CreatedAt,
-                UpdatedAt = t.UpdatedAt,
-                MessageCount = t.Messages?.Count ?? 0
-            });
-
-            return Ok(ticketDtos);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
+        var tickets = await _ticketService.GetByAccountAsync(userId, ct);
+        return CustomJsonResult<IEnumerable<TicketDto>>.SuccessResult(tickets);
     }
 
+    [HttpPatch("{id}/status")]
+    [ProducesResponseType(typeof(CustomJsonResult<TicketDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<TicketDto>> ChangeStatus(int id, [FromBody] int statusId, CancellationToken ct)
+    {
+        var updated = await _ticketService.ChangeStatusAsync(id, statusId, ct);
+        return CustomJsonResult<TicketDto>.SuccessResult(updated);
+    }
 }

@@ -6,10 +6,6 @@ using System.Linq.Expressions;
 
 namespace MTA.Infrastructure.Repositories;
 
-/// <summary>
-/// Generic repository implementation for basic CRUD operations
-/// </summary>
-/// <typeparam name="T">Entity type that inherits from BaseEntity</typeparam>
 public class Repository<T> : IRepository<T> where T : BaseEntity
 {
     protected readonly ApplicationDbContext _context;
@@ -21,140 +17,91 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         _dbSet = context.Set<T>();
     }
 
-    public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
-    {
-        return await _context.Set<T>().AnyAsync(predicate);
-    }
+    public IQueryable<T> GetQueryable() => _dbSet.AsQueryable();
 
-    /// <summary>
-    /// Returns IQueryable for LINQ queries
-    /// </summary>
-    public IQueryable<T> GetQueryable()
-    {
-        return _dbSet.AsQueryable();
-    }
-
-    /// <summary>
-    /// Gets all entities asynchronously
-    /// </summary>
-    /// <returns>Collection of all entities</returns>
-    public virtual async Task<IEnumerable<T>> GetAllAsync()
-    {
-        return await _dbSet.ToListAsync();
-    }
+    public async Task<IEnumerable<T>> GetAllAsync(CancellationToken ct = default)
+        => await _dbSet.AsNoTracking().ToListAsync(ct);
 
     public async Task<IEnumerable<T>> GetAllAsync(
-    Func<IQueryable<T>, IQueryable<T>>? include = null)
+        Expression<Func<T, bool>> predicate, CancellationToken ct = default)
+        => await _dbSet.AsNoTracking().Where(predicate).ToListAsync(ct);
+
+    public async Task<IEnumerable<T>> GetAllAsync(
+        Func<IQueryable<T>, IQueryable<T>>? include = null, CancellationToken ct = default)
     {
-        IQueryable<T> query = _dbSet;
-
-        if (include != null)
-            query = include(query);
-
-        return await query.ToListAsync();
+        IQueryable<T> query = _dbSet.AsNoTracking();
+        if (include != null) query = include(query);
+        return await query.ToListAsync(ct);
     }
 
+    public async Task<T?> GetByIdAsync(int id, CancellationToken ct = default)
+        => await _dbSet.Where(e => e.Id == id).FirstOrDefaultAsync(ct);
 
-    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? predicate) =>
-        predicate != null ? await _dbSet.Where(predicate).ToListAsync() : await GetAllAsync();
+    public async Task<bool> AnyAsync(
+        Expression<Func<T, bool>> predicate, CancellationToken ct = default)
+        => await _dbSet.AnyAsync(predicate, ct);
 
-
-    /// <summary>
-    /// Gets an entity by ID asynchronously
-    /// </summary>
-    /// <param name="id">Entity ID</param>
-    /// <returns>Entity if found, null otherwise</returns>
-    public virtual async Task<T?> GetByIdAsync(int id)
+    public async Task<T> AddAsync(T entity, CancellationToken ct = default)
     {
-        return await _dbSet.FindAsync(id);
-    }
-
-    /// <summary>
-    /// Adds a new entity asynchronously
-    /// </summary>
-    /// <param name="entity">Entity to add</param>
-    /// <returns>Added entity</returns>
-    public virtual async Task<T> AddAsync(T entity)
-    {
-        entity.CreatedAt = entity.UpdatedAt = DateTime.UtcNow;
-        await _dbSet.AddAsync(entity);
+        await _dbSet.AddAsync(entity, ct);
         return entity;
     }
 
-    /// <summary>
-    /// Updates an existing entity asynchronously
-    /// </summary>
-    /// <param name="entity">Entity to update</param>
-    /// <returns>Updated entity</returns>
-    public virtual async Task<T> UpdateAsync(T entity)
+    public Task<T> UpdateAsync(T entity, CancellationToken ct = default)
     {
-        entity.UpdatedAt = DateTime.UtcNow;
         _dbSet.Update(entity);
-        return entity;
+        return Task.FromResult(entity);
     }
 
-    /// <summary>
-    /// Deletes an entity asynchronously
-    /// </summary>
-    /// <param name="id">ID of entity to delete</param>
-    /// <returns>True if deleted successfully, false otherwise</returns>
-    public virtual async Task<bool> DeleteAsync(int id)
+    // Soft delete — sets IsDeleted = true instead of physically removing
+    public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
     {
-        var entity = await GetByIdAsync(id);
-        if (entity == null)
-            return false;
+        var entity = await GetByIdAsync(id, ct);
+        if (entity is null) return false;
 
-        _dbSet.Remove(entity);
+        entity.IsDeleted = true;
+        _dbSet.Update(entity);
         return true;
     }
 
-    /// <summary>
-    /// Checks if an entity exists by ID
-    /// </summary>
-    /// <param name="id">Entity ID</param>
-    /// <returns>True if exists, false otherwise</returns>
-    public virtual async Task<bool> ExistsAsync(int id)
+    public async Task<bool> ExistsAsync(int id, CancellationToken ct = default)
+        => await _dbSet.AnyAsync(e => e.Id == id, ct);
+
+    public async Task<int> CountAsync(
+        Expression<Func<T, bool>>? predicate = null, CancellationToken ct = default)
+        => predicate != null
+            ? await _dbSet.CountAsync(predicate, ct)
+            : await _dbSet.CountAsync(ct);
+
+    public async Task<int> CountAsync(IQueryable<T> query, CancellationToken ct = default)
+        => await query.CountAsync(ct);
+
+    public async Task<IEnumerable<T>> GetPagedAsync(
+        int page, int pageSize,
+        Expression<Func<T, bool>>? filter = null,
+        CancellationToken ct = default)
     {
-        return await _dbSet.AnyAsync(e => e.Id == id);
+        var query = filter != null ? _dbSet.AsNoTracking().Where(filter) : _dbSet.AsNoTracking().AsQueryable();
+        return await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(ct);
     }
 
-    public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null) =>
-    predicate != null ? await _dbSet.CountAsync(predicate) : await _dbSet.CountAsync();
+    public async Task<IEnumerable<T>> GetPagedAsync(
+        IQueryable<T> query, int page, int pageSize, CancellationToken ct = default)
+        => await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(ct);
 
-    public async Task<IEnumerable<T>> GetPagedAsync(int page, int pageSize, Expression<Func<T, bool>>? filter = null)
+    public async Task<IEnumerable<T>> WhereAsync(
+        Expression<Func<T, bool>> predicate, CancellationToken ct = default)
+        => await _dbSet.AsNoTracking().Where(predicate).ToListAsync(ct);
+
+    public async Task<T?> FirstOrDefaultAsync(
+        Expression<Func<T, bool>> predicate, CancellationToken ct = default)
+        => await _dbSet.FirstOrDefaultAsync(predicate, ct);
+
+    public Task DeleteRangeAsync(IEnumerable<T> entities, CancellationToken ct = default)
     {
-        var query = filter != null ? _dbSet.Where(filter) : _dbSet;
-        return await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        foreach (var entity in entities)
+            entity.IsDeleted = true;
+        _dbSet.UpdateRange(entities);
+        return Task.CompletedTask;
     }
-
-    public async Task<int> CountAsync(IQueryable<T> query) => await query.CountAsync();
-
-    public async Task<IEnumerable<T>> GetPagedAsync(IQueryable<T> query, int page, int pageSize) =>
-        await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-
-    /// <summary>
-    /// Filters entities based on predicate
-    /// </summary>
-    /// <param name="predicate">Filter condition</param>
-    /// <returns>Filtered entities</returns>
-    public virtual async Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> predicate)
-    {
-        return await _dbSet.Where(predicate).ToListAsync();
-    }
-
-    /// <summary>
-    /// Gets first entity that matches predicate
-    /// </summary>
-    /// <param name="predicate">Filter condition</param>
-    /// <returns>First matching entity or null</returns>
-    public virtual async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
-    {
-        return await _dbSet.FirstOrDefaultAsync(predicate);
-    }
-
-    public virtual async Task DeleteRangeAsync(IEnumerable<T> entities)
-    {
-        _dbSet.RemoveRange(entities);
-    }
-
 }

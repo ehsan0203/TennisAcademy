@@ -1,116 +1,59 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
 using MTA.Infrastructure.Data;
-using System.Linq.Expressions;
 
 namespace MTA.Infrastructure.Repositories;
 
-/// <summary>
-/// Unit of Work implementation for managing transactions and repositories
-/// </summary>
 public class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _context;
-    private readonly Dictionary<Type, object> _repositories;
+    private readonly Dictionary<Type, object> _repositories = new();
     private IDbContextTransaction? _transaction;
 
     public UnitOfWork(ApplicationDbContext context)
     {
         _context = context;
-        _repositories = new Dictionary<Type, object>();
     }
 
-    /// <summary>
-    /// Gets the repository for a specific entity type
-    /// </summary>
-    /// <typeparam name="T">Entity type</typeparam>
-    /// <returns>Repository instance</returns>
     public IRepository<T> Repository<T>() where T : BaseEntity
     {
         var type = typeof(T);
-
         if (!_repositories.ContainsKey(type))
         {
-            var repositoryType = typeof(Repository<>).MakeGenericType(type);
-            var repository = Activator.CreateInstance(repositoryType, _context);
-            _repositories[type] = repository!;
+            var repoType = typeof(Repository<>).MakeGenericType(type);
+            _repositories[type] = Activator.CreateInstance(repoType, _context)!;
         }
-
         return (IRepository<T>)_repositories[type];
     }
 
-    /// <summary>
-    /// Gets the UserProfiles repository
-    /// </summary>
     public IRepository<UserProfile> UserProfiles => Repository<UserProfile>();
-
-    /// <summary>
-    /// Gets the Accounts repository
-    /// </summary>
     public IRepository<Account> Accounts => Repository<Account>();
-
-    /// <summary>
-    /// Gets the Roles repository
-    /// </summary>
     public IRepository<Role> Roles => Repository<Role>();
-
-    /// <summary>
-    /// Gets the Levels repository
-    /// </summary>
     public IRepository<Level> Levels => Repository<Level>();
 
+    public async Task BeginTransactionAsync(CancellationToken ct = default)
+        => _transaction = await _context.Database.BeginTransactionAsync(ct);
 
-    /// <summary>
-    /// Begins a new transaction
-    /// </summary>
-    /// <returns>Task representing the async operation</returns>
-    public async Task BeginTransactionAsync()
+    public async Task CommitAsync(CancellationToken ct = default)
     {
-        _transaction = await _context.Database.BeginTransactionAsync();
+        if (_transaction is null) return;
+        await _transaction.CommitAsync(ct);
+        await _transaction.DisposeAsync();
+        _transaction = null;
     }
 
-    /// <summary>
-    /// Commits the current transaction
-    /// </summary>
-    /// <returns>Task representing the async operation</returns>
-    public async Task CommitAsync()
+    public async Task RollbackAsync(CancellationToken ct = default)
     {
-        if (_transaction != null)
-        {
-            await _transaction.CommitAsync();
-            await _transaction.DisposeAsync();
-            _transaction = null;
-        }
+        if (_transaction is null) return;
+        await _transaction.RollbackAsync(ct);
+        await _transaction.DisposeAsync();
+        _transaction = null;
     }
 
-    /// <summary>
-    /// Rolls back the current transaction
-    /// </summary>
-    /// <returns>Task representing the async operation</returns>
-    public async Task RollbackAsync()
-    {
-        if (_transaction != null)
-        {
-            await _transaction.RollbackAsync();
-            await _transaction.DisposeAsync();
-            _transaction = null;
-        }
-    }
+    public async Task<int> SaveChangesAsync(CancellationToken ct = default)
+        => await _context.SaveChangesAsync(ct);
 
-    /// <summary>
-    /// Saves all changes made in the current context
-    /// </summary>
-    /// <returns>Number of affected records</returns>
-    public async Task<int> SaveChangesAsync()
-    {
-        return await _context.SaveChangesAsync();
-    }
-
-    /// <summary>
-    /// Disposes the unit of work and context
-    /// </summary>
     public void Dispose()
     {
         _transaction?.Dispose();

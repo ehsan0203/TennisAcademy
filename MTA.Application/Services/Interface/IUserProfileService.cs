@@ -1,28 +1,17 @@
-﻿using MTA.Application.DTOs.User;
+using MTA.Application.DTOs;
+using MTA.Application.DTOs.User;
 
 namespace MTA.Application.Services;
 
-/// <summary>
-/// Optimized service interface for UserProfile operations
-/// </summary>
 public interface IUserProfileService
 {
-    #region CRUD
-
-    Task<UserProfileDto?> GetByIdAsync(int id);               
-    Task<UserProfileDto?> GetByAccountIdAsync(int accountId);  
-    Task<UserProfileDto> CreateAsync(UserProfileDto userProfileDto);
-    Task<UserProfileDto?> UpdateAsync(int id, UpdateUserProfileDto dto);
-    Task<bool> DeleteAsync(int id);                              
-
-    #endregion
-
-    #region Partial Updates
-
-    Task<UserProfileDto?> UpdateAvatarAsync(int id, string imageUrl);
-    Task<UserProfileDto?> UpdateSkillLevelAsync(int id, int skillLevelId);
-    Task<UserProfileDto?> UpdateExperienceAsync(int id, int experience);
-    Task<PagedResult<UserProfileDto>> QueryAsync(UserSearchDto queryDto);
-    #endregion
-
+    Task<UserProfileDto?> GetByIdAsync(int id, CancellationToken ct = default);
+    Task<UserProfileDto?> GetByAccountIdAsync(int accountId, CancellationToken ct = default);
+    Task<UserProfileDto> CreateAsync(UserProfileDto userProfileDto, CancellationToken ct = default);
+    Task<UserProfileDto?> UpdateAsync(int id, UpdateUserProfileDto dto, CancellationToken ct = default);
+    Task<bool> DeleteAsync(int id, CancellationToken ct = default);
+    Task<UserProfileDto?> UpdateAvatarAsync(int id, string imageUrl, CancellationToken ct = default);
+    Task<UserProfileDto?> UpdateSkillLevelAsync(int id, int skillLevelId, CancellationToken ct = default);
+    Task<UserProfileDto?> UpdateExperienceAsync(int id, int experience, CancellationToken ct = default);
+    Task<PagedResult<UserProfileDto>> QueryAsync(UserSearchDto queryDto, CancellationToken ct = default);
 }

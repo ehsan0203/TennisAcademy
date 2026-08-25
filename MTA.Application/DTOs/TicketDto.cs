@@ -53,10 +53,7 @@ public class TicketDto : BaseDto
 
 public class CreateTicketDto
 {
-    /// <summary>
-    /// Topic or subject of the ticket
-    /// </summary>
     public required string Topic { get; set; }
-
+    public int AccountId { get; set; }
 }
 

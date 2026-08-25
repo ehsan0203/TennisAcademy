@@ -29,95 +29,75 @@ public class AccountService : IAccountService
         _mapper = mapper;
     }
 
-    public async Task<PaginatedResult<AccountDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? roleId = null, bool? isActive = null)
+    public async Task<PaginatedResult<AccountDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? roleId = null, bool? isActive = null, CancellationToken ct = default)
     {
-        try
+        var query = _unitOfWork.Accounts.GetQueryable()
+            .AsNoTracking()
+            .Include(a => a.Role)
+            .Include(a => a.Status)
+            .Include(a => a.MediaFile)
+            .Include(a => a.UserProfile)
+            .ThenInclude(up => up.SkillLevel)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(searchTerm))
         {
-            var query = _unitOfWork.Accounts.GetQueryable()
-                .Include(a => a.Role)
-                .Include(a => a.Status)
-                .Include(a => a.MediaFile)
-                .Include(a => a.UserProfile)
-                .ThenInclude(up => up.SkillLevel)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                query = query.Where(a => 
-                    a.Email.Contains(searchTerm) || 
-                    (a.UserProfile != null && (a.UserProfile.FirstName.Contains(searchTerm) || a.UserProfile.LastName.Contains(searchTerm))));
-            }
-
-            if (roleId.HasValue)
-                query = query.Where(a => a.RoleId == roleId.Value);
-
-            if (isActive.HasValue)
-                query = query.Where(a => a.IsActive == isActive.Value);
-
-            var totalCount = await query.CountAsync();
-            var items = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            return new PaginatedResult<AccountDto>
-            {
-                Data = items.Select(MapToDto),
-                TotalCount = totalCount,
-                Page = page,
-                PageSize = pageSize
-            };
+            query = query.Where(a =>
+                a.Email.Contains(searchTerm) ||
+                (a.UserProfile != null && (a.UserProfile.FirstName.Contains(searchTerm) || a.UserProfile.LastName.Contains(searchTerm))));
         }
-        catch (Exception ex)
+
+        if (roleId.HasValue)
+            query = query.Where(a => a.RoleId == roleId.Value);
+
+        if (isActive.HasValue)
+            query = query.Where(a => a.IsActive == isActive.Value);
+
+        var totalCount = await query.CountAsync(ct);
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
+
+        return new PaginatedResult<AccountDto>
         {
-            _logger.LogError(ex, "Error getting all accounts");
-            throw;
-        }
+            Data = items.Select(MapToDto),
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        };
     }
 
-    public async Task<AccountDto?> GetByIdAsync(int id)
+    public async Task<AccountDto?> GetByIdAsync(int id, CancellationToken ct = default)
     {
-        try
-        {
-            var account = await _unitOfWork.Accounts.GetQueryable()
-                .Include(a => a.Role)
-                .Include(a => a.Status)
-                .Include(a => a.MediaFile)
-                .Include(a => a.UserProfile)
-                .ThenInclude(up => up.SkillLevel)
-                .FirstOrDefaultAsync(a => a.Id == id);
+        var account = await _unitOfWork.Accounts.GetQueryable()
+            .AsNoTracking()
+            .Include(a => a.Role)
+            .Include(a => a.Status)
+            .Include(a => a.MediaFile)
+            .Include(a => a.UserProfile)
+            .ThenInclude(up => up.SkillLevel)
+            .FirstOrDefaultAsync(a => a.Id == id, ct);
 
-            return account != null ? MapToDto(account) : null;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting account with ID: {AccountId}", id);
-            throw;
-        }
+        return account != null ? MapToDto(account) : null;
     }
 
-    public async Task<AccountDto?> GetByEmailAsync(string email)
+    public async Task<AccountDto?> GetByEmailAsync(string email, CancellationToken ct = default)
     {
-        try
-        {
-            var account = await _unitOfWork.Accounts.GetQueryable()
-                .Include(a => a.Role)
-                .Include(a => a.Status)
-                .Include(a => a.MediaFile)
-                .Include(a => a.UserProfile)
-                .ThenInclude(up => up.SkillLevel)
-                .FirstOrDefaultAsync(a => a.Email == email);
+        var account = await _unitOfWork.Accounts.GetQueryable()
+            .AsNoTracking()
+            .Include(a => a.Role)
+            .Include(a => a.Status)
+            .Include(a => a.MediaFile)
+            .Include(a => a.UserProfile)
+            .ThenInclude(up => up.SkillLevel)
+            .FirstOrDefaultAsync(a => a.Email == email, ct);
 
-            return account != null ? MapToDto(account) : null;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting account by email: {Email}", email);
-            throw;
-        }
+        return account != null ? MapToDto(account) : null;
     }
 
-    public async Task<AccountDto> CreateAsync(CreateAccountDto accountDto)
+    // CreateAsync keeps try/catch for media-upload rollback compensation
+    public async Task<AccountDto> CreateAsync(CreateAccountDto accountDto, CancellationToken ct = default)
     {
         MediaFileDto? uploadedMedia = null;
 
@@ -136,19 +116,17 @@ public class AccountService : IAccountService
             }
 
             var account = _mapper.Map<Account>(accountDto);
-            account.Password = HashPassword(accountDto.Password ?? "defaultpassword");
+            account.Password = HashPassword(accountDto.Password ?? throw new ArgumentException("Password is required.", nameof(accountDto)));
 
             if (uploadedMedia != null)
             {
-                account.MediaFileId = uploadedMedia.Id; // یا MediaFileId
+                account.MediaFileId = uploadedMedia.Id;
                 account.ProfileImagePath = uploadedMedia.Url;
             }
 
-            // 3️⃣ ذخیره Account در دیتابیس
-            await _unitOfWork.Accounts.AddAsync(account);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.Accounts.AddAsync(account, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
-            // 4️⃣ برگرداندن DTO
             return _mapper.Map<AccountDto>(account);
         }
         catch (Exception ex)
@@ -171,17 +149,19 @@ public class AccountService : IAccountService
         }
     }
 
-    public async Task<CurrentUserDto?> GetCurrentUserAsync(int accountId)
+    public async Task<CurrentUserDto?> GetCurrentUserAsync(int accountId, CancellationToken ct = default)
     {
         var account = await _unitOfWork.Accounts.GetQueryable()
+            .AsNoTracking()
             .Include(a => a.MediaFile)
             .Include(a => a.UserProfile)
-                .ThenInclude(a=>a.SkillLevel)
+                .ThenInclude(a => a.SkillLevel)
             .Include(u => u.UserCourseHistory)
             .Include(u => u.PackageHistory)
                 .ThenInclude(ph => ph.Package)
             .Include(u => u.Tickets)
-            .FirstOrDefaultAsync(a => a.Id == accountId);
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(a => a.Id == accountId, ct);
 
         if (account == null) return null;
 
@@ -210,69 +190,58 @@ public class AccountService : IAccountService
             HealthCondition = profile?.HealthCondition ?? false,
             HealthDescription = profile?.HealthDescription,
             SkillLevelId = profile?.SkillLevelId ?? 0,
-            SkillLevelValue = profile.SkillLevel?.Title ?? "",
+            SkillLevelValue = profile?.SkillLevel?.Title ?? "",
             PurchasedCourseIds = purchasedCourseIds,
             RemainingCredit = remainingCredit
         };
     }
 
-    public async Task<AccountDto?> UpdateAsync(int id, UpdateAccountDto updateDto)
+    public async Task<AccountDto?> UpdateAsync(int id, UpdateAccountDto updateDto, CancellationToken ct = default)
     {
-        try
+        var account = await _unitOfWork.Accounts.GetByIdAsync(id, ct);
+        if (account == null)
+            return null;
+
+        if (!string.IsNullOrEmpty(updateDto.Email))
+            account.Email = updateDto.Email;
+        if (!string.IsNullOrEmpty(updateDto.Password))
+            account.Password = HashPassword(updateDto.Password);
+
+        if (updateDto.IsActive.HasValue)
+            account.IsActive = updateDto.IsActive.Value;
+        if (updateDto.RoleId.HasValue)
+            account.RoleId = updateDto.RoleId.Value;
+        if (updateDto.StatusId.HasValue)
+            account.StatusId = updateDto.StatusId.Value;
+        if (updateDto.MediaFileId.HasValue)
         {
-            var account = await _unitOfWork.Accounts.GetByIdAsync(id);
-            if (account == null)
-                return null;
-
-            if (!string.IsNullOrEmpty(updateDto.Email))
-                account.Email = updateDto.Email;
-            if (!string.IsNullOrEmpty(updateDto.Password))
-                account.Password = HashPassword(updateDto.Password);
-
-            if (updateDto.IsActive.HasValue)
-                account.IsActive = updateDto.IsActive.Value;
-            if (updateDto.RoleId.HasValue)
-                account.RoleId = updateDto.RoleId.Value;
-            if (updateDto.StatusId.HasValue)
-                account.StatusId = updateDto.StatusId.Value;
-            if (updateDto.MediaFileId.HasValue)
-            {
-                account.MediaFileId = updateDto.MediaFileId.Value;
-                var mediaFile = await _unitOfWork.Repository<MediaFile>().GetByIdAsync(updateDto.MediaFileId.Value);
-                account.ProfileImagePath = mediaFile?.Url;
-            }
-
-
-            if (updateDto.Image != null && updateDto.Image.Length > 0)
-            {
-                var mediaDto = new MediaFileUploadDto
-                {
-                    MediaType = "Account",
-                    PlacementName = "ProfileImage",
-                    Title = $"{account.Email} Profile Image"
-                };
-
-                var uploadedMedia = await _mediaFileService.CreateAsync(updateDto.Image, mediaDto);
-
-                account.MediaFileId = uploadedMedia.Id;
-                account.ProfileImagePath = uploadedMedia.Url;
-            }
-
-            account.UpdatedAt = DateTime.UtcNow;
-
-            await _unitOfWork.Accounts.UpdateAsync(account);
-            await _unitOfWork.SaveChangesAsync();
-
-            return await GetByIdAsync(id);
+            account.MediaFileId = updateDto.MediaFileId.Value;
+            var mediaFile = await _unitOfWork.Repository<MediaFile>().GetByIdAsync(updateDto.MediaFileId.Value, ct);
+            account.ProfileImagePath = mediaFile?.Url;
         }
-        catch (Exception ex)
+
+        if (updateDto.Image != null && updateDto.Image.Length > 0)
         {
-            _logger.LogError(ex, "Error updating account with ID: {AccountId}", id);
-            throw;
+            var mediaDto = new MediaFileUploadDto
+            {
+                MediaType = "Account",
+                PlacementName = "ProfileImage",
+                Title = $"{account.Email} Profile Image"
+            };
+
+            var uploadedMedia = await _mediaFileService.CreateAsync(updateDto.Image, mediaDto);
+
+            account.MediaFileId = uploadedMedia.Id;
+            account.ProfileImagePath = uploadedMedia.Url;
         }
+
+        await _unitOfWork.Accounts.UpdateAsync(account, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
+
+        return await GetByIdAsync(id, ct);
     }
 
-    public async Task<string?> UploadProfileImageAsync(int accountId, IFormFile profileImage)
+    public async Task<string?> UploadProfileImageAsync(int accountId, IFormFile profileImage, CancellationToken ct = default)
     {
         if (profileImage == null || profileImage.Length == 0)
         {
@@ -281,7 +250,7 @@ public class AccountService : IAccountService
 
         var account = await _unitOfWork.Accounts.GetQueryable()
             .Include(a => a.MediaFile)
-            .FirstOrDefaultAsync(a => a.Id == accountId);
+            .FirstOrDefaultAsync(a => a.Id == accountId, ct);
 
         if (account == null)
         {
@@ -306,20 +275,19 @@ public class AccountService : IAccountService
 
         account.MediaFileId = uploadedMedia.Id;
         account.ProfileImagePath = uploadedMedia.Url;
-        account.UpdatedAt = DateTime.UtcNow;
 
-        await _unitOfWork.Accounts.UpdateAsync(account);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.Accounts.UpdateAsync(account, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
 
         return account.ProfileImagePath;
     }
 
-    public async Task<CurrentUserDto?> UpdateCurrentUserAsync(int accountId, UpdateCurrentUserDto updateDto)
+    public async Task<CurrentUserDto?> UpdateCurrentUserAsync(int accountId, UpdateCurrentUserDto updateDto, CancellationToken ct = default)
     {
         var account = await _unitOfWork.Accounts.GetQueryable()
             .Include(a => a.MediaFile)
             .Include(a => a.UserProfile)
-            .FirstOrDefaultAsync(a => a.Id == accountId);
+            .FirstOrDefaultAsync(a => a.Id == accountId, ct);
 
         if (account == null) return null;
 
@@ -332,7 +300,6 @@ public class AccountService : IAccountService
 
         if (updateDto.ProfileImage != null && updateDto.ProfileImage.Length > 0)
         {
-            // حذف عکس قدیمی اگر موجود است
             if (account.MediaFileId.HasValue)
             {
                 await _mediaFileService.DeleteAsync(account.MediaFileId.Value);
@@ -376,110 +343,71 @@ public class AccountService : IAccountService
         if (account.UserProfile == null)
             account.UserProfile = profile;
 
-        account.UpdatedAt = DateTime.UtcNow;
-        profile.UpdatedAt = DateTime.UtcNow;
+        await _unitOfWork.Accounts.UpdateAsync(account, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
 
-        await _unitOfWork.Accounts.UpdateAsync(account);
-        await _unitOfWork.SaveChangesAsync();
-
-        return await GetCurrentUserAsync(accountId);
+        return await GetCurrentUserAsync(accountId, ct);
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
     {
-        try
-        {
-            var account = await _unitOfWork.Accounts.GetByIdAsync(id);
-            if (account == null)
-                return false;
+        var account = await _unitOfWork.Accounts.GetByIdAsync(id, ct);
+        if (account == null)
+            return false;
 
-            account.IsActive = false;
-            account.UpdatedAt = DateTime.UtcNow;
+        account.IsActive = false;
 
-            _unitOfWork.Accounts.UpdateAsync(account);
-            await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.Accounts.UpdateAsync(account, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
 
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error deleting account with ID: {AccountId}", id);
-            throw;
-        }
+        return true;
     }
 
-    public async Task<bool> ChangePasswordAsync(int id, string currentPassword, string newPassword)
+    public async Task<bool> ChangePasswordAsync(int id, string currentPassword, string newPassword, CancellationToken ct = default)
     {
-        try
-        {
-            var account = await _unitOfWork.Accounts.GetByIdAsync(id);
-            if (account == null)
-                return false;
+        var account = await _unitOfWork.Accounts.GetByIdAsync(id, ct);
+        if (account == null)
+            return false;
 
-            // Verify current password
-            if (!VerifyPassword(currentPassword, account.Password))
-                return false;
+        // Verify current password
+        if (!VerifyPassword(currentPassword, account.Password))
+            return false;
 
-            // Hash and update new password
-            account.Password = HashPassword(newPassword);
-            account.UpdatedAt = DateTime.UtcNow;
+        // Hash and update new password
+        account.Password = HashPassword(newPassword);
 
-            _unitOfWork.Accounts.UpdateAsync(account);
-            await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.Accounts.UpdateAsync(account, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
 
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error changing password for account with ID: {AccountId}", id);
-            throw;
-        }
+        return true;
     }
 
-    public async Task<AccountDto?> SetActiveStatusAsync(int id, bool isActive)
+    public async Task<AccountDto?> SetActiveStatusAsync(int id, bool isActive, CancellationToken ct = default)
     {
-        try
-        {
-            var account = await _unitOfWork.Accounts.GetByIdAsync(id);
-            if (account == null)
-                return null;
+        var account = await _unitOfWork.Accounts.GetByIdAsync(id, ct);
+        if (account == null)
+            return null;
 
-            account.IsActive = isActive;
-            account.UpdatedAt = DateTime.UtcNow;
+        account.IsActive = isActive;
 
-            _unitOfWork.Accounts.UpdateAsync(account);
-            await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.Accounts.UpdateAsync(account, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
 
-            return await GetByIdAsync(id);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error setting active status for account with ID: {AccountId}", id);
-            throw;
-        }
+        return await GetByIdAsync(id, ct);
     }
 
-    public async Task<AccountDto?> ChangeRoleAsync(int id, int roleId)
+    public async Task<AccountDto?> ChangeRoleAsync(int id, int roleId, CancellationToken ct = default)
     {
-        try
-        {
-            var account = await _unitOfWork.Accounts.GetByIdAsync(id);
-            if (account == null)
-                return null;
+        var account = await _unitOfWork.Accounts.GetByIdAsync(id, ct);
+        if (account == null)
+            return null;
 
-            account.RoleId = roleId;
-            account.UpdatedAt = DateTime.UtcNow;
+        account.RoleId = roleId;
 
-            _unitOfWork.Accounts.UpdateAsync(account);
-            await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.Accounts.UpdateAsync(account, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
 
-            return await GetByIdAsync(id);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error changing role for account with ID: {AccountId}", id);
-            throw;
-        }
+        return await GetByIdAsync(id, ct);
     }
 
     #region Helper Methods
@@ -536,7 +464,6 @@ public class AccountService : IAccountService
             } : null
         };
     }
-
 
     #endregion
 }

@@ -22,3 +22,4 @@ packages/
 
 # Misc
 *.log
+MTA.Web/appsettings.Production.json

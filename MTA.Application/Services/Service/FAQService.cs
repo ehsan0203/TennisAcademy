@@ -20,9 +20,10 @@ public class FAQService : IFAQService
         _mapper = mapper;
     }
 
-    public async Task<PaginatedResult<FAQCategoryDto>> GetCategoriesAsync(int page = 1, int pageSize = 10, string? searchTerm = null, bool? isActive = null)
+    public async Task<PaginatedResult<FAQCategoryDto>> GetCategoriesAsync(int page = 1, int pageSize = 10, string? searchTerm = null, bool? isActive = null, CancellationToken ct = default)
     {
-        var query = _unitOfWork.Repository<FAQCategory>().GetQueryable();
+        var query = _unitOfWork.Repository<FAQCategory>().GetQueryable()
+            .AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
@@ -34,16 +35,16 @@ public class FAQService : IFAQService
             query = query.Where(c => c.IsActive == isActive.Value);
         }
 
-        var totalCount = await query.CountAsync();
+        var totalCount = await query.CountAsync(ct);
         var categories = await query
             .OrderBy(c => c.SortOrder)
             .ThenBy(c => c.Title)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync();
+            .ToListAsync(ct);
 
         var categoryDtos = _mapper.Map<IEnumerable<FAQCategoryDto>>(categories);
-        
+
         return new PaginatedResult<FAQCategoryDto>
         {
             Data = categoryDtos,
@@ -53,68 +54,68 @@ public class FAQService : IFAQService
         };
     }
 
-    public async Task<FAQCategoryDto?> GetCategoryByIdAsync(int id)
+    public async Task<FAQCategoryDto?> GetCategoryByIdAsync(int id, CancellationToken ct = default)
     {
-        var category = await _unitOfWork.Repository<FAQCategory>().GetByIdAsync(id);
+        var category = await _unitOfWork.Repository<FAQCategory>().GetByIdAsync(id, ct);
         return _mapper.Map<FAQCategoryDto>(category);
     }
 
 
-    public async Task<FAQCategoryDto?> GetCategoryByTitleAsync(string title)
+    public async Task<FAQCategoryDto?> GetCategoryByTitleAsync(string title, CancellationToken ct = default)
     {
         var category = await _unitOfWork.Repository<FAQCategory>().GetQueryable()
-            .FirstOrDefaultAsync(c => c.Title == title);
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Title == title, ct);
         return _mapper.Map<FAQCategoryDto>(category);
     }
 
-    public async Task<FAQCategoryDto> CreateCategoryAsync(CreateFAQCategoryDto categoryDto)
+    public async Task<FAQCategoryDto> CreateCategoryAsync(CreateFAQCategoryDto categoryDto, CancellationToken ct = default)
     {
         var category = _mapper.Map<FAQCategory>(categoryDto);
-        category.CreatedAt = DateTime.UtcNow;
-        
-        await _unitOfWork.Repository<FAQCategory>().AddAsync(category);
-        await _unitOfWork.SaveChangesAsync();
-        
+
+        await _unitOfWork.Repository<FAQCategory>().AddAsync(category, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
+
         return _mapper.Map<FAQCategoryDto>(category);
     }
 
-    public async Task<FAQCategoryDto> UpdateCategoryAsync(int id, FAQCategoryDto categoryDto)
+    public async Task<FAQCategoryDto> UpdateCategoryAsync(int id, FAQCategoryDto categoryDto, CancellationToken ct = default)
     {
-        var existingCategory = await _unitOfWork.Repository<FAQCategory>().GetByIdAsync(id);
+        var existingCategory = await _unitOfWork.Repository<FAQCategory>().GetByIdAsync(id, ct);
         if (existingCategory == null)
             throw new ArgumentException($"FAQ category with ID {id} not found");
 
         _mapper.Map(categoryDto, existingCategory);
-        existingCategory.UpdatedAt = DateTime.UtcNow;
-        
-        _unitOfWork.Repository<FAQCategory>().UpdateAsync(existingCategory);
-        await _unitOfWork.SaveChangesAsync();
-        
+
+        await _unitOfWork.Repository<FAQCategory>().UpdateAsync(existingCategory, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
+
         return _mapper.Map<FAQCategoryDto>(existingCategory);
     }
 
-    public async Task<bool> DeleteCategoryAsync(int id)
+    public async Task<bool> DeleteCategoryAsync(int id, CancellationToken ct = default)
     {
-        var category = await _unitOfWork.Repository<FAQCategory>().GetByIdAsync(id);
+        var category = await _unitOfWork.Repository<FAQCategory>().GetByIdAsync(id, ct);
         if (category == null)
             return false;
 
         // Check if category has questions
         var hasQuestions = await _unitOfWork.Repository<QuestionFAQ>().GetQueryable()
-            .AnyAsync(q => q.CategoryId == id);
-        
+            .AnyAsync(q => q.CategoryId == id, ct);
+
         if (hasQuestions)
             throw new InvalidOperationException("Cannot delete category with existing questions");
 
-        _unitOfWork.Repository<FAQCategory>().DeleteAsync(category.Id);
-        await _unitOfWork.SaveChangesAsync();
-        
+        await _unitOfWork.Repository<FAQCategory>().DeleteAsync(category.Id, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
+
         return true;
     }
 
-    public async Task<PaginatedResult<QuestionDto>> GetQuestionsByCategoryAsync(int categoryId, int page = 1, int pageSize = 10, bool? isActive = null)
+    public async Task<PaginatedResult<QuestionDto>> GetQuestionsByCategoryAsync(int categoryId, int page = 1, int pageSize = 10, bool? isActive = null, CancellationToken ct = default)
     {
         var query = _unitOfWork.Repository<QuestionFAQ>().GetQueryable()
+            .AsNoTracking()
             .Include(q => q.Category)
             .Where(q => q.CategoryId == categoryId);
 
@@ -123,13 +124,13 @@ public class FAQService : IFAQService
             query = query.Where(q => q.IsActive == isActive.Value);
         }
 
-        var totalCount = await query.CountAsync();
+        var totalCount = await query.CountAsync(ct);
         var questions = await query
             .OrderBy(q => q.Category.SortOrder)
             .ThenBy(q => q.QuestionText)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync();
+            .ToListAsync(ct);
 
         var questionDtos = questions.Select(q => new QuestionDto
         {
@@ -152,11 +153,12 @@ public class FAQService : IFAQService
         };
     }
 
-    public async Task<QuestionDto?> GetQuestionByIdAsync(int id)
+    public async Task<QuestionDto?> GetQuestionByIdAsync(int id, CancellationToken ct = default)
     {
         var question = await _unitOfWork.Repository<QuestionFAQ>().GetQueryable()
+            .AsNoTracking()
             .Include(q => q.Category)
-            .FirstOrDefaultAsync(q => q.Id == id);
+            .FirstOrDefaultAsync(q => q.Id == id, ct);
 
         if (question == null)
             return null;
@@ -174,7 +176,7 @@ public class FAQService : IFAQService
         };
     }
 
-    public async Task<QuestionDto> CreateQuestionAsync(CreateQuestionDto questionDto)
+    public async Task<QuestionDto> CreateQuestionAsync(CreateQuestionDto questionDto, CancellationToken ct = default)
     {
         var question = new QuestionFAQ
         {
@@ -184,12 +186,10 @@ public class FAQService : IFAQService
             CategoryId = questionDto.CategoryId
         };
 
-        question.CreatedAt = DateTime.UtcNow;
-        
-        await _unitOfWork.Repository<QuestionFAQ>().AddAsync(question);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.Repository<QuestionFAQ>().AddAsync(question, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
 
-        var result = await GetQuestionByIdAsync(question.Id);
+        var result = await GetQuestionByIdAsync(question.Id, ct);
         if (result == null)
         {
             throw new InvalidOperationException("Failed to retrieve created question.");
@@ -198,48 +198,48 @@ public class FAQService : IFAQService
         return result;
     }
 
-    public async Task<QuestionDto> UpdateQuestionAsync(int id, UpdateQuestionDto questionDto)
+    public async Task<QuestionDto> UpdateQuestionAsync(int id, UpdateQuestionDto questionDto, CancellationToken ct = default)
     {
-        var existingQuestion = await _unitOfWork.Repository<QuestionFAQ>().GetByIdAsync(id);
+        var existingQuestion = await _unitOfWork.Repository<QuestionFAQ>().GetByIdAsync(id, ct);
         if (existingQuestion == null)
             throw new ArgumentException($"Question with ID {id} not found");
 
         existingQuestion.QuestionText = questionDto.QuestionText;
         existingQuestion.AnswerText = questionDto.AnswerText;
         existingQuestion.IsActive = questionDto.IsActive;
-        existingQuestion.UpdatedAt = DateTime.UtcNow;
 
-        await _unitOfWork.Repository<QuestionFAQ>().UpdateAsync(existingQuestion);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.Repository<QuestionFAQ>().UpdateAsync(existingQuestion, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
 
-        return await GetQuestionByIdAsync(id) ?? _mapper.Map<QuestionDto>(existingQuestion);
+        return await GetQuestionByIdAsync(id, ct) ?? _mapper.Map<QuestionDto>(existingQuestion);
     }
 
-    public async Task<bool> DeleteQuestionAsync(int id)
+    public async Task<bool> DeleteQuestionAsync(int id, CancellationToken ct = default)
     {
-        var question = await _unitOfWork.Repository<QuestionFAQ>().GetByIdAsync(id);
+        var question = await _unitOfWork.Repository<QuestionFAQ>().GetByIdAsync(id, ct);
         if (question == null)
             return false;
 
-        _unitOfWork.Repository<QuestionFAQ>().DeleteAsync(question.Id);
-        await _unitOfWork.SaveChangesAsync();
-        
+        await _unitOfWork.Repository<QuestionFAQ>().DeleteAsync(question.Id, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
+
         return true;
     }
 
-    public async Task<PaginatedResult<QuestionDto>> SearchQuestionsAsync(string searchTerm, int page = 1, int pageSize = 10)
+    public async Task<PaginatedResult<QuestionDto>> SearchQuestionsAsync(string searchTerm, int page = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var query = _unitOfWork.Repository<QuestionFAQ>().GetQueryable()
+            .AsNoTracking()
             .Include(q => q.Category)
             .Where(q => q.QuestionText.Contains(searchTerm) || q.AnswerText.Contains(searchTerm));
 
-        var totalCount = await query.CountAsync();
+        var totalCount = await query.CountAsync(ct);
         var questions = await query
             .OrderBy(q => q.Category.SortOrder)
             .ThenBy(q => q.QuestionText)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync();
+            .ToListAsync(ct);
 
         var questionDtos = questions.Select(q => new QuestionDto
         {
@@ -262,15 +262,16 @@ public class FAQService : IFAQService
         };
     }
 
-    public async Task<IEnumerable<QuestionDto>> GetFrequentlyAskedQuestionsAsync(int limit = 10)
+    public async Task<IEnumerable<QuestionDto>> GetFrequentlyAskedQuestionsAsync(int limit = 10, CancellationToken ct = default)
     {
         var questions = await _unitOfWork.Repository<QuestionFAQ>().GetQueryable()
+            .AsNoTracking()
             .Include(q => q.Category)
             .Where(q => q.IsActive)
             .OrderBy(q => q.Category.SortOrder)
             .ThenBy(q => q.QuestionText)
             .Take(limit)
-            .ToListAsync();
+            .ToListAsync(ct);
 
         return questions.Select(q => new QuestionDto
         {
@@ -285,10 +286,14 @@ public class FAQService : IFAQService
         });
     }
 
-    public async Task<FAQStatisticsDto> GetStatisticsAsync()
+    public async Task<FAQStatisticsDto> GetStatisticsAsync(CancellationToken ct = default)
     {
-        var categories = await _unitOfWork.Repository<FAQCategory>().GetQueryable().ToListAsync();
-        var questions = await _unitOfWork.Repository<QuestionFAQ>().GetQueryable().ToListAsync();
+        var categories = await _unitOfWork.Repository<FAQCategory>().GetQueryable()
+            .AsNoTracking()
+            .ToListAsync(ct);
+        var questions = await _unitOfWork.Repository<QuestionFAQ>().GetQueryable()
+            .AsNoTracking()
+            .ToListAsync(ct);
 
         var questionsPerCategory = questions
             .GroupBy(q => q.CategoryId)
@@ -309,13 +314,14 @@ public class FAQService : IFAQService
         };
     }
 
-    public async Task<IEnumerable<FAQCategoryDto>> GetCategoriesWithQuestionCountAsync()
+    public async Task<IEnumerable<FAQCategoryDto>> GetCategoriesWithQuestionCountAsync(CancellationToken ct = default)
     {
         var categories = await _unitOfWork.Repository<FAQCategory>().GetQueryable()
+            .AsNoTracking()
             .Include(c => c.Questions)
             .OrderBy(c => c.SortOrder)
             .ThenBy(c => c.Title)
-            .ToListAsync();
+            .ToListAsync(ct);
 
         return categories.Select(c => new FAQCategoryDto
         {
@@ -329,34 +335,32 @@ public class FAQService : IFAQService
         });
     }
 
-    public async Task<FAQCategoryDto> ToggleCategoryStatusAsync(int id)
+    public async Task<FAQCategoryDto> ToggleCategoryStatusAsync(int id, CancellationToken ct = default)
     {
-        var category = await _unitOfWork.Repository<FAQCategory>().GetByIdAsync(id);
+        var category = await _unitOfWork.Repository<FAQCategory>().GetByIdAsync(id, ct);
         if (category == null)
             throw new ArgumentException($"FAQ category with ID {id} not found");
 
         category.IsActive = !category.IsActive;
-        category.UpdatedAt = DateTime.UtcNow;
-        
-        _unitOfWork.Repository<FAQCategory>().UpdateAsync(category);
-        await _unitOfWork.SaveChangesAsync();
-        
+
+        await _unitOfWork.Repository<FAQCategory>().UpdateAsync(category, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
+
         return _mapper.Map<FAQCategoryDto>(category);
     }
 
-    public async Task<QuestionDto> ToggleQuestionStatusAsync(int id)
+    public async Task<QuestionDto> ToggleQuestionStatusAsync(int id, CancellationToken ct = default)
     {
-        var question = await _unitOfWork.Repository<QuestionFAQ>().GetByIdAsync(id);
+        var question = await _unitOfWork.Repository<QuestionFAQ>().GetByIdAsync(id, ct);
         if (question == null)
             throw new ArgumentException($"Question with ID {id} not found");
 
         question.IsActive = !question.IsActive;
-        question.UpdatedAt = DateTime.UtcNow;
 
-        await _unitOfWork.Repository<QuestionFAQ>().UpdateAsync(question);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.Repository<QuestionFAQ>().UpdateAsync(question, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
 
-        var result = await GetQuestionByIdAsync(id);
+        var result = await GetQuestionByIdAsync(id, ct);
         if (result == null)
             throw new InvalidOperationException($"Question with ID {id} not found after update");
 
@@ -364,4 +368,3 @@ public class FAQService : IFAQService
     }
 
 }
-

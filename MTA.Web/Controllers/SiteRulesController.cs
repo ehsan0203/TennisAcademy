@@ -1,116 +1,80 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
+using MTA.Web.Models;
 
-namespace MTA.Web.Controllers
+namespace MTA.Web.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class SiteRulesController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class SiteRulesController : ControllerBase
+    private readonly ILookupService _lookupService;
+
+    public SiteRulesController(ILookupService lookupService)
     {
-        private readonly ILookupService _lookupService;
-        private readonly ILogger<SiteRulesController> _logger;
-
-        public SiteRulesController(ILookupService lookupService, ILogger<SiteRulesController> logger)
-        {
-            _lookupService = lookupService;
-            _logger = logger;
-        }
-
-        // GET: api/siterules
-        [HttpGet("SiteRules")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<LookupDto>>> GetSiteRules([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
-        {
-            var result = await _lookupService.GetAllAsync(page, pageSize, "SiteRule");
-            return Ok(result);
-        }
-
-        [HttpGet("category")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<LookupDto>>> GetCategory([FromQuery] string CategoryName)
-        {
-            var result = await _lookupService.GetByCategoryAsync(CategoryName);
-            return Ok(result);
-        }
-
-        [HttpGet("categories")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<string>>> Categories()
-        {
-            var result = await _lookupService.GetAllCategoriesAsync();
-            return Ok(result);
-        }
-
-        // GET: api/siterules/5
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<LookupDto>> GetById(int id)
-        {
-            var rule = await _lookupService.GetByIdAsync(id);
-            if (rule == null || rule.Category != "SiteRule")
-                return NotFound();
-
-            return Ok(rule);
-        }
-
-        // POST: api/siterules
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<LookupDto>> Create([FromBody] SiteRuleUpsertDto dto)
-        {
-            var createDto = new CreateLookupDto
-            {
-                Category = "SiteRule",
-                Key = dto.Subject,
-                Value = dto.Text
-            };
-            var created = await _lookupService.CreateAsync(createDto);
-
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
-        }
-
-        // PUT: api/siterules/5
-        [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update(int id, [FromBody] SiteRuleUpsertDto dto)
-        {
-            var existing = await _lookupService.GetByIdAsync(id);
-            if (existing == null || existing.Category != "SiteRule")
-                return NotFound();
-
-            var updateDto = new LookupDto
-            {
-                Id = id,
-                Category = "SiteRule",
-                Key = dto.Subject,
-                Value = dto.Text
-            };
-            await _lookupService.UpdateAsync(id, updateDto);
-
-            return NoContent();
-        }
-
-        // DELETE: api/siterules/5
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var existing = await _lookupService.GetByIdAsync(id);
-            if (existing == null || existing.Category != "SiteRule")
-                return NotFound();
-
-            var deleted = await _lookupService.DeleteAsync(id);
-            if (!deleted)
-                return StatusCode(500, new { message = "Could not delete the rule" });
-
-            return NoContent();
-        }
-
-
+        _lookupService = lookupService;
     }
 
+    [HttpGet]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(CustomJsonResult<PaginatedResult<LookupDto>>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<PaginatedResult<LookupDto>>> GetSiteRules(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken ct = default)
+    {
+        var result = await _lookupService.GetAllAsync(page, pageSize, "SiteRule", ct: ct);
+        return CustomJsonResult<PaginatedResult<LookupDto>>.SuccessResult(result);
+    }
+
+    [HttpGet("{id}")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(CustomJsonResult<LookupDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<LookupDto>> GetById(int id, CancellationToken ct)
+    {
+        var rule = await _lookupService.GetByIdAsync(id, ct);
+        if (rule == null || rule.Category != "SiteRule")
+            return CustomJsonResult<LookupDto>.NotFound($"Site rule with ID {id} not found");
+        return CustomJsonResult<LookupDto>.SuccessResult(rule);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(CustomJsonResult<LookupDto>), StatusCodes.Status201Created)]
+    public async Task<CustomJsonResult<LookupDto>> Create([FromBody] SiteRuleUpsertDto dto, CancellationToken ct)
+    {
+        var createDto = new CreateLookupDto { Category = "SiteRule", Key = dto.Subject, Value = dto.Text };
+        var created = await _lookupService.CreateAsync(createDto, ct);
+        return CustomJsonResult<LookupDto>.Created(created);
+    }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(CustomJsonResult<LookupDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<LookupDto>> Update(int id, [FromBody] SiteRuleUpsertDto dto, CancellationToken ct)
+    {
+        var existing = await _lookupService.GetByIdAsync(id, ct);
+        if (existing == null || existing.Category != "SiteRule")
+            return CustomJsonResult<LookupDto>.NotFound($"Site rule with ID {id} not found");
+
+        var updateDto = new LookupDto { Id = id, Category = "SiteRule", Key = dto.Subject, Value = dto.Text };
+        var updated = await _lookupService.UpdateAsync(id, updateDto, ct);
+        return CustomJsonResult<LookupDto>.SuccessResult(updated);
+    }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<string>> Delete(int id, CancellationToken ct)
+    {
+        var existing = await _lookupService.GetByIdAsync(id, ct);
+        if (existing == null || existing.Category != "SiteRule")
+            return CustomJsonResult<string>.NotFound($"Site rule with ID {id} not found");
+
+        await _lookupService.DeleteAsync(id, ct);
+        return CustomJsonResult<string>.NoContent();
+    }
 }

@@ -9,6 +9,7 @@ public class PermissionsRoleConfiguration : IEntityTypeConfiguration<Permissions
     public void Configure(EntityTypeBuilder<PermissionsRole> builder)
     {
         builder.HasKey(permissionsRole => permissionsRole.Id);
+        builder.HasQueryFilter(permissionsRole => !permissionsRole.IsDeleted);
 
         builder.HasOne(permissionsRole => permissionsRole.Role)
             .WithMany(role => role.RolePermissions)

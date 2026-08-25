@@ -9,6 +9,7 @@ public class LevelConfiguration : IEntityTypeConfiguration<Level>
     public void Configure(EntityTypeBuilder<Level> builder)
     {
         builder.HasKey(level => level.Id);
+        builder.HasQueryFilter(level => !level.IsDeleted);
 
         builder.Property(level => level.Title)
             .IsRequired()

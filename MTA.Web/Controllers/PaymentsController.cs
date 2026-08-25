@@ -1,15 +1,16 @@
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
+using MTA.Web.Models;
 
 namespace MTA.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class PaymentsController : ControllerBase
 {
     private readonly IPaymentService _paymentService;
@@ -33,194 +34,101 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpPost("package/{packageId}/link")]
-    public async Task<ActionResult<PaymentLinkResponseDto>> CreatePackagePaymentLink(int packageId, [FromBody] PaymentInitRequestDto request)
+    [ProducesResponseType(typeof(CustomJsonResult<PaymentLinkResponseDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<PaymentLinkResponseDto>> CreatePackagePaymentLink(
+        int packageId, [FromBody] PaymentInitRequestDto request, CancellationToken ct)
     {
-        try
-        {
-            var link = await _paymentService.CreatePackagePaymentLinkAsync(request.AccountId, packageId, request.SuccessUrl, request.CancelUrl);
-            return Ok(link);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error creating package payment link");
-            return StatusCode(500, "Failed to create payment link");
-        }
+        var link = await _paymentService.CreatePackagePaymentLinkAsync(request.AccountId, packageId, request.SuccessUrl, request.CancelUrl, ct);
+        return CustomJsonResult<PaymentLinkResponseDto>.SuccessResult(link);
     }
 
     [HttpGet("square/diagnostics/location")]
-    public async Task<ActionResult<LocationDiagnosticsDto>> SquareLocationDiagnostics()
+    [ProducesResponseType(typeof(CustomJsonResult<LocationDiagnosticsDto>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<LocationDiagnosticsDto>> SquareLocationDiagnostics(CancellationToken ct)
     {
-        try
-        {
-            var result = await _paymentService.VerifyLocationOwnershipAsync();
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error running Square location diagnostics");
-            return StatusCode(500, new { ok = false, message = "Diagnostics failed" });
-        }
+        var result = await _paymentService.VerifyLocationOwnershipAsync(ct);
+        return CustomJsonResult<LocationDiagnosticsDto>.SuccessResult(result);
     }
 
     [HttpPost("course/{courseId}/link")]
-    public async Task<ActionResult<PaymentLinkResponseDto>> CreateCoursePaymentLink(int courseId, [FromBody] PaymentInitRequestDto request)
+    [ProducesResponseType(typeof(CustomJsonResult<PaymentLinkResponseDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status409Conflict)]
+    public async Task<CustomJsonResult<PaymentLinkResponseDto>> CreateCoursePaymentLink(
+        int courseId, [FromBody] PaymentInitRequestDto request, CancellationToken ct)
     {
-        try
-        {
-            var alreadyHas = await _userCourseHistoryService.UserHasPurchasedCourseAsync(request.AccountId, courseId);
-            if (alreadyHas)
-            {
-                return Conflict(new { message = "User already owns this course" });
-            }
+        var alreadyHas = await _userCourseHistoryService.UserHasPurchasedCourseAsync(request.AccountId, courseId, ct);
+        if (alreadyHas)
+            return CustomJsonResult<PaymentLinkResponseDto>.Conflict("User already owns this course");
 
-            var link = await _paymentService.CreateCoursePaymentLinkAsync(request.AccountId, courseId, request.SuccessUrl, request.CancelUrl);
-            return Ok(link);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error creating course payment link");
-            return StatusCode(500, "Failed to create payment link");
-        }
+        var link = await _paymentService.CreateCoursePaymentLinkAsync(request.AccountId, courseId, request.SuccessUrl, request.CancelUrl, ct);
+        return CustomJsonResult<PaymentLinkResponseDto>.SuccessResult(link);
     }
 
-    // Square redirects here with ?ref=... after checkout completes (client-side only)
-    // This action lets your frontend verify current status based on the webhook side-effects.
     [HttpGet("result")]
-    public async Task<ActionResult<PaymentResultDto>> CheckoutResult([FromQuery(Name = "ref")] string referenceId)
+    [ProducesResponseType(typeof(CustomJsonResult<PaymentResultDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status400BadRequest)]
+    public async Task<CustomJsonResult<PaymentResultDto>> CheckoutResult(
+        [FromQuery(Name = "ref")] string referenceId, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(referenceId))
-        {
-            return BadRequest("Missing ref");
-        }
+            return CustomJsonResult<PaymentResultDto>.Failure("Missing ref", StatusCodes.Status400BadRequest);
 
         var parsed = ParseReference(referenceId);
         if (parsed == null)
-        {
-            return Ok(new PaymentResultDto
-            {
-                ReferenceId = referenceId,
-                Status = "invalid",
-            });
-        }
+            return CustomJsonResult<PaymentResultDto>.SuccessResult(new PaymentResultDto { ReferenceId = referenceId, Status = "invalid" });
 
         var (type, itemId, accountId) = parsed.Value;
+        var result = new PaymentResultDto { ReferenceId = referenceId, Type = type, ItemId = itemId, AccountId = accountId, Status = "pending" };
 
-        var result = new PaymentResultDto
-        {
-            ReferenceId = referenceId,
-            Type = type,
-            ItemId = itemId,
-            AccountId = accountId,
-            Status = "pending"
-        };
+        if (type.Equals("package", StringComparison.OrdinalIgnoreCase))
+            result.Status = await _packageHistoryService.UserHasActivePackageAsync(accountId, itemId, ct) ? "success" : "pending";
+        else if (type.Equals("course", StringComparison.OrdinalIgnoreCase))
+            result.Status = await _userCourseHistoryService.UserHasPurchasedCourseAsync(accountId, itemId, ct) ? "success" : "pending";
 
-        try
-        {
-            if (type.Equals("package", StringComparison.OrdinalIgnoreCase))
-            {
-                var hasActive = await _packageHistoryService.UserHasActivePackageAsync(accountId, itemId);
-                result.Status = hasActive ? "success" : "pending";
-            }
-            else if (type.Equals("course", StringComparison.OrdinalIgnoreCase))
-            {
-                var purchased = await _userCourseHistoryService.UserHasPurchasedCourseAsync(accountId, itemId);
-                result.Status = purchased ? "success" : "pending";
-            }
-
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error checking payment result for {ReferenceId}", referenceId);
-            // Do not leak internal errors; keep a graceful pending result
-            return Ok(result);
-        }
+        return CustomJsonResult<PaymentResultDto>.SuccessResult(result);
     }
 
-    // Allows client-side confirmation using Square orderId (e.g., after redirect)
     [HttpGet("square/complete")]
-    public async Task<ActionResult<PaymentResultDto>> CompleteSquareOrder([FromQuery] string orderId)
+    [ProducesResponseType(typeof(CustomJsonResult<PaymentResultDto>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<PaymentResultDto>> CompleteSquareOrder([FromQuery] string orderId, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(orderId))
-        {
-            return BadRequest("Missing orderId");
-        }
+            return CustomJsonResult<PaymentResultDto>.Failure("Missing orderId", StatusCodes.Status400BadRequest);
 
-        try
-        {
-            var orderInfo = await _paymentService.GetOrderInfoAsync(orderId);
-            if (orderInfo == null || string.IsNullOrWhiteSpace(orderInfo.ReferenceId))
-            {
-                return Ok(new PaymentResultDto
-                {
-                    ReferenceId = string.Empty,
-                    Status = "pending"
-                });
-            }
+        var orderInfo = await _paymentService.GetOrderInfoAsync(orderId, ct);
+        if (orderInfo == null || string.IsNullOrWhiteSpace(orderInfo.ReferenceId))
+            return CustomJsonResult<PaymentResultDto>.SuccessResult(new PaymentResultDto { ReferenceId = string.Empty, Status = "pending" });
 
-            var parsed = ParseReference(orderInfo.ReferenceId);
-            if (parsed == null)
-            {
-                return Ok(new PaymentResultDto
-                {
-                    ReferenceId = orderInfo.ReferenceId,
-                    Status = "invalid"
-                });
-            }
+        var parsed = ParseReference(orderInfo.ReferenceId);
+        if (parsed == null)
+            return CustomJsonResult<PaymentResultDto>.SuccessResult(new PaymentResultDto { ReferenceId = orderInfo.ReferenceId, Status = "invalid" });
 
-            var (type, itemId, accountId) = parsed.Value;
-            var result = new PaymentResultDto
-            {
-                ReferenceId = orderInfo.ReferenceId,
-                Type = type,
-                ItemId = itemId,
-                AccountId = accountId,
-                Status = "pending"
-            };
+        var (type, itemId, accountId) = parsed.Value;
+        var result = new PaymentResultDto { ReferenceId = orderInfo.ReferenceId, Type = type, ItemId = itemId, AccountId = accountId, Status = "pending" };
 
-            if (!orderInfo.IsPaid)
-            {
-                _logger.LogInformation("Square order not completed yet. Order={OrderId}, State={State}", orderInfo.OrderId, orderInfo.State);
-                return Ok(result);
-            }
+        if (!orderInfo.IsPaid)
+            return CustomJsonResult<PaymentResultDto>.SuccessResult(result);
 
-            await HandleSuccessfulReferenceAsync(orderInfo.ReferenceId);
+        await HandleSuccessfulReferenceAsync(orderInfo.ReferenceId, ct);
 
-            if (type.Equals("package", StringComparison.OrdinalIgnoreCase))
-            {
-                var hasActive = await _packageHistoryService.UserHasActivePackageAsync(accountId, itemId);
-                result.Status = hasActive ? "success" : "pending";
-            }
-            else if (type.Equals("course", StringComparison.OrdinalIgnoreCase))
-            {
-                var purchased = await _userCourseHistoryService.UserHasPurchasedCourseAsync(accountId, itemId);
-                result.Status = purchased ? "success" : "pending";
-            }
+        if (type.Equals("package", StringComparison.OrdinalIgnoreCase))
+            result.Status = await _packageHistoryService.UserHasActivePackageAsync(accountId, itemId, ct) ? "success" : "pending";
+        else if (type.Equals("course", StringComparison.OrdinalIgnoreCase))
+            result.Status = await _userCourseHistoryService.UserHasPurchasedCourseAsync(accountId, itemId, ct) ? "success" : "pending";
 
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error completing Square order {OrderId}", orderId);
-            return Ok(new PaymentResultDto { ReferenceId = string.Empty, Status = "pending" });
-        }
+        return CustomJsonResult<PaymentResultDto>.SuccessResult(result);
     }
 
-    [HttpGet("square/webhook")]
-    public async Task<IActionResult> SquareWebhook()
+    // Webhook: returns IActionResult (not CustomJsonResult) because Square expects plain 200/401
+    [HttpPost("square/webhook")]
+    [AllowAnonymous]
+    public async Task<IActionResult> SquareWebhook(CancellationToken ct)
     {
-        // Verify signature
         var signatureKey = _config["Square:WebhookSignatureKey"] ?? string.Empty;
         var webhookUrl = _config["Square:WebhookUrl"] ?? string.Empty;
-        // Webhooks disabled or not configured: acknowledge and exit gracefully
+
         if (string.IsNullOrWhiteSpace(signatureKey) || string.IsNullOrWhiteSpace(webhookUrl))
         {
             _logger.LogInformation("Square webhooks disabled or not configured; ignoring webhook call.");
@@ -228,8 +136,8 @@ public class PaymentsController : ControllerBase
         }
 
         Request.EnableBuffering();
-        using var reader = new StreamReader(Request.Body, Encoding.UTF8, detectEncodingFromByteOrderMarks: false, leaveOpen: true);
-        var body = await reader.ReadToEndAsync();
+        using var reader = new StreamReader(Request.Body, Encoding.UTF8, leaveOpen: true);
+        var body = await reader.ReadToEndAsync(ct);
         Request.Body.Position = 0;
 
         var headerSig = Request.Headers["x-square-hmacsha256-signature"].FirstOrDefault()
@@ -242,44 +150,33 @@ public class PaymentsController : ControllerBase
             return Unauthorized();
         }
 
-        try
+        using var doc = JsonDocument.Parse(body);
+        var root = doc.RootElement;
+        var eventType = root.GetProperty("type").GetString();
+
+        if (eventType != null && eventType.StartsWith("payment.", StringComparison.OrdinalIgnoreCase))
         {
-            using var doc = JsonDocument.Parse(body);
-            var root = doc.RootElement;
-            var eventType = root.GetProperty("type").GetString();
-
-            // We're interested in completed payments
-            if (eventType != null && eventType.StartsWith("payment.", StringComparison.OrdinalIgnoreCase))
+            var payment = root.GetProperty("data").GetProperty("object").GetProperty("payment");
+            var status = payment.GetProperty("status").GetString();
+            if (string.Equals(status, "COMPLETED", StringComparison.OrdinalIgnoreCase))
             {
-                var payment = root.GetProperty("data").GetProperty("object").GetProperty("payment");
-                var status = payment.GetProperty("status").GetString();
-                if (string.Equals(status, "COMPLETED", StringComparison.OrdinalIgnoreCase))
-                {
-                    var orderId = payment.TryGetProperty("order_id", out var orderEl) ? orderEl.GetString() : null;
-                    string? referenceId = null;
-                    if (!string.IsNullOrEmpty(orderId))
-                    {
-                        referenceId = await _paymentService.GetOrderReferenceIdAsync(orderId!);
-                    }
+                var orderId = payment.TryGetProperty("order_id", out var orderEl) ? orderEl.GetString() : null;
+                string? referenceId = null;
+                if (!string.IsNullOrEmpty(orderId))
+                    referenceId = await _paymentService.GetOrderReferenceIdAsync(orderId!, ct);
 
-                    if (!string.IsNullOrWhiteSpace(referenceId))
-                    {
-                        _logger.LogInformation("Square payment completed. Order={OrderId}, Ref={ReferenceId}", orderId, referenceId);
-                        await HandleSuccessfulReferenceAsync(referenceId!);
-                    }
+                if (!string.IsNullOrWhiteSpace(referenceId))
+                {
+                    _logger.LogInformation("Square payment completed. Order={OrderId}, Ref={ReferenceId}", orderId, referenceId);
+                    await HandleSuccessfulReferenceAsync(referenceId!, ct);
                 }
             }
+        }
 
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error processing Square webhook");
-            return StatusCode(500);
-        }
+        return Ok();
     }
 
-    private async Task HandleSuccessfulReferenceAsync(string referenceId)
+    private async Task HandleSuccessfulReferenceAsync(string referenceId, CancellationToken ct)
     {
         var parsed = ParseReference(referenceId);
         if (parsed == null) return;
@@ -288,40 +185,22 @@ public class PaymentsController : ControllerBase
 
         if (type.Equals("package", StringComparison.OrdinalIgnoreCase))
         {
-            await _packageHistoryService.CreateAsync(new CreatePackageHistoryDto
-            {
-                PackageId = itemId,
-                AccountId = accountId,
-                IsExpired = false
-            });
+            await _packageHistoryService.CreateAsync(new CreatePackageHistoryDto { PackageId = itemId, AccountId = accountId }, ct);
         }
         else if (type.Equals("course", StringComparison.OrdinalIgnoreCase))
         {
-            var purchased = await _userCourseHistoryService.UserHasPurchasedCourseAsync(accountId, itemId);
-            if (purchased) return;
-
-            await _userCourseHistoryService.CreateAsync(new CreateUserCourseHistoryDto
-            {
-                CourseId = itemId,
-                AccountId = accountId
-            });
+            var purchased = await _userCourseHistoryService.UserHasPurchasedCourseAsync(accountId, itemId, ct);
+            if (!purchased)
+                await _userCourseHistoryService.CreateAsync(new CreateUserCourseHistoryDto { CourseId = itemId, AccountId = accountId }, ct);
         }
     }
 
     private static (string type, int itemId, int accountId)? ParseReference(string referenceId)
     {
-        // Expected formats:
-        // package:{packageId}:account:{accountId}
-        // course:{courseId}:account:{accountId}
         var parts = referenceId.Split(':', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        if (parts.Length == 4 && parts[2].Equals("account", StringComparison.OrdinalIgnoreCase))
-        {
-            var type = parts[0];
-            if (int.TryParse(parts[1], out var itemId) && int.TryParse(parts[3], out var accountId))
-            {
-                return (type, itemId, accountId);
-            }
-        }
+        if (parts.Length == 4 && parts[2].Equals("account", StringComparison.OrdinalIgnoreCase)
+            && int.TryParse(parts[1], out var itemId) && int.TryParse(parts[3], out var accountId))
+            return (parts[0], itemId, accountId);
         return null;
     }
 }

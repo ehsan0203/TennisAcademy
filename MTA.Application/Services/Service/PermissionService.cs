@@ -23,297 +23,228 @@ public class PermissionService : IPermissionService
     /// <summary>
     /// Get all permissions with optional filtering
     /// </summary>
-    public async Task<PaginatedResult<PermissionDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null)
+    public async Task<PaginatedResult<PermissionDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, CancellationToken ct = default)
     {
-        try
+        var query = _unitOfWork.Repository<Permission>().GetQueryable()
+            .AsNoTracking();
+
+        // Apply search filter if provided
+        if (!string.IsNullOrWhiteSpace(searchTerm))
         {
-            var query = _unitOfWork.Repository<Permission>().GetQueryable();
-
-            // Apply search filter if provided
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                query = query.Where(p => 
-                    p.Title.Contains(searchTerm) || 
-                    (p.Description != null && p.Description.Contains(searchTerm)));
-            }
-
-            // Get total count
-            var totalCount = await query.CountAsync();
-
-            // Apply pagination
-            var permissions = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Include(p => p.PermissionsRoles)
-                .ToListAsync();
-
-            // Map to DTOs
-            var permissionDtos = permissions.Select(MapToDto).ToList();
-
-            return new PaginatedResult<PermissionDto>
-            {
-                Data = permissionDtos,
-                TotalCount = totalCount,
-                Page = page,
-                PageSize = pageSize
-            };
+            query = query.Where(p =>
+                p.Title.Contains(searchTerm) ||
+                (p.Description != null && p.Description.Contains(searchTerm)));
         }
-        catch (Exception ex)
+
+        // Get total count
+        var totalCount = await query.CountAsync(ct);
+
+        // Apply pagination
+        var permissions = await query
+            .Include(p => p.PermissionsRoles)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
+
+        // Map to DTOs
+        var permissionDtos = permissions.Select(MapToDto).ToList();
+
+        return new PaginatedResult<PermissionDto>
         {
-            _logger.LogError(ex, "Error getting permissions with page {Page}, pageSize {PageSize}, searchTerm {SearchTerm}", 
-                page, pageSize, searchTerm);
-            throw;
-        }
+            Data = permissionDtos,
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        };
     }
 
     /// <summary>
     /// Get permission by ID
     /// </summary>
-    public async Task<PermissionDto?> GetByIdAsync(int id)
+    public async Task<PermissionDto?> GetByIdAsync(int id, CancellationToken ct = default)
     {
-        try
-        {
-            var permission = await _unitOfWork.Repository<Permission>().GetQueryable()
-                .Include(p => p.PermissionsRoles)
-                .FirstOrDefaultAsync(p => p.Id == id);
+        var permission = await _unitOfWork.Repository<Permission>().GetQueryable()
+            .AsNoTracking()
+            .Include(p => p.PermissionsRoles)
+            .FirstOrDefaultAsync(p => p.Id == id, ct);
 
-            return permission != null ? MapToDto(permission) : null;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting permission with ID: {PermissionId}", id);
-            throw;
-        }
+        return permission != null ? MapToDto(permission) : null;
     }
 
     /// <summary>
     /// Get permission by title
     /// </summary>
-    public async Task<PermissionDto?> GetByTitleAsync(string title)
+    public async Task<PermissionDto?> GetByTitleAsync(string title, CancellationToken ct = default)
     {
-        try
-        {
-            var permission = await _unitOfWork.Repository<Permission>().GetQueryable()
-                .Include(p => p.PermissionsRoles)
-                .FirstOrDefaultAsync(p => p.Title.ToLower() == title.ToLower());
+        var permission = await _unitOfWork.Repository<Permission>().GetQueryable()
+            .AsNoTracking()
+            .Include(p => p.PermissionsRoles)
+            .FirstOrDefaultAsync(p => p.Title.ToLower() == title.ToLower(), ct);
 
-            return permission != null ? MapToDto(permission) : null;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting permission with title: {Title}", title);
-            throw;
-        }
-        }
+        return permission != null ? MapToDto(permission) : null;
+    }
 
     /// <summary>
     /// Create new permission
     /// </summary>
-    public async Task<PermissionDto> CreateAsync(CreatePermissionDto permissionDto)
+    public async Task<PermissionDto> CreateAsync(CreatePermissionDto permissionDto, CancellationToken ct = default)
     {
-        try
+        // Check if permission with same title already exists
+        var existingPermission = await GetByTitleAsync(permissionDto.Title, ct);
+        if (existingPermission != null)
         {
-            // Check if permission with same title already exists
-            var existingPermission = await GetByTitleAsync(permissionDto.Title);
-            if (existingPermission != null)
-            {
-                throw new InvalidOperationException($"Permission with title '{permissionDto.Title}' already exists");
-            }
-
-            var permission = new Permission
-            {
-                Title = permissionDto.Title,
-                Description = permissionDto.Description
-            };
-
-            await _unitOfWork.Repository<Permission>().AddAsync(permission);
-            await _unitOfWork.SaveChangesAsync();
-
-            // Return the created permission
-            return await GetByIdAsync(permission.Id) ??  new PermissionDto
-            {
-                Id = permission.Id,
-                Title = permission.Title,
-                Description = permission.Description,
-                CreatedAt = permission.CreatedAt,
-                UpdatedAt = permission.UpdatedAt
-            }; 
+            throw new InvalidOperationException($"Permission with title '{permissionDto.Title}' already exists");
         }
-        catch (Exception ex)
+
+        var permission = new Permission
         {
-            _logger.LogError(ex, "Error creating permission with title: {Title}", permissionDto.Title);
-            throw;
-        }
+            Title = permissionDto.Title,
+            Description = permissionDto.Description
+        };
+
+        await _unitOfWork.Repository<Permission>().AddAsync(permission, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
+
+        // Return the created permission
+        return await GetByIdAsync(permission.Id, ct) ?? new PermissionDto
+        {
+            Id = permission.Id,
+            Title = permission.Title,
+            Description = permission.Description,
+            CreatedAt = permission.CreatedAt,
+            UpdatedAt = permission.UpdatedAt
+        };
     }
 
     /// <summary>
     /// Update existing permission
     /// </summary>
-    public async Task<PermissionDto> UpdateAsync(int id, PermissionDto permissionDto)
+    public async Task<PermissionDto> UpdateAsync(int id, PermissionDto permissionDto, CancellationToken ct = default)
     {
-        try
+        var permission = await _unitOfWork.Repository<Permission>().GetByIdAsync(id, ct);
+        if (permission == null)
         {
-            var permission = await _unitOfWork.Repository<Permission>().GetByIdAsync(id);
-            if (permission == null)
-            {
-                throw new InvalidOperationException($"Permission with ID {id} not found");
-            }
-
-            // Check if title is being changed and if it conflicts with existing permissions
-            if (permission.Title != permissionDto.Title)
-            {
-                var existingPermission = await GetByTitleAsync(permissionDto.Title);
-                if (existingPermission != null && existingPermission.Id != id)
-                {
-                    throw new InvalidOperationException($"Permission with title '{permissionDto.Title}' already exists");
-                }
-            }
-
-            // Update properties
-            permission.Title = permissionDto.Title;
-            permission.Description = permissionDto.Description;
-            permission.UpdatedAt = DateTime.UtcNow;
-
-            _unitOfWork.Repository<Permission>().UpdateAsync(permission);
-            await _unitOfWork.SaveChangesAsync();
-
-            return await GetByIdAsync(id) ?? permissionDto;
+            throw new InvalidOperationException($"Permission with ID {id} not found");
         }
-        catch (Exception ex)
+
+        // Check if title is being changed and if it conflicts with existing permissions
+        if (permission.Title != permissionDto.Title)
         {
-            _logger.LogError(ex, "Error updating permission with ID: {PermissionId}", id);
-            throw;
+            var existingPermission = await GetByTitleAsync(permissionDto.Title, ct);
+            if (existingPermission != null && existingPermission.Id != id)
+            {
+                throw new InvalidOperationException($"Permission with title '{permissionDto.Title}' already exists");
+            }
         }
+
+        // Update properties
+        permission.Title = permissionDto.Title;
+        permission.Description = permissionDto.Description;
+
+        await _unitOfWork.Repository<Permission>().UpdateAsync(permission, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
+
+        return await GetByIdAsync(id, ct) ?? permissionDto;
     }
 
     /// <summary>
     /// Delete permission
     /// </summary>
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
     {
-        try
+        var permission = await _unitOfWork.Repository<Permission>().GetByIdAsync(id, ct);
+        if (permission == null)
         {
-            var permission = await _unitOfWork.Repository<Permission>().GetByIdAsync(id);
-            if (permission == null)
-            {
-                return false;
-            }
-
-            // Check if permission is assigned to any roles
-            var hasRoles = await _unitOfWork.Repository<PermissionsRole>().GetQueryable()
-                .AnyAsync(rp => rp.PermissionId == id);
-
-            if (hasRoles)
-            {
-                throw new InvalidOperationException($"Cannot delete permission '{permission.Title}' as it is assigned to one or more roles");
-            }
-
-            await _unitOfWork.Repository<Permission>().DeleteAsync(id);
-            await _unitOfWork.SaveChangesAsync();
-
-            return true;
+            return false;
         }
-        catch (Exception ex)
+
+        // Check if permission is assigned to any roles
+        var hasRoles = await _unitOfWork.Repository<PermissionsRole>().GetQueryable()
+            .AnyAsync(rp => rp.PermissionId == id, ct);
+
+        if (hasRoles)
         {
-            _logger.LogError(ex, "Error deleting permission with ID: {PermissionId}", id);
-            throw;
+            throw new InvalidOperationException($"Cannot delete permission '{permission.Title}' as it is assigned to one or more roles");
         }
+
+        await _unitOfWork.Repository<Permission>().DeleteAsync(id, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
+
+        return true;
     }
 
     /// <summary>
     /// Get permission statistics
     /// </summary>
-    public async Task<PermissionStatisticsDto> GetStatisticsAsync()
+    public async Task<PermissionStatisticsDto> GetStatisticsAsync(CancellationToken ct = default)
     {
-        try
+        var permissions = await _unitOfWork.Repository<Permission>().GetQueryable()
+            .AsNoTracking()
+            .Include(p => p.PermissionsRoles)
+            .ToListAsync(ct);
+
+        var totalPermissions = permissions.Count;
+        var permissionsWithRoles = permissions.Count(p => p.PermissionsRoles.Any());
+        var permissionsWithoutRoles = totalPermissions - permissionsWithRoles;
+
+        var totalRoleAssignments = permissions.Sum(p => p.PermissionsRoles.Count);
+        var averageRolesPerPermission = totalPermissions > 0 ? (double)totalRoleAssignments / totalPermissions : 0;
+
+        // Get permissions created this month and last month
+        var now = DateTime.UtcNow;
+        var thisMonth = new DateTime(now.Year, now.Month, 1);
+        var lastMonth = thisMonth.AddMonths(-1);
+
+        var permissionsThisMonth = permissions.Count(p => p.CreatedAt >= thisMonth);
+        var permissionsLastMonth = permissions.Count(p => p.CreatedAt >= lastMonth && p.CreatedAt < thisMonth);
+
+        return new PermissionStatisticsDto
         {
-            var permissions = await _unitOfWork.Repository<Permission>().GetQueryable()
-                .Include(p => p.PermissionsRoles)
-                .ToListAsync();
-
-            var totalPermissions = permissions.Count;
-            var permissionsWithRoles = permissions.Count(p => p.PermissionsRoles.Any());
-            var permissionsWithoutRoles = totalPermissions - permissionsWithRoles;
-
-            var totalRoleAssignments = permissions.Sum(p => p.PermissionsRoles.Count);
-            var averageRolesPerPermission = totalPermissions > 0 ? (double)totalRoleAssignments / totalPermissions : 0;
-
-            // Get permissions created this month and last month
-            var now = DateTime.UtcNow;
-            var thisMonth = new DateTime(now.Year, now.Month, 1);
-            var lastMonth = thisMonth.AddMonths(-1);
-
-            var permissionsThisMonth = permissions.Count(p => p.CreatedAt >= thisMonth);
-            var permissionsLastMonth = permissions.Count(p => p.CreatedAt >= lastMonth && p.CreatedAt < thisMonth);
-
-            return new PermissionStatisticsDto
-            {
-                TotalPermissions = totalPermissions,
-                PermissionsWithRoles = permissionsWithRoles,
-                PermissionsWithoutRoles = permissionsWithoutRoles,
-                AverageRolesPerPermission = Math.Round(averageRolesPerPermission, 2),
-                PermissionsThisMonth = permissionsThisMonth,
-                PermissionsLastMonth = permissionsLastMonth
-            };
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting permission statistics");
-            throw;
-        }
+            TotalPermissions = totalPermissions,
+            PermissionsWithRoles = permissionsWithRoles,
+            PermissionsWithoutRoles = permissionsWithoutRoles,
+            AverageRolesPerPermission = Math.Round(averageRolesPerPermission, 2),
+            PermissionsThisMonth = permissionsThisMonth,
+            PermissionsLastMonth = permissionsLastMonth
+        };
     }
 
     /// <summary>
     /// Get permissions with role count
     /// </summary>
-    public async Task<IEnumerable<PermissionDto>> GetPermissionsWithRoleCountAsync()
+    public async Task<IEnumerable<PermissionDto>> GetPermissionsWithRoleCountAsync(CancellationToken ct = default)
     {
-        try
-        {
-            var permissions = await _unitOfWork.Repository<Permission>()
-                .GetQueryable()
-                .Include(p => p.PermissionsRoles)  
-                .ToListAsync();
+        var permissions = await _unitOfWork.Repository<Permission>()
+            .GetQueryable()
+            .AsNoTracking()
+            .Include(p => p.PermissionsRoles)
+            .ToListAsync(ct);
 
-            return permissions.Select(MapToDto);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting permissions with role count");
-            throw;
-        }
+        return permissions.Select(MapToDto);
     }
 
     /// <summary>
     /// Bulk create permissions
     /// </summary>
-    public async Task<IEnumerable<PermissionDto>> BulkCreateAsync(IEnumerable<CreatePermissionDto> permissionDtos)
+    public async Task<IEnumerable<PermissionDto>> BulkCreateAsync(IEnumerable<CreatePermissionDto> permissionDtos, CancellationToken ct = default)
     {
-        try
-        {
-            var createdPermissions = new List<PermissionDto>();
+        var createdPermissions = new List<PermissionDto>();
 
-            foreach (var permissionDto in permissionDtos)
+        foreach (var permissionDto in permissionDtos)
+        {
+            try
             {
-                try
-                {
-                    var created = await CreateAsync(permissionDto);
-                    createdPermissions.Add(created);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(ex, "Failed to create permission with title: {Title}", permissionDto.Title);
-                    // Continue with other permissions
-                }
+                var created = await CreateAsync(permissionDto, ct);
+                createdPermissions.Add(created);
             }
+            catch (Exception ex)
+            {
+                // Intentional: skip individual failures and continue the batch
+                _logger.LogWarning(ex, "Failed to create permission with title: {Title}", permissionDto.Title);
+            }
+        }
 
-            return createdPermissions;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error in bulk create permissions");
-            throw;
-        }
+        return createdPermissions;
     }
 
     #region Helper Methods

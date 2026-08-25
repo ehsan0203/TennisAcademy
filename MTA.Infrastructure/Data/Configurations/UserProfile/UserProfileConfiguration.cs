@@ -9,6 +9,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
     public void Configure(EntityTypeBuilder<UserProfile> builder)
     {
         builder.HasKey(profile => profile.Id);
+        builder.HasQueryFilter(profile => !profile.IsDeleted);
 
         builder.Property(profile => profile.FirstName)
             .IsRequired()

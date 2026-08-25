@@ -1,112 +1,93 @@
-# Code Review Skill
+# Code Review Agent
 
-Mandatory **self-review** to run after generating any code, before returning the
-final answer. Verify the generated code against **every rule in `CLAUDE.md`**.
-This checklist must stay in sync with `CLAUDE.md`; if a rule changes there,
-change it here too. If any rule is violated, automatically refactor and re-run
-the review before producing the final answer.
+## Identity & Responsibility
+This agent performs deep technical code review across the entire MTA Academy ASP.NET Web API codebase.
+
+**Focus areas:**
+- Architecture & CLAUDE.md compliance (Clean Architecture boundaries, DI, no business logic in controllers)
+- Code quality (correctness, null safety, error handling, async/await correctness)
+- Security (auth, input validation, injection risks, sensitive data exposure)
+- Performance (N+1 queries, unbounded lists, missing AsNoTracking, in-memory filtering)
+- Dependencies (correct abstractions, no concrete injections, no circular refs)
+- Potential regressions (removed guards, broken call sites, unawaited tasks)
+- EF Core correctness (tracking, soft delete, global filters, split queries)
+
+## What This Agent Does NOT Do
+- Business logic validation (that is the project-context.md agent's job)
+- Domain rule verification
+- End-to-end flow correctness
 
 ## Review Checklist
 
-### Architecture
-- [ ] SOLID principles respected.
-- [ ] DRY principles respected.
-- [ ] Controllers contain no business logic; services contain the business logic.
-- [ ] Dependency Injection used correctly (no manual instantiation of services / `DbContext`).
+### Architecture (CLAUDE.md rules)
+- [ ] Controllers return `CustomJsonResult<T>` — never `IActionResult`, `ActionResult<T>`, `Ok()`, `BadRequest()`, `NotFound()`
+- [ ] Controllers inject only service interfaces — no `IUnitOfWork`, `ApplicationDbContext`, `IMapper` in controllers
+- [ ] No business logic in controllers — only service calls and claim reads
+- [ ] No `try/catch` for cross-cutting errors in controllers (global middleware handles)
+- [ ] Services depend on interfaces, not concrete implementations
+- [ ] Services do not access `HttpContext`
+- [ ] `SaveChangesAsync` called only through `IUnitOfWork` — never `DbContext.SaveChangesAsync()` directly from services
+- [ ] No CQRS, MediatR, Event Sourcing introduced
 
-### Service Layer
-- [ ] Services depend on interfaces, not concrete implementations.
-- [ ] Services do not access `HttpContext` directly.
-- [ ] Services remain testable.
+### Soft Delete & Audit (CLAUDE.md rules)
+- [ ] No physical deletes — `Repository.DeleteAsync` sets `IsDeleted = true`
+- [ ] Every entity configuration has `HasQueryFilter(e => !e.IsDeleted)`
+- [ ] Audit fields (`CreatedAt`, `CreatedBy`, `UpdatedAt`, `ModifiedBy`) set by `AuditInterceptor`, not manually in services
+- [ ] `IAuditable` implemented by `BaseEntity`
 
-### Controllers
-- [ ] RESTful attribute routing with the correct verb (`GET` read, `POST` create, `PUT`/`PATCH` update, `DELETE` delete).
-- [ ] All endpoints return `CustomJsonResult<T>` — never `IActionResult` / `ActionResult` / `Ok()` / `BadRequest()` / `NotFound()`.
-- [ ] Non-200 outcomes are expressed through `CustomJsonResult<T>`, not raw action results.
-- [ ] A `ProducesResponseType` is declared for every status code the endpoint can return (success **and** errors).
-- [ ] Controllers only call services.
-- [ ] No `try/catch` for cross-cutting error handling (global middleware handles it); a local `try/catch` only for a genuinely recoverable, endpoint-specific case.
-
-### Validation
-- [ ] Every **request/input** DTO has a FluentValidation validator (response DTOs are not validated).
-- [ ] No manual/inline validation exists.
-- [ ] Validators are registered in DI.
-
-### EF Core & Data Access
-- [ ] Read-only queries use `AsNoTracking()`.
-- [ ] Queries with **multiple collection `Include()`s** use `AsSplitQuery()` (not applied blindly to reference includes; stable `OrderBy` present when splitting).
-- [ ] Projections used where appropriate (only required columns selected).
-- [ ] `async/await` used for all I/O; no N+1 queries.
-- [ ] Data accessed through `DbContext`; a repository abstraction added **only where it adds clear value** (no generic repository forced over everything).
+### EF Core
+- [ ] Read-only queries use `.AsNoTracking()`
+- [ ] Multi-collection includes use `AsSplitQuery()` with a stable `OrderBy`
+- [ ] No unbounded list returns — pagination applied to all collections
+- [ ] No N+1 query patterns
+- [ ] Queries filter at DB level, not in-memory after materialisation
 
 ### Async & Nullability
-- [ ] Async method names end with `Async`.
-- [ ] Public async methods accept/honor a `CancellationToken`.
-- [ ] Nullable reference types respected; no needless `null!` / `!`.
-- [ ] No `.Result` or `.Wait()` (no sync-over-async).
+- [ ] Every `async Task<T>` call is `await`ed — no fire-and-forget
+- [ ] Public async methods accept `CancellationToken ct` and pass it to all EF calls
+- [ ] Nullable reference types respected — no accidental `.Property` on a nullable without null-conditional `?.`
+- [ ] No `.Result` or `.Wait()` (sync-over-async)
 
-### Unit of Work
-- [ ] `SaveChanges` executed only through `UnitOfWork`.
-- [ ] Services do not call `DbContext.SaveChanges()` directly.
+### Validation
+- [ ] Every input/request DTO has a FluentValidation `*Validator` registered in DI
+- [ ] No manual `if (!ModelState.IsValid)` or inline `if (string.IsNullOrWhiteSpace(...))` in controllers
+- [ ] Response/output DTOs are not validated
 
-### Transactions
-- [ ] Transactions used only for multi-write operations that must succeed/fail together.
-- [ ] No unnecessary transaction scopes.
-
-### Soft Delete
-- [ ] No physical delete operations (use `IsDeleted`; hard delete only on a legal/compliance requirement).
-- [ ] Soft-deleted rows excluded automatically via an EF **global query filter** (`HasQueryFilter`), not per-query `Where`.
-
-### Audit Fields
-- [ ] `CreatedDate`, `CreatedBy`, `ModifiedDate`, `ModifiedBy` populated **automatically** via a `SaveChangesInterceptor` (or `SaveChangesAsync` override) — not by hand in services.
-
-### Permissions / Authorization
-- [ ] `PermissionService` is used; no duplicated permission logic.
-- [ ] Permission checks are centralized.
-- [ ] Permissions checked before business actions.
-
-### Mapping
-- [ ] One consistent mapping approach project-wide.
-- [ ] Manual mapping or a source generator (Mapster / Mapperly) preferred; no new dependence on AutoMapper.
-- [ ] Mapping kept in the Application layer (never in controllers).
-
-### Naming Conventions
-- [ ] DTOs end with `Dto`.
-- [ ] Validators end with `Validator`.
-- [ ] Services end with `Service`.
-- [ ] Interfaces start with `I`.
-
-### Logging
-- [ ] Unexpected exceptions are logged.
-- [ ] No sensitive information is logged.
-- [ ] Structured logging is used.
-
-### Cache
-- [ ] Cache strategy applied where appropriate.
-- [ ] Cache invalidation exists after updates.
-
-### Exception Handling
-- [ ] Services throw business exceptions; errors are not swallowed.
-- [ ] Global exception middleware is assumed.
+### Security
+- [ ] No sensitive data (passwords, tokens) logged
+- [ ] Password hashing consistent — BCrypt in `AuthService`, SHA-256 in `AccountService` (known inconsistency, not to be silently fixed)
+- [ ] Webhook endpoints verify signatures before processing
+- [ ] No SQL injection risk from raw string concatenation in queries
+- [ ] JWT claims read correctly (primary claim is `"UserId"`, not `"AccountId"`)
 
 ### Performance
-- [ ] No unnecessary database queries.
-- [ ] Only required columns selected.
-- [ ] N+1 query problems avoided.
-- [ ] Pagination used for collections; no unbounded lists.
+- [ ] `LoginAsync` and other high-traffic paths filter at DB level, not in memory
+- [ ] No full-table materialise-then-filter patterns
+- [ ] Statistics/aggregate queries use DB-side GROUP BY, not in-memory LINQ
 
-### Testing
-- [ ] Tests use xUnit and the AAA pattern.
-- [ ] Test names follow `Method_Scenario_ExpectedResult`.
-- [ ] Dependencies mocked via interfaces; no real DB in unit tests.
+### DI & Registration
+- [ ] `ICurrentUser` and `AuditInterceptor` registered as scoped
+- [ ] `AuditInterceptor` registered before `AddDbContext` factory runs (deferred — safe at request time)
+- [ ] No service registered as concrete type when an interface exists
+- [ ] `AddValidatorsFromAssemblyContaining<T>` scans the correct assembly
 
-## Final Output: Rule Compliance Report
+### Mapping
+- [ ] One consistent mapping approach per service (no mixing AutoMapper + manual in same class)
+- [ ] Mapping stays in Application layer — never in controllers
 
-End the response with a section titled **"Rule Compliance Report"** listing:
+### Naming
+- [ ] DTOs end in `Dto`, Validators in `Validator`, Services in `Service`, Interfaces start with `I`
 
-- ✔ Rules followed
-- ⚠ Potential improvements
-- ❌ Violations found and fixed
+### RESTful Routing
+- [ ] HTTP verb matches operation (GET=read, POST=create, PUT/PATCH=update, DELETE=delete)
+- [ ] No verb names in route paths (e.g. no `CreateCategory` in route string)
 
-If any rule was violated, refactor automatically and re-run this review.
-Repeat until no violations remain. Never deliver code with known violations.
+## Output Format
+Produce a numbered list of findings. For each:
+- **File & line**
+- **Rule violated**
+- **Severity** (Critical / High / Medium / Low)
+- **Concrete failure scenario**
+- **Fix recommendation**
+
+End with a **Rule Compliance Summary** table showing pass/fail per category.

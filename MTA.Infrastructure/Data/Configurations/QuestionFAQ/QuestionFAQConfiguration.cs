@@ -9,6 +9,7 @@ public class QuestionFAQConfiguration : IEntityTypeConfiguration<QuestionFAQ>
     public void Configure(EntityTypeBuilder<QuestionFAQ> builder)
     {
         builder.HasKey(question => question.Id);
+        builder.HasQueryFilter(question => !question.IsDeleted);
 
         builder.Property(question => question.QuestionText)
             .IsRequired()

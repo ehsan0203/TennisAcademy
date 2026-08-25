@@ -2,294 +2,84 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
-using Microsoft.Extensions.Logging;
+using MTA.Web.Models;
 
 namespace MTA.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize]
+[Authorize]
 public class PackageController : ControllerBase
 {
     private readonly IPackageService _packageService;
-    private readonly ILogger<PackageController> _logger;
 
-    public PackageController(IPackageService packageService, ILogger<PackageController> logger)
+    public PackageController(IPackageService packageService)
     {
         _packageService = packageService;
-        _logger = logger;
     }
 
-    #region CRUD Operations
-
-    /// <summary>
-    /// Get all packages with pagination and filtering
-    /// </summary>
     [HttpGet]
-    public async Task<ActionResult<PaginatedResult<PackageDto>>> GetPackages(
+    [ProducesResponseType(typeof(CustomJsonResult<PaginatedResult<PackageDto>>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<PaginatedResult<PackageDto>>> GetPackages(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
         [FromQuery] string? searchTerm = null,
         [FromQuery] decimal? minPrice = null,
         [FromQuery] decimal? maxPrice = null,
-        [FromQuery] int? durationUnitId = null)
+        [FromQuery] int? durationUnitId = null,
+        CancellationToken ct = default)
     {
-        try
-        {
-            var result = await _packageService.GetAllAsync(page, pageSize, searchTerm, minPrice, maxPrice, durationUnitId);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting packages");
-            return StatusCode(500, "Internal server error");
-        }
+        var result = await _packageService.GetAllAsync(page, pageSize, searchTerm, minPrice, maxPrice, durationUnitId, ct);
+        return CustomJsonResult<PaginatedResult<PackageDto>>.SuccessResult(result);
     }
 
-    /// <summary>
-    /// Get package by ID
-    /// </summary>
     [HttpGet("{id}")]
-    public async Task<ActionResult<PackageDto>> GetPackage(int id)
+    [ProducesResponseType(typeof(CustomJsonResult<PackageDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<PackageDto>> GetPackage(int id, CancellationToken ct)
     {
-        try
-        {
-            var package = await _packageService.GetByIdAsync(id);
-            if (package == null)
-                return NotFound("Package not found");
-
-            return Ok(package);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting package with ID: {PackageId}", id);
-            return StatusCode(500, "Internal server error");
-        }
+        var package = await _packageService.GetByIdAsync(id, ct);
+        return package is null
+            ? CustomJsonResult<PackageDto>.NotFound("Package not found")
+            : CustomJsonResult<PackageDto>.SuccessResult(package);
     }
 
-    ///// <summary>
-    ///// Get packages by price range
-    ///// </summary>
-    //[HttpGet("by-price-range")]
-    //public async Task<ActionResult<IEnumerable<PackageDto>>> GetPackagesByPriceRange(
-    //    [FromQuery] decimal minPrice,
-    //    [FromQuery] decimal maxPrice)
-    //{
-    //    try
-    //    {
-    //        var packages = await _packageService.GetByPriceRangeAsync(minPrice, maxPrice);
-    //        return Ok(packages);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error getting packages by price range from {MinPrice} to {MaxPrice}", minPrice, maxPrice);
-    //        return StatusCode(500, "Internal server error");
-    //    }
-    //}
-
-    ///// <summary>
-    ///// Get packages by duration unit
-    ///// </summary>
-    //[HttpGet("by-duration-unit/{durationUnitId}")]
-    //public async Task<ActionResult<IEnumerable<PackageDto>>> GetPackagesByDurationUnit(int durationUnitId)
-    //{
-    //    try
-    //    {
-    //        var packages = await _packageService.GetByDurationUnitAsync(durationUnitId);
-    //        return Ok(packages);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error getting packages by duration unit ID: {DurationUnitId}", durationUnitId);
-    //        return StatusCode(500, "Internal server error");
-    //    }
-    //}
-
-    /// <summary>
-    /// Create new package
-    /// </summary>
     [HttpPost]
-    //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<PackageDto>> CreatePackage([FromBody] CreatePackageDto packageDto)
+    [ProducesResponseType(typeof(CustomJsonResult<PackageDto>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status400BadRequest)]
+    public async Task<CustomJsonResult<PackageDto>> CreatePackage([FromBody] CreatePackageDto packageDto, CancellationToken ct)
     {
-        try
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var createdPackage = await _packageService.CreateAsync(packageDto);
-            return CreatedAtAction(nameof(GetPackage), new { id = createdPackage.Id }, createdPackage);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error creating package");
-            return StatusCode(500, "Internal server error");
-        }
+        var created = await _packageService.CreateAsync(packageDto, ct);
+        return CustomJsonResult<PackageDto>.Created(created);
     }
 
-    /// <summary>
-    /// Update existing package
-    /// </summary>
     [HttpPut("{id}")]
-    //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<PackageDto>> UpdatePackage(int id, [FromBody] PackageDto packageDto)
+    [ProducesResponseType(typeof(CustomJsonResult<PackageDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<PackageDto>> UpdatePackage(int id, [FromBody] PackageDto packageDto, CancellationToken ct)
     {
-        try
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var updatedPackage = await _packageService.UpdateAsync(id, packageDto);
-            if (updatedPackage == null)
-                return NotFound("Package not found");
-
-            return Ok(updatedPackage);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error updating package with ID: {PackageId}", id);
-            return StatusCode(500, "Internal server error");
-        }
+        var updated = await _packageService.UpdateAsync(id, packageDto, ct);
+        return CustomJsonResult<PackageDto>.SuccessResult(updated);
     }
 
-    /// <summary>
-    /// Delete package
-    /// </summary>
     [HttpDelete("{id}")]
-    //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult> DeletePackage(int id)
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<string>> DeletePackage(int id, CancellationToken ct)
     {
-        try
-        {
-            var result = await _packageService.DeleteAsync(id);
-            if (!result)
-                return NotFound("Package not found");
-
-            return Ok("Package deleted successfully");
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error deleting package with ID: {PackageId}", id);
-            return StatusCode(500, "Internal server error");
-        }
+        var deleted = await _packageService.DeleteAsync(id, ct);
+        return deleted
+            ? CustomJsonResult<string>.NoContent()
+            : CustomJsonResult<string>.NotFound("Package not found");
     }
 
-    #endregion
-
-    #region Advanced Operations
-
-    ///// <summary>
-    ///// Update package price
-    ///// </summary>
-    //[HttpPatch("{id}/price")]
-    ////[Authorize(Roles = "Admin")]
-    //public async Task<ActionResult<PackageDto>> UpdatePrice(int id, [FromBody] decimal price)
-    //{
-    //    try
-    //    {
-    //        var updatedPackage = await _packageService.UpdatePriceAsync(id, price);
-    //        return Ok(updatedPackage);
-    //    }
-    //    catch (InvalidOperationException ex)
-    //    {
-    //        return BadRequest(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error updating price for package with ID: {PackageId}", id);
-    //        return StatusCode(500, "Internal server error");
-    //    }
-    //}
-
-    ///// <summary>
-    ///// Update package capacity
-    ///// </summary>
-    //[HttpPatch("{id}/capacity")]
-    ////[Authorize(Roles = "Admin")]
-    //public async Task<ActionResult<PackageDto>> UpdateCapacity(int id, [FromBody] UpdateCapacityDto capacityDto)
-    //{
-    //    try
-    //    {
-    //        var updatedPackage = await _packageService.UpdateCapacityAsync(id, capacityDto.TicketCount, capacityDto.MessageCount);
-    //        return Ok(updatedPackage);
-    //    }
-    //    catch (InvalidOperationException ex)
-    //    {
-    //        return BadRequest(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error updating capacity for package with ID: {PackageId}", id);
-    //        return StatusCode(500, "Internal server error");
-    //    }
-    //}
-
-    ///// <summary>
-    ///// Update package duration
-    ///// </summary>
-    //[HttpPatch("{id}/duration")]
-    ////[Authorize(Roles = "Admin")]
-    //public async Task<ActionResult<PackageDto>> UpdateDuration(int id, [FromBody] UpdateDurationDto durationDto)
-    //{
-    //    try
-    //    {
-    //        var updatedPackage = await _packageService.UpdateDurationAsync(id, durationDto.Duration, durationDto.DurationUnitId);
-    //        return Ok(updatedPackage);
-    //    }
-    //    catch (InvalidOperationException ex)
-    //    {
-    //        return BadRequest(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error updating duration for package with ID: {PackageId}", id);
-    //        return StatusCode(500, "Internal server error");
-    //    }
-    //}
-
-    #endregion
-
-
-    #region Search and Filter
-
-    /// <summary>
-    /// Search packages by title
-    /// </summary>
     [HttpPost("search")]
-    public async Task<ActionResult<PaginatedResult<PackageDto>>> SearchPackages([FromBody] PackageSearchDto searchDto)
+    [ProducesResponseType(typeof(CustomJsonResult<PaginatedResult<PackageDto>>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<PaginatedResult<PackageDto>>> SearchPackages([FromBody] PackageSearchDto searchDto, CancellationToken ct)
     {
-        try
-        {
-            var result = await _packageService.GetAllAsync(
-                searchDto.Page, 
-                searchDto.PageSize, 
-                searchDto.SearchTerm,
-                searchDto.MinPrice,
-                searchDto.MaxPrice,
-                searchDto.DurationUnitId);
-            
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error searching packages");
-            return StatusCode(500, "Internal server error");
-        }
+        var result = await _packageService.GetAllAsync(
+            searchDto.Page, searchDto.PageSize, searchDto.SearchTerm,
+            searchDto.MinPrice, searchDto.MaxPrice, searchDto.DurationUnitId, ct);
+        return CustomJsonResult<PaginatedResult<PackageDto>>.SuccessResult(result);
     }
-
-    #endregion
 }
-
-

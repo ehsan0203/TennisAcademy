@@ -9,6 +9,7 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
     public void Configure(EntityTypeBuilder<Permission> builder)
     {
         builder.HasKey(permission => permission.Id);
+        builder.HasQueryFilter(permission => !permission.IsDeleted);
 
         builder.Property(permission => permission.Title)
             .IsRequired()

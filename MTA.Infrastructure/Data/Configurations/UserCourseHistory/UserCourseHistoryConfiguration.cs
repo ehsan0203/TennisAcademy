@@ -9,6 +9,7 @@ public class UserCourseHistoryConfiguration : IEntityTypeConfiguration<UserCours
     public void Configure(EntityTypeBuilder<UserCourseHistory> builder)
     {
         builder.HasKey(history => history.Id);
+        builder.HasQueryFilter(history => !history.IsDeleted);
 
         builder.HasOne(history => history.Course)
             .WithMany(course => course.UserCourseHistory)

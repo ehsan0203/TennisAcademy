@@ -9,6 +9,7 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
     public void Configure(EntityTypeBuilder<Role> builder)
     {
         builder.HasKey(role => role.Id);
+        builder.HasQueryFilter(role => !role.IsDeleted);
 
         builder.Property(role => role.Title)
             .IsRequired()

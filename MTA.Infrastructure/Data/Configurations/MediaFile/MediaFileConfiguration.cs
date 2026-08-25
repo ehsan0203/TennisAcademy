@@ -9,6 +9,7 @@ public class MediaFileConfiguration : IEntityTypeConfiguration<MediaFile>
     public void Configure(EntityTypeBuilder<MediaFile> builder)
     {
         builder.HasKey(mediaFile => mediaFile.Id);
+        builder.HasQueryFilter(mediaFile => !mediaFile.IsDeleted);
 
         builder.Property(mediaFile => mediaFile.Title)
             .IsRequired()

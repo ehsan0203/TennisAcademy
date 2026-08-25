@@ -4,65 +4,22 @@ using MTA.Application.DTOs.User;
 
 namespace MTA.Application.Services;
 
-/// <summary>
-/// Service interface for Account operations (light & optimized)
-/// </summary>
 public interface IAccountService
 {
-    /// <summary>
-    /// Get all accounts with optional filtering and pagination
-    /// </summary>
-    Task<PaginatedResult<AccountDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? roleId = null, bool? isActive = null);
-
-    /// <summary>
-    /// Get account by ID
-    /// </summary>
-    Task<AccountDto?> GetByIdAsync(int id);
-
-    Task<CurrentUserDto?> UpdateCurrentUserAsync(int accountId, UpdateCurrentUserDto updateDto);
-
-    Task<CurrentUserDto?> GetCurrentUserAsync(int accountId);
-
-    Task<string?> UploadProfileImageAsync(int accountId, IFormFile profileImage);
-    /// <summary>
-    /// Get account by email
-    /// </summary>
-    Task<AccountDto?> GetByEmailAsync(string email);
-
-    /// <summary>
-    /// Create new account
-    /// </summary>
-    Task<AccountDto> CreateAsync(CreateAccountDto accountDto);
-
-    /// <summary>
-    /// Update account info (name, email, role, status, etc.)
-    /// </summary>
-    Task<AccountDto?> UpdateAsync(int id, UpdateAccountDto updateDto);
-
-    /// <summary>
-    /// Soft delete account
-    /// </summary>
-    Task<bool> DeleteAsync(int id);
-
-    /// <summary>
-    /// Change account password
-    /// </summary>
-    Task<bool> ChangePasswordAsync(int id, string currentPassword, string newPassword);
-
-    /// <summary>
-    /// Activate or deactivate account
-    /// </summary>
-    Task<AccountDto?> SetActiveStatusAsync(int id, bool isActive);
-
-    /// <summary>
-    /// Change account role
-    /// </summary>
-    Task<AccountDto?> ChangeRoleAsync(int id, int roleId);
+    Task<PaginatedResult<AccountDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? roleId = null, bool? isActive = null, CancellationToken ct = default);
+    Task<AccountDto?> GetByIdAsync(int id, CancellationToken ct = default);
+    Task<AccountDto?> GetByEmailAsync(string email, CancellationToken ct = default);
+    Task<CurrentUserDto?> GetCurrentUserAsync(int accountId, CancellationToken ct = default);
+    Task<AccountDto> CreateAsync(CreateAccountDto accountDto, CancellationToken ct = default);
+    Task<AccountDto?> UpdateAsync(int id, UpdateAccountDto updateDto, CancellationToken ct = default);
+    Task<CurrentUserDto?> UpdateCurrentUserAsync(int accountId, UpdateCurrentUserDto updateDto, CancellationToken ct = default);
+    Task<string?> UploadProfileImageAsync(int accountId, IFormFile profileImage, CancellationToken ct = default);
+    Task<bool> DeleteAsync(int id, CancellationToken ct = default);
+    Task<bool> ChangePasswordAsync(int id, string currentPassword, string newPassword, CancellationToken ct = default);
+    Task<AccountDto?> SetActiveStatusAsync(int id, bool isActive, CancellationToken ct = default);
+    Task<AccountDto?> ChangeRoleAsync(int id, int roleId, CancellationToken ct = default);
 }
 
-/// <summary>
-/// Paginated result wrapper
-/// </summary>
 public class PaginatedResult<T>
 {
     public IEnumerable<T> Data { get; set; } = new List<T>();

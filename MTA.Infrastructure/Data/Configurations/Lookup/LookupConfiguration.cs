@@ -9,6 +9,7 @@ public class LookupConfiguration : IEntityTypeConfiguration<Lookup>
     public void Configure(EntityTypeBuilder<Lookup> builder)
     {
         builder.HasKey(lookup => lookup.Id);
+        builder.HasQueryFilter(lookup => !lookup.IsDeleted);
 
         builder.Property(lookup => lookup.Category)
             .IsRequired()

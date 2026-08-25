@@ -1,92 +1,91 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
+using MTA.Web.Models;
 
-namespace MTA.API.Controllers
+namespace MTA.Web.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class LookupController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class LookupController : ControllerBase
+    private readonly ILookupService _lookupService;
+
+    public LookupController(ILookupService lookupService)
     {
-        private readonly ILookupService _lookupService;
+        _lookupService = lookupService;
+    }
 
-        public LookupController(ILookupService lookupService)
-        {
-            _lookupService = lookupService;
-        }
+    [HttpGet]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(CustomJsonResult<PaginatedResult<LookupDto>>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<PaginatedResult<LookupDto>>> GetAll(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? category = null,
+        [FromQuery] string? searchTerm = null,
+        CancellationToken ct = default)
+    {
+        var result = await _lookupService.GetAllAsync(page, pageSize, category, searchTerm, ct);
+        return CustomJsonResult<PaginatedResult<LookupDto>>.SuccessResult(result);
+    }
 
-        [HttpGet]
-        public async Task<ActionResult<PaginatedResult<LookupDto>>> GetAll(
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] string? category = null,
-            [FromQuery] string? searchTerm = null)
-        {
-            var result = await _lookupService.GetAllAsync(page, pageSize, category, searchTerm);
-            return Ok(result);
-        }
+    [HttpGet("{id:int}")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(CustomJsonResult<LookupDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<LookupDto>> GetById(int id, CancellationToken ct)
+    {
+        var lookup = await _lookupService.GetByIdAsync(id, ct);
+        return lookup is null
+            ? CustomJsonResult<LookupDto>.NotFound($"Lookup with ID {id} not found")
+            : CustomJsonResult<LookupDto>.SuccessResult(lookup);
+    }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<LookupDto>> GetById(int id)
-        {
-            var lookup = await _lookupService.GetByIdAsync(id);
-            if (lookup == null)
-                return NotFound($"Lookup with ID {id} not found.");
+    [HttpGet("category/{category}")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<LookupDto>>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<IEnumerable<LookupDto>>> GetByCategory(string category, CancellationToken ct)
+    {
+        var result = await _lookupService.GetByCategoryAsync(category, ct);
+        return CustomJsonResult<IEnumerable<LookupDto>>.SuccessResult(result);
+    }
 
-            return Ok(lookup);
-        }
+    [HttpGet("categories")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<string>>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<IEnumerable<string>>> GetCategories(CancellationToken ct)
+    {
+        var result = await _lookupService.GetAllCategoriesAsync(ct);
+        return CustomJsonResult<IEnumerable<string>>.SuccessResult(result);
+    }
 
-        [HttpGet("category/{category}")]
-        public async Task<ActionResult<IEnumerable<LookupDto>>> GetByCategory(string category)
-        {
-            var result = await _lookupService.GetByCategoryAsync(category);
-            return Ok(result);
-        }
+    [HttpPost]
+    [ProducesResponseType(typeof(CustomJsonResult<LookupDto>), StatusCodes.Status201Created)]
+    public async Task<CustomJsonResult<LookupDto>> Create([FromBody] CreateLookupDto lookupDto, CancellationToken ct)
+    {
+        var created = await _lookupService.CreateAsync(lookupDto, ct);
+        return CustomJsonResult<LookupDto>.Created(created);
+    }
 
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(CustomJsonResult<LookupDto>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<LookupDto>> Update(int id, [FromBody] LookupDto lookupDto, CancellationToken ct)
+    {
+        var updated = await _lookupService.UpdateAsync(id, lookupDto, ct);
+        return CustomJsonResult<LookupDto>.SuccessResult(updated);
+    }
 
-        [HttpPost]
-        public async Task<ActionResult<LookupDto>> Create([FromBody] CreateLookupDto dto)
-        {
-            if (dto == null)
-                return BadRequest("Invalid request.");
-
-            var created = await _lookupService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
-        }
-
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult<LookupDto>> Update(int id, [FromBody] LookupDto dto)
-        {
-            if (dto == null)
-                return BadRequest("Invalid request.");
-
-            try
-            {
-                var updated = await _lookupService.UpdateAsync(id, dto);
-                return Ok(updated);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-        }
-
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var success = await _lookupService.DeleteAsync(id);
-            if (!success)
-                return NotFound($"Lookup with ID {id} not found.");
-
-            return NoContent();
-        }
-
-        [HttpGet("categories")]
-        public async Task<ActionResult<IEnumerable<string>>> GetCategories()
-        {
-            var result = await _lookupService.GetAllCategoriesAsync();
-            return Ok(result);
-        }
-
+    [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<string>> Delete(int id, CancellationToken ct)
+    {
+        var deleted = await _lookupService.DeleteAsync(id, ct);
+        return deleted
+            ? CustomJsonResult<string>.NoContent()
+            : CustomJsonResult<string>.NotFound($"Lookup with ID {id} not found");
     }
 }

@@ -2,251 +2,116 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
-using Microsoft.Extensions.Logging;
+using MTA.Web.Models;
 
 namespace MTA.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize]
 public class LessonController : ControllerBase
 {
     private readonly ILessonService _lessonService;
-    private readonly ILogger<LessonController> _logger;
 
-    public LessonController(ILessonService lessonService, ILogger<LessonController> logger)
+    public LessonController(ILessonService lessonService)
     {
         _lessonService = lessonService;
-        _logger = logger;
     }
 
-    #region CRUD Operations
-
-    /// <summary>
-    /// Get all lessons with pagination and filtering
-    /// </summary>
     [HttpGet]
-    public async Task<ActionResult<PaginatedResult<LessonDto>>> GetLessons(
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(CustomJsonResult<PaginatedResult<LessonDto>>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<PaginatedResult<LessonDto>>> GetLessons(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
         [FromQuery] string? searchTerm = null,
         [FromQuery] int? courseId = null,
-        [FromQuery] bool? isFree = null)
+        [FromQuery] bool? isFree = null,
+        CancellationToken ct = default)
     {
-        try
-        {
-            var result = await _lessonService.GetAllAsync(page, pageSize, searchTerm, courseId, isFree);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting lessons");
-            return StatusCode(500, "Internal server error");
-        }
+        var result = await _lessonService.GetAllAsync(page, pageSize, searchTerm, courseId, isFree, ct);
+        return CustomJsonResult<PaginatedResult<LessonDto>>.SuccessResult(result);
     }
 
-    /// <summary>
-    /// Get lesson by ID
-    /// </summary>
     [HttpGet("{id}")]
-    public async Task<ActionResult<LessonDto>> GetLesson(int id)
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(CustomJsonResult<LessonDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<LessonDto>> GetLesson(int id, CancellationToken ct)
     {
-        try
-        {
-            var lesson = await _lessonService.GetByIdAsync(id);
-            if (lesson == null)
-                return NotFound("Lesson not found");
-
-            return Ok(lesson);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting lesson with ID: {LessonId}", id);
-            return StatusCode(500, "Internal server error");
-        }
+        var lesson = await _lessonService.GetByIdAsync(id, ct);
+        return lesson is null
+            ? CustomJsonResult<LessonDto>.NotFound("Lesson not found")
+            : CustomJsonResult<LessonDto>.SuccessResult(lesson);
     }
 
-    /// <summary>
-    /// Get lessons by course ID
-    /// </summary>
     [HttpGet("by-course/{courseId}")]
-    public async Task<ActionResult<IEnumerable<LessonDto>>> GetLessonsByCourse(int courseId)
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<LessonDto>>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<IEnumerable<LessonDto>>> GetLessonsByCourse(int courseId, CancellationToken ct)
     {
-        try
-        {
-            var lessons = await _lessonService.GetByCourseAsync(courseId);
-            return Ok(lessons);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting lessons by course ID: {CourseId}", courseId);
-            return StatusCode(500, "Internal server error");
-        }
+        var lessons = await _lessonService.GetByCourseAsync(courseId, ct);
+        return CustomJsonResult<IEnumerable<LessonDto>>.SuccessResult(lessons);
     }
 
-    /// <summary>
-    /// Create new lesson
-    /// </summary>
     [HttpPost]
-    //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<LessonDto>> CreateLesson([FromForm] CreateLessonDto lessonDto)
+    [Authorize]
+    [ProducesResponseType(typeof(CustomJsonResult<LessonDto>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status400BadRequest)]
+    public async Task<CustomJsonResult<LessonDto>> CreateLesson([FromForm] CreateLessonDto lessonDto, CancellationToken ct)
     {
-        try
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var createdLesson = await _lessonService.CreateAsync(lessonDto);
-            return CreatedAtAction(nameof(GetLesson), new { id = createdLesson.Id }, createdLesson);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error creating lesson");
-            return StatusCode(500, "Internal server error");
-        }
+        var created = await _lessonService.CreateAsync(lessonDto, ct);
+        return CustomJsonResult<LessonDto>.Created(created);
     }
 
-    /// <summary>
-    /// Update existing lesson
-    /// </summary>
     [HttpPut("{id}")]
-   // [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<LessonDto>> UpdateLesson(int id, [FromForm] UpdateLessonDto lessonDto)
+    [Authorize]
+    [ProducesResponseType(typeof(CustomJsonResult<LessonDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<LessonDto>> UpdateLesson(int id, [FromForm] UpdateLessonDto lessonDto, CancellationToken ct)
     {
-        try
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var updatedLesson = await _lessonService.UpdateAsync(id, lessonDto);
-            if (updatedLesson == null)
-                return NotFound("Lesson not found");
-
-            return Ok(updatedLesson);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error updating lesson with ID: {LessonId}", id);
-            return StatusCode(500, "Internal server error");
-        }
+        var updated = await _lessonService.UpdateAsync(id, lessonDto, ct);
+        return updated is null
+            ? CustomJsonResult<LessonDto>.NotFound("Lesson not found")
+            : CustomJsonResult<LessonDto>.SuccessResult(updated);
     }
 
-    /// <summary>
-    /// Delete lesson
-    /// </summary>
     [HttpDelete("{id}")]
-    //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult> DeleteLesson(int id)
+    [Authorize]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
+    public async Task<CustomJsonResult<string>> DeleteLesson(int id, CancellationToken ct)
     {
-        try
-        {
-            var result = await _lessonService.DeleteAsync(id);
-            if (!result)
-                return NotFound("Lesson not found");
-
-            return Ok("Lesson deleted successfully");
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error deleting lesson with ID: {LessonId}", id);
-            return StatusCode(500, "Internal server error");
-        }
+        var deleted = await _lessonService.DeleteAsync(id, ct);
+        return deleted
+            ? CustomJsonResult<string>.NoContent()
+            : CustomJsonResult<string>.NotFound("Lesson not found");
     }
 
-    #endregion
-
-    #region Advanced Operations
-
-    /// <summary>
-    /// Change lesson course
-    /// </summary>
     [HttpPatch("{id}/course")]
-    //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<LessonDto>> ChangeCourse(int id, [FromBody] int courseId)
+    [Authorize]
+    [ProducesResponseType(typeof(CustomJsonResult<LessonDto>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<LessonDto>> ChangeCourse(int id, [FromBody] int courseId, CancellationToken ct)
     {
-        try
-        {
-            var updatedLesson = await _lessonService.ChangeCourseAsync(id, courseId);
-            return Ok(updatedLesson);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error changing course for lesson with ID: {LessonId}", id);
-            return StatusCode(500, "Internal server error");
-        }
+        var updated = await _lessonService.ChangeCourseAsync(id, courseId, ct);
+        return CustomJsonResult<LessonDto>.SuccessResult(updated);
     }
 
-    /// <summary>
-    /// Update lesson order
-    /// </summary>
     [HttpPatch("{id}/order")]
-    //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<LessonDto>> UpdateOrder(int id, [FromBody] int order)
+    [Authorize]
+    [ProducesResponseType(typeof(CustomJsonResult<LessonDto>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<LessonDto>> UpdateOrder(int id, [FromBody] int order, CancellationToken ct)
     {
-        try
-        {
-            var updatedLesson = await _lessonService.UpdateOrderAsync(id, order);
-            return Ok(updatedLesson);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error updating order for lesson with ID: {LessonId}", id);
-            return StatusCode(500, "Internal server error");
-        }
+        var updated = await _lessonService.UpdateOrderAsync(id, order, ct);
+        return CustomJsonResult<LessonDto>.SuccessResult(updated);
     }
 
-    #endregion
-
-    #region Search and Filter
-
-    /// <summary>
-    /// Search lessons by title or description
-    /// </summary>
     [HttpPost("search")]
-    public async Task<ActionResult<PaginatedResult<LessonDto>>> SearchLessons([FromBody] LessonSearchDto searchDto)
+    [Authorize]
+    [ProducesResponseType(typeof(CustomJsonResult<PaginatedResult<LessonDto>>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<PaginatedResult<LessonDto>>> SearchLessons([FromBody] LessonSearchDto searchDto, CancellationToken ct)
     {
-        try
-        {
-            var result = await _lessonService.GetAllAsync(
-                searchDto.Page, 
-                searchDto.PageSize, 
-                searchDto.SearchTerm,
-                searchDto.CourseId,
-                searchDto.IsFree);
-            
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error searching lessons");
-            return StatusCode(500, "Internal server error");
-        }
+        var result = await _lessonService.GetAllAsync(
+            searchDto.Page, searchDto.PageSize, searchDto.SearchTerm, searchDto.CourseId, searchDto.IsFree, ct);
+        return CustomJsonResult<PaginatedResult<LessonDto>>.SuccessResult(result);
     }
-
-    #endregion
 }
-
-/// <summary>
-/// DTO for lesson search
-/// </summary>
-

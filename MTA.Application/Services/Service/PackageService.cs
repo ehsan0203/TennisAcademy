@@ -23,11 +23,12 @@ public class PackageService : IPackageService
     /// <summary>
     /// Get all packages with optional filtering
     /// </summary>
-    public async Task<PaginatedResult<PackageDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, decimal? minPrice = null, decimal? maxPrice = null, int? durationUnitId = null)
+    public async Task<PaginatedResult<PackageDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, decimal? minPrice = null, decimal? maxPrice = null, int? durationUnitId = null, CancellationToken ct = default)
     {
         try
         {
             var query = _unitOfWork.Repository<Package>().GetQueryable()
+                .AsNoTracking()
                 .Include(p => p.DurationUnit)
                 .Include(p => p.Tickets)
                 .Include(p => p.PackageHistories)
@@ -55,14 +56,14 @@ public class PackageService : IPackageService
             }
 
             // Get total count
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.CountAsync(ct);
 
             // Apply pagination and ordering
             var packages = await query
                 .OrderBy(p => p.Price)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToListAsync(ct);
 
             // Map to DTOs
             var packageDtos = packages.Select(MapToDto).ToList();
@@ -77,7 +78,7 @@ public class PackageService : IPackageService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting packages with page {Page}, pageSize {PageSize}, searchTerm {SearchTerm}, minPrice {MinPrice}, maxPrice {MaxPrice}, durationUnitId {DurationUnitId}", 
+            _logger.LogError(ex, "Error getting packages with page {Page}, pageSize {PageSize}, searchTerm {SearchTerm}, minPrice {MinPrice}, maxPrice {MaxPrice}, durationUnitId {DurationUnitId}",
                 page, pageSize, searchTerm, minPrice, maxPrice, durationUnitId);
             throw;
         }
@@ -86,15 +87,16 @@ public class PackageService : IPackageService
     /// <summary>
     /// Get package by ID
     /// </summary>
-    public async Task<PackageDto?> GetByIdAsync(int id)
+    public async Task<PackageDto?> GetByIdAsync(int id, CancellationToken ct = default)
     {
         try
         {
             var package = await _unitOfWork.Repository<Package>().GetQueryable()
+                .AsNoTracking()
                 .Include(p => p.DurationUnit)
                 .Include(p => p.Tickets)
                 .Include(p => p.PackageHistories)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == id, ct);
 
             return package != null ? MapToDto(package) : null;
         }
@@ -108,17 +110,18 @@ public class PackageService : IPackageService
     /// <summary>
     /// Get packages by price range
     /// </summary>
-    public async Task<IEnumerable<PackageDto>> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice)
+    public async Task<IEnumerable<PackageDto>> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice, CancellationToken ct = default)
     {
         try
         {
             var packages = await _unitOfWork.Repository<Package>().GetQueryable()
+                .AsNoTracking()
                 .Include(p => p.DurationUnit)
                 .Include(p => p.Tickets)
                 .Include(p => p.PackageHistories)
                 .Where(p => p.Price >= minPrice && p.Price <= maxPrice)
                 .OrderBy(p => p.Price)
-                .ToListAsync();
+                .ToListAsync(ct);
 
             return packages.Select(MapToDto);
         }
@@ -132,17 +135,18 @@ public class PackageService : IPackageService
     /// <summary>
     /// Get packages by duration unit
     /// </summary>
-    public async Task<IEnumerable<PackageDto>> GetByDurationUnitAsync(int durationUnitId)
+    public async Task<IEnumerable<PackageDto>> GetByDurationUnitAsync(int durationUnitId, CancellationToken ct = default)
     {
         try
         {
             var packages = await _unitOfWork.Repository<Package>().GetQueryable()
+                .AsNoTracking()
                 .Include(p => p.DurationUnit)
                 .Include(p => p.Tickets)
                 .Include(p => p.PackageHistories)
                 .Where(p => p.DurationUnitId == durationUnitId)
                 .OrderBy(p => p.Price)
-                .ToListAsync();
+                .ToListAsync(ct);
 
             return packages.Select(MapToDto);
         }
@@ -156,12 +160,12 @@ public class PackageService : IPackageService
     /// <summary>
     /// Create new package
     /// </summary>
-    public async Task<PackageDto> CreateAsync(CreatePackageDto packageDto)
+    public async Task<PackageDto> CreateAsync(CreatePackageDto packageDto, CancellationToken ct = default)
     {
         try
         {
             // Validate duration unit exists
-            var durationUnit = await _unitOfWork.Repository<Lookup>().GetByIdAsync(packageDto.DurationUnitId);
+            var durationUnit = await _unitOfWork.Repository<Lookup>().GetByIdAsync(packageDto.DurationUnitId, ct);
             if (durationUnit == null)
             {
                 throw new InvalidOperationException($"Duration unit with ID {packageDto.DurationUnitId} not found");
@@ -177,11 +181,11 @@ public class PackageService : IPackageService
                 DurationUnitId = packageDto.DurationUnitId
             };
 
-            await _unitOfWork.Repository<Package>().AddAsync(package);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.Repository<Package>().AddAsync(package, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
             // Return the created package
-            return await GetByIdAsync(package.Id)
+            return await GetByIdAsync(package.Id, ct)
                    ?? new PackageDto
                    {
                        Id = package.Id,
@@ -205,11 +209,11 @@ public class PackageService : IPackageService
     /// <summary>
     /// Update existing package
     /// </summary>
-    public async Task<PackageDto> UpdateAsync(int id, PackageDto packageDto)
+    public async Task<PackageDto> UpdateAsync(int id, PackageDto packageDto, CancellationToken ct = default)
     {
         try
         {
-            var package = await _unitOfWork.Repository<Package>().GetByIdAsync(id);
+            var package = await _unitOfWork.Repository<Package>().GetByIdAsync(id, ct);
             if (package == null)
             {
                 throw new InvalidOperationException($"Package with ID {id} not found");
@@ -218,7 +222,7 @@ public class PackageService : IPackageService
             // Validate duration unit exists if changing
             if (packageDto.DurationUnitId != package.DurationUnitId)
             {
-                var durationUnit = await _unitOfWork.Repository<Lookup>().GetByIdAsync(packageDto.DurationUnitId);
+                var durationUnit = await _unitOfWork.Repository<Lookup>().GetByIdAsync(packageDto.DurationUnitId, ct);
                 if (durationUnit == null)
                 {
                     throw new InvalidOperationException($"Duration unit with ID {packageDto.DurationUnitId} not found");
@@ -232,13 +236,12 @@ public class PackageService : IPackageService
             package.MessageCount = 0;
             package.Duration = packageDto.Duration;
             package.DurationUnitId = packageDto.DurationUnitId;
-            package.UpdatedAt = DateTime.UtcNow;
 
-            _unitOfWork.Repository<Package>().UpdateAsync(package);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.Repository<Package>().UpdateAsync(package, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
             // Return the updated package
-            return await GetByIdAsync(id) ?? packageDto;
+            return await GetByIdAsync(id, ct) ?? packageDto;
         }
         catch (Exception ex)
         {
@@ -250,11 +253,11 @@ public class PackageService : IPackageService
     /// <summary>
     /// Delete package
     /// </summary>
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
     {
         try
         {
-            var package = await _unitOfWork.Repository<Package>().GetByIdAsync(id);
+            var package = await _unitOfWork.Repository<Package>().GetByIdAsync(id, ct);
             if (package == null)
             {
                 return false;
@@ -262,18 +265,18 @@ public class PackageService : IPackageService
 
             // Check if package has associated tickets or purchase history
             var hasTickets = await _unitOfWork.Repository<Ticket>().GetQueryable()
-                .AnyAsync(t => t.PackageId == id);
+                .AnyAsync(t => t.PackageId == id, ct);
 
             var hasHistory = await _unitOfWork.Repository<PackageHistory>().GetQueryable()
-                .AnyAsync(ph => ph.PackageId == id);
+                .AnyAsync(ph => ph.PackageId == id, ct);
 
             if (hasTickets || hasHistory)
             {
                 throw new InvalidOperationException($"Cannot delete package '{package.Title}' as it has associated tickets or purchase history");
             }
 
-            await _unitOfWork.Repository<Package>().DeleteAsync(id);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.Repository<Package>().DeleteAsync(id, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
             return true;
         }
@@ -287,11 +290,11 @@ public class PackageService : IPackageService
     /// <summary>
     /// Update package price
     /// </summary>
-    public async Task<PackageDto> UpdatePriceAsync(int id, decimal price)
+    public async Task<PackageDto> UpdatePriceAsync(int id, decimal price, CancellationToken ct = default)
     {
         try
         {
-            var package = await _unitOfWork.Repository<Package>().GetByIdAsync(id);
+            var package = await _unitOfWork.Repository<Package>().GetByIdAsync(id, ct);
             if (package == null)
             {
                 throw new InvalidOperationException($"Package with ID {id} not found");
@@ -303,12 +306,11 @@ public class PackageService : IPackageService
             }
 
             package.Price = price;
-            package.UpdatedAt = DateTime.UtcNow;
 
-            _unitOfWork.Repository<Package>().UpdateAsync(package);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.Repository<Package>().UpdateAsync(package, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
-            return await GetByIdAsync(id) ?? throw new InvalidOperationException("Failed to retrieve updated package");
+            return await GetByIdAsync(id, ct) ?? throw new InvalidOperationException("Failed to retrieve updated package");
         }
         catch (Exception ex)
         {
@@ -320,11 +322,11 @@ public class PackageService : IPackageService
     /// <summary>
     /// Update package capacity
     /// </summary>
-    public async Task<PackageDto> UpdateCapacityAsync(int id, int ticketCount, int messageCount)
+    public async Task<PackageDto> UpdateCapacityAsync(int id, int ticketCount, int messageCount, CancellationToken ct = default)
     {
         try
         {
-            var package = await _unitOfWork.Repository<Package>().GetByIdAsync(id);
+            var package = await _unitOfWork.Repository<Package>().GetByIdAsync(id, ct);
             if (package == null)
             {
                 throw new InvalidOperationException($"Package with ID {id} not found");
@@ -337,12 +339,11 @@ public class PackageService : IPackageService
 
             package.TicketCount = ticketCount;
             package.MessageCount = 0;
-            package.UpdatedAt = DateTime.UtcNow;
 
-            _unitOfWork.Repository<Package>().UpdateAsync(package);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.Repository<Package>().UpdateAsync(package, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
-            return await GetByIdAsync(id) ?? throw new InvalidOperationException("Failed to retrieve updated package");
+            return await GetByIdAsync(id, ct) ?? throw new InvalidOperationException("Failed to retrieve updated package");
         }
         catch (Exception ex)
         {
@@ -354,18 +355,18 @@ public class PackageService : IPackageService
     /// <summary>
     /// Update package duration
     /// </summary>
-    public async Task<PackageDto> UpdateDurationAsync(int id, int duration, int durationUnitId)
+    public async Task<PackageDto> UpdateDurationAsync(int id, int duration, int durationUnitId, CancellationToken ct = default)
     {
         try
         {
-            var package = await _unitOfWork.Repository<Package>().GetByIdAsync(id);
+            var package = await _unitOfWork.Repository<Package>().GetByIdAsync(id, ct);
             if (package == null)
             {
                 throw new InvalidOperationException($"Package with ID {id} not found");
             }
 
             // Validate duration unit exists
-            var durationUnit = await _unitOfWork.Repository<Lookup>().GetByIdAsync(durationUnitId);
+            var durationUnit = await _unitOfWork.Repository<Lookup>().GetByIdAsync(durationUnitId, ct);
             if (durationUnit == null)
             {
                 throw new InvalidOperationException($"Duration unit with ID {durationUnitId} not found");
@@ -378,12 +379,11 @@ public class PackageService : IPackageService
 
             package.Duration = duration;
             package.DurationUnitId = durationUnitId;
-            package.UpdatedAt = DateTime.UtcNow;
 
-            _unitOfWork.Repository<Package>().UpdateAsync(package);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.Repository<Package>().UpdateAsync(package, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
-            return await GetByIdAsync(id) ?? throw new InvalidOperationException("Failed to retrieve updated package");
+            return await GetByIdAsync(id, ct) ?? throw new InvalidOperationException("Failed to retrieve updated package");
         }
         catch (Exception ex)
         {
