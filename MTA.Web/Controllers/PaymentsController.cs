@@ -2,8 +2,13 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MTA.Application.DTOs;
 using MTA.Application.Services;
+using MTA.Application.Services.Interface;
+using MTA.Application.Services.Service;
+using MTA.Domain.Entities;
+using MTA.Domain.Interfaces;
 using MTA.Web.Models;
 
 namespace MTA.Web.Controllers;
@@ -16,6 +21,8 @@ public class PaymentsController : ControllerBase
     private readonly IPaymentService _paymentService;
     private readonly IPackageHistoryService _packageHistoryService;
     private readonly IUserCourseHistoryService _userCourseHistoryService;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IEmailService _emailService;
     private readonly ILogger<PaymentsController> _logger;
     private readonly IConfiguration _config;
 
@@ -23,12 +30,16 @@ public class PaymentsController : ControllerBase
         IPaymentService paymentService,
         IPackageHistoryService packageHistoryService,
         IUserCourseHistoryService userCourseHistoryService,
+        IUnitOfWork unitOfWork,
+        IEmailService emailService,
         ILogger<PaymentsController> logger,
         IConfiguration config)
     {
         _paymentService = paymentService;
         _packageHistoryService = packageHistoryService;
         _userCourseHistoryService = userCourseHistoryService;
+        _unitOfWork = unitOfWork;
+        _emailService = emailService;
         _logger = logger;
         _config = config;
     }
@@ -111,7 +122,7 @@ public class PaymentsController : ControllerBase
         if (!orderInfo.IsPaid)
             return CustomJsonResult<PaymentResultDto>.SuccessResult(result);
 
-        await HandleSuccessfulReferenceAsync(orderInfo.ReferenceId, ct);
+        await HandleSuccessfulReferenceAsync(orderId, orderInfo.ReferenceId, ct);
 
         if (type.Equals("package", StringComparison.OrdinalIgnoreCase))
             result.Status = await _packageHistoryService.UserHasActivePackageAsync(accountId, itemId, ct) ? "success" : "pending";
@@ -165,10 +176,10 @@ public class PaymentsController : ControllerBase
                 if (!string.IsNullOrEmpty(orderId))
                     referenceId = await _paymentService.GetOrderReferenceIdAsync(orderId!, ct);
 
-                if (!string.IsNullOrWhiteSpace(referenceId))
+                if (!string.IsNullOrWhiteSpace(referenceId) && !string.IsNullOrWhiteSpace(orderId))
                 {
                     _logger.LogInformation("Square payment completed. Order={OrderId}, Ref={ReferenceId}", orderId, referenceId);
-                    await HandleSuccessfulReferenceAsync(referenceId!, ct);
+                    await HandleSuccessfulReferenceAsync(orderId!, referenceId!, ct);
                 }
             }
         }
@@ -176,22 +187,96 @@ public class PaymentsController : ControllerBase
         return Ok();
     }
 
-    private async Task HandleSuccessfulReferenceAsync(string referenceId, CancellationToken ct)
+    private async Task HandleSuccessfulReferenceAsync(string orderId, string referenceId, CancellationToken ct)
     {
         var parsed = ParseReference(referenceId);
         if (parsed == null) return;
+
+        // The webhook and the client's return-page poll can both report the same paid
+        // order; without this guard each call would re-grant credit for one payment.
+        if (!await TryMarkOrderProcessedAsync(orderId, referenceId, ct))
+        {
+            _logger.LogInformation("Square order {OrderId} was already processed; skipping duplicate credit.", orderId);
+            return;
+        }
 
         var (type, itemId, accountId) = parsed.Value;
 
         if (type.Equals("package", StringComparison.OrdinalIgnoreCase))
         {
-            await _packageHistoryService.CreateAsync(new CreatePackageHistoryDto { PackageId = itemId, AccountId = accountId }, ct);
+            var packageHistory = await _packageHistoryService.CreateAsync(new CreatePackageHistoryDto { PackageId = itemId, AccountId = accountId }, ct);
+
+            if (!string.IsNullOrWhiteSpace(packageHistory.UserEmail))
+            {
+                try
+                {
+                    var subject = $"Payment confirmed: {packageHistory.PackageTitle}";
+                    var body = EmailTemplates.PackagePurchase(
+                        packageHistory.UserFirstName ?? "there",
+                        packageHistory.PackageTitle ?? "your package",
+                        packageHistory.PackagePrice,
+                        packageHistory.RemainingTickets,
+                        packageHistory.ExpiredDate);
+                    await _emailService.SendEmailAsync(packageHistory.UserEmail, subject, body, ct);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to send package purchase confirmation email to {Email}", packageHistory.UserEmail);
+                }
+            }
         }
         else if (type.Equals("course", StringComparison.OrdinalIgnoreCase))
         {
             var purchased = await _userCourseHistoryService.UserHasPurchasedCourseAsync(accountId, itemId, ct);
             if (!purchased)
+            {
                 await _userCourseHistoryService.CreateAsync(new CreateUserCourseHistoryDto { CourseId = itemId, AccountId = accountId }, ct);
+
+                var account = await _unitOfWork.Repository<Account>()
+                    .GetQueryable()
+                    .Include(a => a.UserProfile)
+                    .FirstOrDefaultAsync(a => a.Id == accountId, ct);
+                var course = await _unitOfWork.Repository<Course>().GetByIdAsync(itemId, ct);
+
+                if (account != null && course != null)
+                {
+                    try
+                    {
+                        var subject = $"Payment confirmed: {course.Title}";
+                        var body = EmailTemplates.CoursePurchase(account.UserProfile?.FirstName ?? "there", course.Title ?? "your course", course.Price);
+                        await _emailService.SendEmailAsync(account.Email, subject, body, ct);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Failed to send course purchase confirmation email to {Email}", account.Email);
+                    }
+                }
+            }
+        }
+    }
+
+    private async Task<bool> TryMarkOrderProcessedAsync(string orderId, string referenceId, CancellationToken ct)
+    {
+        var alreadyProcessed = await _unitOfWork.Repository<ProcessedPaymentOrder>()
+            .GetQueryable()
+            .AnyAsync(o => o.OrderId == orderId, ct);
+        if (alreadyProcessed) return false;
+
+        try
+        {
+            await _unitOfWork.Repository<ProcessedPaymentOrder>().AddAsync(new ProcessedPaymentOrder
+            {
+                OrderId = orderId,
+                ReferenceId = referenceId,
+                ProcessedAt = DateTime.UtcNow
+            }, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
+            return true;
+        }
+        catch (DbUpdateException)
+        {
+            // Unique index on OrderId rejected a concurrent duplicate insert (webhook and poll racing).
+            return false;
         }
     }
 
