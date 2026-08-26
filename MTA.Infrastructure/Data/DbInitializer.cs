@@ -205,6 +205,19 @@ public static class DbInitializer
                 await context.FAQCategories.AddRangeAsync(faqCategories);
 
             // -------------------------------
+            // Seed footer contact details
+            // -------------------------------
+            if (!await context.FooterContactItems.AnyAsync())
+            {
+                context.FooterContactItems.AddRange(
+                    new FooterContactItem { Label = "North Vancouver", Value = "+16046007292", SortOrder = 1, CreatedAt = DateTime.UtcNow },
+                    new FooterContactItem { Label = "West Vancouver", Value = "+16045004558", SortOrder = 2, CreatedAt = DateTime.UtcNow },
+                    new FooterContactItem { Label = "Mail", Value = "Mtatennisvancouver@gmail.com", SortOrder = 3, CreatedAt = DateTime.UtcNow },
+                    new FooterContactItem { Label = "Instagram", Value = "mahdavian_tennis_academy", SortOrder = 4, CreatedAt = DateTime.UtcNow }
+                );
+            }
+
+            // -------------------------------
             // ذخیره تغییرات
             // -------------------------------
             await context.SaveChangesAsync();

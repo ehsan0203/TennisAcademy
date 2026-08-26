@@ -43,6 +43,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPaymentService, SquarePaymentService>();
         services.AddScoped<IStatisticsService, StatisticsService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<ISiteSettingsService, SiteSettingsService>();
 
         // UoW — registered here; Persistence layer also registers it, last registration wins (fine)
         services.AddScoped<IUnitOfWork, UnitOfWork>();

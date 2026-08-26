@@ -36,6 +36,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
     public DbSet<ProcessedPaymentOrder> ProcessedPaymentOrders { get; set; }
+    public DbSet<SiteImage> SiteImages { get; set; }
+    public DbSet<FooterContactItem> FooterContactItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
