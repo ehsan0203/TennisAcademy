@@ -34,6 +34,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<FAQCategory> FAQCategories { get; set; }
     public DbSet<QuestionFAQ> QuestionFAQs { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -71,4 +71,24 @@ public class AuthController : ControllerBase
         var isValid = await _authService.ValidateTokenAsync(token, ct);
         return CustomJsonResult<bool>.SuccessResult(isValid);
     }
+
+    [HttpPost("forgot-password")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status400BadRequest)]
+    public async Task<CustomJsonResult<string>> ForgotPassword([FromBody] ForgotPasswordDto dto, CancellationToken ct)
+    {
+        await _authService.ForgotPasswordAsync(dto, ct);
+        return CustomJsonResult<string>.SuccessResult("If an account with that email exists, a reset link has been sent.");
+    }
+
+    [HttpPost("reset-password")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status400BadRequest)]
+    public async Task<CustomJsonResult<string>> ResetPassword([FromBody] ResetPasswordDto dto, CancellationToken ct)
+    {
+        await _authService.ResetPasswordAsync(dto, ct);
+        return CustomJsonResult<string>.SuccessResult("Password reset successfully.");
+    }
 }

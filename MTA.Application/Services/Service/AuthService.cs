@@ -1,10 +1,13 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MTA.Application.DTOs.Auth;
+using MTA.Application.Services.Interface;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace MTA.Application.Services.Service;
 
@@ -15,19 +18,31 @@ public class AuthService : IAuthService
     private readonly IConfiguration _configuration;
     private readonly IRoleService _roleService;
     private readonly IValidator<RegisterDto> _registerValidator;
+    private readonly IValidator<ForgotPasswordDto> _forgotPasswordValidator;
+    private readonly IValidator<ResetPasswordDto> _resetPasswordValidator;
+    private readonly IEmailService _emailService;
+    private readonly ILogger<AuthService> _logger;
 
     public AuthService(
         IUnitOfWork unitOfWork,
         IJwtService jwtService,
         IConfiguration configuration,
         IRoleService roleService,
-        IValidator<RegisterDto> registerValidator)
+        IValidator<RegisterDto> registerValidator,
+        IValidator<ForgotPasswordDto> forgotPasswordValidator,
+        IValidator<ResetPasswordDto> resetPasswordValidator,
+        IEmailService emailService,
+        ILogger<AuthService> logger)
     {
         _unitOfWork = unitOfWork;
         _jwtService = jwtService;
         _configuration = configuration;
         _roleService = roleService;
         _registerValidator = registerValidator;
+        _forgotPasswordValidator = forgotPasswordValidator;
+        _resetPasswordValidator = resetPasswordValidator;
+        _emailService = emailService;
+        _logger = logger;
     }
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto, CancellationToken ct = default)
@@ -133,6 +148,19 @@ public class AuthService : IAuthService
         var refreshToken = _jwtService.GenerateRefreshToken();
         await SaveRefreshTokenAsync(account.Id, refreshToken, ct);
 
+        try
+        {
+            await _emailService.SendEmailAsync(
+                account.Email,
+                "Welcome to MTA Tennis Academy",
+                EmailTemplates.Welcome(registerDto.FirstName),
+                ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to send welcome email to {Email}", account.Email);
+        }
+
         return new AuthResponseDto
         {
             AccessToken = accessToken,
@@ -225,6 +253,76 @@ public class AuthService : IAuthService
 
     public Task<bool> ValidateTokenAsync(string token, CancellationToken ct = default)
         => Task.FromResult(_jwtService.ValidateToken(token));
+
+    public async Task ForgotPasswordAsync(ForgotPasswordDto dto, CancellationToken ct = default)
+    {
+        var validation = await _forgotPasswordValidator.ValidateAsync(dto, ct);
+        if (!validation.IsValid)
+            throw new ValidationException(validation.Errors);
+
+        var emailLower = dto.Email.ToLower();
+        var account = await _unitOfWork.Repository<Account>()
+            .GetQueryable()
+            .Include(a => a.UserProfile)
+            .FirstOrDefaultAsync(a => a.Email.ToLower() == emailLower, ct);
+
+        // Always behave the same whether the email exists or not, so callers
+        // can't use this endpoint to discover which emails are registered.
+        if (account == null)
+            return;
+
+        var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32))
+            .Replace('+', '-').Replace('/', '_').TrimEnd('=');
+
+        await _unitOfWork.Repository<PasswordResetToken>().AddAsync(new PasswordResetToken
+        {
+            AccountId = account.Id,
+            Token = token,
+            ExpiresAt = DateTime.UtcNow.AddHours(1)
+        }, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
+
+        var frontendBaseUrl = _configuration["Frontend:BaseUrl"]?.TrimEnd('/') ?? string.Empty;
+        var resetLink = $"{frontendBaseUrl}/reset-password?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(account.Email)}";
+
+        try
+        {
+            await _emailService.SendEmailAsync(
+                account.Email,
+                "Reset your MTA Tennis Academy password",
+                EmailTemplates.PasswordReset(account.UserProfile?.FirstName ?? "there", resetLink),
+                ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to send password reset email to {Email}", account.Email);
+        }
+    }
+
+    public async Task ResetPasswordAsync(ResetPasswordDto dto, CancellationToken ct = default)
+    {
+        var validation = await _resetPasswordValidator.ValidateAsync(dto, ct);
+        if (!validation.IsValid)
+            throw new ValidationException(validation.Errors);
+
+        var emailLower = dto.Email.ToLower();
+        var tokenEntity = await _unitOfWork.Repository<PasswordResetToken>()
+            .GetQueryable()
+            .Include(t => t.Account)
+            .FirstOrDefaultAsync(t => t.Token == dto.Token
+                && !t.IsUsed
+                && t.Account.Email.ToLower() == emailLower, ct);
+
+        if (tokenEntity == null || tokenEntity.ExpiresAt < DateTime.UtcNow)
+            throw new ArgumentException("Invalid or expired reset token");
+
+        tokenEntity.Account.Password = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+        tokenEntity.IsUsed = true;
+
+        await _unitOfWork.Repository<Account>().UpdateAsync(tokenEntity.Account, ct);
+        await _unitOfWork.Repository<PasswordResetToken>().UpdateAsync(tokenEntity, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
+    }
 
     private async Task SaveRefreshTokenAsync(int accountId, string token, CancellationToken ct)
     {
