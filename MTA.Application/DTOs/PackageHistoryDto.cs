@@ -90,3 +90,11 @@ public class CreatePackageHistoryDto
     public bool IsExpired { get; set; }
 }
 
+public class UpdateRemainingTicketsDto
+{
+    /// <summary>
+    /// New remaining-tickets value for this package history record (manual admin adjustment).
+    /// </summary>
+    public int RemainingTickets { get; set; }
+}
+

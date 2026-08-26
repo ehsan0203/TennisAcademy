@@ -62,6 +62,15 @@ public class PackageHistoryController : ControllerBase
         return CustomJsonResult<PackageHistoryDto>.SuccessResult(updated);
     }
 
+    [HttpPatch("{id}/remaining-tickets")]
+    [ProducesResponseType(typeof(CustomJsonResult<PackageHistoryDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status400BadRequest)]
+    public async Task<CustomJsonResult<PackageHistoryDto>> UpdateRemainingTickets(int id, [FromBody] UpdateRemainingTicketsDto dto, CancellationToken ct)
+    {
+        var updated = await _packageHistoryService.UpdateRemainingTicketsAsync(id, Math.Max(0, dto.RemainingTickets), ct);
+        return CustomJsonResult<PackageHistoryDto>.SuccessResult(updated);
+    }
+
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
