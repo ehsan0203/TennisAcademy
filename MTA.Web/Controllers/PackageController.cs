@@ -19,6 +19,7 @@ public class PackageController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(CustomJsonResult<PaginatedResult<PackageDto>>), StatusCodes.Status200OK)]
     public async Task<CustomJsonResult<PaginatedResult<PackageDto>>> GetPackages(
         [FromQuery] int page = 1,
@@ -34,6 +35,7 @@ public class PackageController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(CustomJsonResult<PackageDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status404NotFound)]
     public async Task<CustomJsonResult<PackageDto>> GetPackage(int id, CancellationToken ct)

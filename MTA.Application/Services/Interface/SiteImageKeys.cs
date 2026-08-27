@@ -7,10 +7,13 @@ public static class SiteImageKeys
     public const string TrainingPlansBanner = "TrainingPlansBanner";
     public const string HomeCoachingCardImage = "HomeCoachingCardImage";
     public const string HomeCoursesCardImage = "HomeCoursesCardImage";
+    public const string CoursesIntroVideo = "CoursesIntroVideo";
+    public const string TrainingPlansIntroVideo = "TrainingPlansIntroVideo";
 
     public static readonly string[] All =
     {
-        Logo, HomeHeroBanner, TrainingPlansBanner, HomeCoachingCardImage, HomeCoursesCardImage
+        Logo, HomeHeroBanner, TrainingPlansBanner, HomeCoachingCardImage, HomeCoursesCardImage,
+        CoursesIntroVideo, TrainingPlansIntroVideo
     };
 }
 
