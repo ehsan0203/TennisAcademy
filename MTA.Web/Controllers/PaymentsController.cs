@@ -50,7 +50,13 @@ public class PaymentsController : ControllerBase
     public async Task<CustomJsonResult<PaymentLinkResponseDto>> CreatePackagePaymentLink(
         int packageId, [FromBody] PaymentInitRequestDto request, CancellationToken ct)
     {
-        var link = await _paymentService.CreatePackagePaymentLinkAsync(request.AccountId, packageId, request.SuccessUrl, request.CancelUrl, ct);
+        // The account always comes from the token — a caller must not be able to direct
+        // the purchase at someone else's account by putting their id in the body.
+        var accountId = GetCurrentAccountId();
+        if (accountId is null)
+            return CustomJsonResult<PaymentLinkResponseDto>.Unauthorized("Account ID not found in token.");
+
+        var link = await _paymentService.CreatePackagePaymentLinkAsync(accountId.Value, packageId, request.SuccessUrl, request.CancelUrl, ct);
         return CustomJsonResult<PaymentLinkResponseDto>.SuccessResult(link);
     }
 
@@ -69,11 +75,15 @@ public class PaymentsController : ControllerBase
     public async Task<CustomJsonResult<PaymentLinkResponseDto>> CreateCoursePaymentLink(
         int courseId, [FromBody] PaymentInitRequestDto request, CancellationToken ct)
     {
-        var alreadyHas = await _userCourseHistoryService.UserHasPurchasedCourseAsync(request.AccountId, courseId, ct);
+        var accountId = GetCurrentAccountId();
+        if (accountId is null)
+            return CustomJsonResult<PaymentLinkResponseDto>.Unauthorized("Account ID not found in token.");
+
+        var alreadyHas = await _userCourseHistoryService.UserHasPurchasedCourseAsync(accountId.Value, courseId, ct);
         if (alreadyHas)
             return CustomJsonResult<PaymentLinkResponseDto>.Conflict("User already owns this course");
 
-        var link = await _paymentService.CreateCoursePaymentLinkAsync(request.AccountId, courseId, request.SuccessUrl, request.CancelUrl, ct);
+        var link = await _paymentService.CreateCoursePaymentLinkAsync(accountId.Value, courseId, request.SuccessUrl, request.CancelUrl, ct);
         return CustomJsonResult<PaymentLinkResponseDto>.SuccessResult(link);
     }
 
@@ -278,6 +288,13 @@ public class PaymentsController : ControllerBase
             // Unique index on OrderId rejected a concurrent duplicate insert (webhook and poll racing).
             return false;
         }
+    }
+
+    private int? GetCurrentAccountId()
+    {
+        var claimValue = User.FindFirst("UserId")?.Value
+                         ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        return int.TryParse(claimValue, out var id) ? id : null;
     }
 
     private static (string type, int itemId, int accountId)? ParseReference(string referenceId)

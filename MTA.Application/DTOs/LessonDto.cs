@@ -33,6 +33,11 @@ public class LessonDto : BaseDto
 	public int? MediaFileId { get; set; }
 	public string? MediaFileUrl { get; set; }
 
+	/// <summary>
+	/// True when the caller hasn't paid for this lesson, so no video location is returned.
+	/// </summary>
+	public bool IsLocked { get; set; }
+
 
 }
 

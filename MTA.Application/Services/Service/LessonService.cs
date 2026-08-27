@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MTA.Application.DTOs;
 using MTA.Application.DTOs.Course;
+using MTA.Application.Services.Interface;
 using MTA.Domain.Entities;
 using MTA.Domain.Interfaces;
 
@@ -17,14 +18,33 @@ public class LessonService : ILessonService
 	private readonly ILogger<LessonService> _logger;
 	private readonly IMapper _mapper;
     private readonly IMediaFileService _mediaFileService;
+    private readonly ICurrentUser _currentUser;
 
 
-    public LessonService(IUnitOfWork unitOfWork, ILogger<LessonService> logger, IMapper mapper, IMediaFileService mediaFileService)
+    public LessonService(IUnitOfWork unitOfWork, ILogger<LessonService> logger, IMapper mapper, IMediaFileService mediaFileService, ICurrentUser currentUser)
 	{
 		_unitOfWork = unitOfWork;
 		_logger = logger;
 		_mapper = mapper;
 		_mediaFileService = mediaFileService;
+		_currentUser = currentUser;
+	}
+
+	/// <summary>
+	/// Course IDs the caller has paid for. Empty for anonymous visitors.
+	/// </summary>
+	private async Task<HashSet<int>> GetPurchasedCourseIdsAsync(CancellationToken ct)
+	{
+		var accountId = _currentUser.Id;
+		if (accountId is null) return new HashSet<int>();
+
+		var ids = await _unitOfWork.Repository<UserCourseHistory>().GetQueryable()
+			.AsNoTracking()
+			.Where(uch => uch.AccountId == accountId.Value)
+			.Select(uch => uch.CourseId)
+			.ToListAsync(ct);
+
+		return ids.ToHashSet();
 	}
 
 	/// <summary>
@@ -69,7 +89,8 @@ public class LessonService : ILessonService
 				.ToListAsync(ct);
 
 			// Map to DTOs
-			var lessonDtos = lessons.Select(MapToDto).ToList();
+			var purchased = await GetPurchasedCourseIdsAsync(ct);
+			var lessonDtos = lessons.Select(l => MapToDto(l, purchased)).ToList();
 
 			return new PaginatedResult<LessonDto>
 			{
@@ -100,7 +121,8 @@ public class LessonService : ILessonService
 				.Include(l => l.MediaFile)
 				.FirstOrDefaultAsync(l => l.Id == id, ct);
 
-			return lesson != null ? MapToDto(lesson) : null;
+			if (lesson == null) return null;
+			return MapToDto(lesson, await GetPurchasedCourseIdsAsync(ct));
 		}
 		catch (Exception ex)
 		{
@@ -123,7 +145,8 @@ public class LessonService : ILessonService
 				.Where(l => l.CourseId == courseId)
 				.ToListAsync(ct);
 
-			return lessons.Select(MapToDto);
+			var purchased = await GetPurchasedCourseIdsAsync(ct);
+			return lessons.Select(l => MapToDto(l, purchased));
 		}
 		catch (Exception ex)
 		{
@@ -347,8 +370,15 @@ public class LessonService : ILessonService
 	/// <summary>
 	/// Map Lesson entity to LessonDto
 	/// </summary>
-	private LessonDto MapToDto(Lesson lesson)
+	/// <summary>
+	/// Maps a lesson, withholding the video location unless the lesson is free or the
+	/// caller has bought the course. Without this the video URL of every paid lesson is
+	/// handed out to anonymous callers.
+	/// </summary>
+	private static LessonDto MapToDto(Lesson lesson, HashSet<int> purchasedCourseIds)
 	{
+		var unlocked = lesson.IsFree || purchasedCourseIds.Contains(lesson.CourseId);
+
 		return new LessonDto
 		{
 			Id = lesson.Id,
@@ -356,8 +386,9 @@ public class LessonService : ILessonService
 			Description = lesson.Description,
 			IsFree = lesson.IsFree,
 			CourseId = lesson.CourseId,
-			MediaFileId = lesson.MediaFileId,
-			MediaFileUrl = lesson.MediaFile != null ? lesson.MediaFile.Url : null,
+			MediaFileId = unlocked ? lesson.MediaFileId : null,
+			MediaFileUrl = unlocked && lesson.MediaFile != null ? lesson.MediaFile.Url : null,
+			IsLocked = !unlocked,
 			CreatedAt = lesson.CreatedAt,
 			UpdatedAt = lesson.UpdatedAt
 		};
