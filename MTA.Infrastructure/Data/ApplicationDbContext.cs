@@ -38,6 +38,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<ProcessedPaymentOrder> ProcessedPaymentOrders { get; set; }
     public DbSet<SiteImage> SiteImages { get; set; }
     public DbSet<FooterContactItem> FooterContactItems { get; set; }
+    public DbSet<SiteText> SiteTexts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

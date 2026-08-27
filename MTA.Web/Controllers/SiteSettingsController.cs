@@ -71,4 +71,22 @@ public class SiteSettingsController : ControllerBase
         await _siteSettingsService.DeleteFooterContactItemAsync(id, ct);
         return CustomJsonResult<string>.NoContent();
     }
+
+    [HttpGet("texts")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(CustomJsonResult<IEnumerable<SiteTextDto>>), StatusCodes.Status200OK)]
+    public async Task<CustomJsonResult<IEnumerable<SiteTextDto>>> GetTexts(CancellationToken ct)
+    {
+        var result = await _siteSettingsService.GetSiteTextsAsync(ct);
+        return CustomJsonResult<IEnumerable<SiteTextDto>>.SuccessResult(result);
+    }
+
+    [HttpPut("texts/{key}")]
+    [ProducesResponseType(typeof(CustomJsonResult<SiteTextDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomJsonResult<string>), StatusCodes.Status400BadRequest)]
+    public async Task<CustomJsonResult<SiteTextDto>> SetText(string key, [FromBody] UpdateSiteTextDto dto, CancellationToken ct)
+    {
+        var result = await _siteSettingsService.SetSiteTextAsync(key, dto.Value, ct);
+        return CustomJsonResult<SiteTextDto>.SuccessResult(result);
+    }
 }

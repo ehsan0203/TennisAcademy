@@ -20,3 +20,14 @@ public class UpsertFooterContactItemDto
     public string Value { get; set; } = string.Empty;
     public int SortOrder { get; set; }
 }
+
+public class SiteTextDto
+{
+    public string Key { get; set; } = string.Empty;
+    public string Value { get; set; } = string.Empty;
+}
+
+public class UpdateSiteTextDto
+{
+    public string Value { get; set; } = string.Empty;
+}

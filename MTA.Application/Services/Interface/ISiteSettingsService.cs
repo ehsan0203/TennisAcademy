@@ -12,4 +12,7 @@ public interface ISiteSettingsService
     Task<FooterContactItemDto> CreateFooterContactItemAsync(UpsertFooterContactItemDto dto, CancellationToken ct = default);
     Task<FooterContactItemDto> UpdateFooterContactItemAsync(int id, UpsertFooterContactItemDto dto, CancellationToken ct = default);
     Task DeleteFooterContactItemAsync(int id, CancellationToken ct = default);
+
+    Task<IEnumerable<SiteTextDto>> GetSiteTextsAsync(CancellationToken ct = default);
+    Task<SiteTextDto> SetSiteTextAsync(string key, string value, CancellationToken ct = default);
 }

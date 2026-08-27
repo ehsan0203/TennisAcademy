@@ -106,6 +106,41 @@ public class SiteSettingsService : ISiteSettingsService
         await _unitOfWork.SaveChangesAsync(ct);
     }
 
+    public async Task<IEnumerable<SiteTextDto>> GetSiteTextsAsync(CancellationToken ct = default)
+    {
+        var existing = await _unitOfWork.Repository<SiteText>().GetAllAsync(ct);
+        var byKey = existing.ToDictionary(t => t.Key, t => t.Value);
+
+        return SiteTextKeys.All.Select(key => new SiteTextDto
+        {
+            Key = key,
+            Value = byKey.TryGetValue(key, out var value) ? value : SiteTextKeys.DefaultsByKey[key]
+        });
+    }
+
+    public async Task<SiteTextDto> SetSiteTextAsync(string key, string value, CancellationToken ct = default)
+    {
+        if (!SiteTextKeys.All.Contains(key))
+            throw new ArgumentException($"Unknown site text key: {key}");
+
+        var repo = _unitOfWork.Repository<SiteText>();
+        var existing = await repo.FirstOrDefaultAsync(t => t.Key == key, ct);
+
+        if (existing != null)
+        {
+            existing.Value = value;
+            await repo.UpdateAsync(existing, ct);
+        }
+        else
+        {
+            await repo.AddAsync(new SiteText { Key = key, Value = value }, ct);
+        }
+
+        await _unitOfWork.SaveChangesAsync(ct);
+
+        return new SiteTextDto { Key = key, Value = value };
+    }
+
     private static FooterContactItemDto MapToDto(FooterContactItem item) => new()
     {
         Id = item.Id,
