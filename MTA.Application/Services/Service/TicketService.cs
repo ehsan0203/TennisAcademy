@@ -8,10 +8,12 @@ namespace MTA.Application.Services.Service;
 public class TicketService : ITicketService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMessageService _messageService;
 
-    public TicketService(IUnitOfWork unitOfWork)
+    public TicketService(IUnitOfWork unitOfWork, IMessageService messageService)
     {
         _unitOfWork = unitOfWork;
+        _messageService = messageService;
     }
 
     public async Task<PaginatedResult<TicketDto>> GetAllAsync(
@@ -172,9 +174,24 @@ public class TicketService : ITicketService
 
     public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
     {
+        var messageIds = await _unitOfWork.Repository<Message>().GetQueryable()
+            .Where(m => m.TicketId == id)
+            .Select(m => m.Id)
+            .ToListAsync(ct);
+
         var deleted = await _unitOfWork.Repository<Ticket>().DeleteAsync(id, ct);
-        if (deleted) await _unitOfWork.SaveChangesAsync(ct);
-        return deleted;
+        if (!deleted) return false;
+
+        await _unitOfWork.SaveChangesAsync(ct);
+
+        // Cascade through the ticket's messages so their media files (and the
+        // physical files on disk) get cleaned up too, not just the ticket row.
+        foreach (var messageId in messageIds)
+        {
+            await _messageService.DeleteAsync(messageId, ct);
+        }
+
+        return true;
     }
 
     public async Task<TicketDto> ChangeStatusAsync(int id, int statusId, CancellationToken ct = default)

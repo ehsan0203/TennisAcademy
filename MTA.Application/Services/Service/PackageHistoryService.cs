@@ -92,7 +92,12 @@ public class PackageHistoryService : IPackageHistoryService
     /// </summary>
     public async Task<IEnumerable<PackageHistoryDto>> GetByAccountAsync(int accountId, CancellationToken ct = default)
     {
-        var packageHistories = await _unitOfWork.Repository<PackageHistory>().GetAllAsync(ph => ph.AccountId == accountId, ct: ct);
+        var packageHistories = await _unitOfWork.Repository<PackageHistory>().GetQueryable()
+            .AsNoTracking()
+            .Include(ph => ph.Package)
+            .Include(ph => ph.Account).ThenInclude(a => a.UserProfile)
+            .Where(ph => ph.AccountId == accountId)
+            .ToListAsync(ct);
         return packageHistories.Select(ph => _mapper.Map<PackageHistoryDto>(ph));
     }
 
@@ -101,7 +106,12 @@ public class PackageHistoryService : IPackageHistoryService
     /// </summary>
     public async Task<IEnumerable<PackageHistoryDto>> GetByPackageAsync(int packageId, CancellationToken ct = default)
     {
-        var packageHistories = await _unitOfWork.Repository<PackageHistory>().GetAllAsync(ph => ph.PackageId == packageId, ct: ct);
+        var packageHistories = await _unitOfWork.Repository<PackageHistory>().GetQueryable()
+            .AsNoTracking()
+            .Include(ph => ph.Package)
+            .Include(ph => ph.Account).ThenInclude(a => a.UserProfile)
+            .Where(ph => ph.PackageId == packageId)
+            .ToListAsync(ct);
         return packageHistories.Select(ph => _mapper.Map<PackageHistoryDto>(ph));
     }
 
@@ -111,8 +121,12 @@ public class PackageHistoryService : IPackageHistoryService
     public async Task<IEnumerable<PackageHistoryDto>> GetActiveByAccountAsync(int accountId, CancellationToken ct = default)
     {
         var currentDate = DateTime.UtcNow;
-        var packageHistories = await _unitOfWork.Repository<PackageHistory>().GetAllAsync(ph =>
-            ph.AccountId == accountId && ph.ExpiredDate >= currentDate, ct: ct);
+        var packageHistories = await _unitOfWork.Repository<PackageHistory>().GetQueryable()
+            .AsNoTracking()
+            .Include(ph => ph.Package)
+            .Include(ph => ph.Account).ThenInclude(a => a.UserProfile)
+            .Where(ph => ph.AccountId == accountId && ph.ExpiredDate >= currentDate)
+            .ToListAsync(ct);
         return packageHistories.Select(ph => _mapper.Map<PackageHistoryDto>(ph));
     }
 
@@ -122,8 +136,12 @@ public class PackageHistoryService : IPackageHistoryService
     public async Task<IEnumerable<PackageHistoryDto>> GetExpiredByAccountAsync(int accountId, CancellationToken ct = default)
     {
         var currentDate = DateTime.UtcNow;
-        var packageHistories = await _unitOfWork.Repository<PackageHistory>().GetAllAsync(ph =>
-            ph.AccountId == accountId && ph.ExpiredDate < currentDate, ct: ct);
+        var packageHistories = await _unitOfWork.Repository<PackageHistory>().GetQueryable()
+            .AsNoTracking()
+            .Include(ph => ph.Package)
+            .Include(ph => ph.Account).ThenInclude(a => a.UserProfile)
+            .Where(ph => ph.AccountId == accountId && ph.ExpiredDate < currentDate)
+            .ToListAsync(ct);
         return packageHistories.Select(ph => _mapper.Map<PackageHistoryDto>(ph));
     }
 

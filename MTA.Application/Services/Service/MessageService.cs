@@ -371,12 +371,23 @@ public class MessageService : IMessageService
     /// </summary>
     public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
 	{
-		var message = await _unitOfWork.Repository<Message>().GetByIdAsync(id, ct);
+		var message = await _unitOfWork.Repository<Message>().GetQueryable()
+			.Include(m => m.MediaFiles)
+			.FirstOrDefaultAsync(m => m.Id == id, ct);
 		if (message == null)
 			return false;
 
+		var mediaFileIds = message.MediaFiles.Select(mm => mm.MediaFileId).ToList();
+
 		await _unitOfWork.Repository<Message>().DeleteAsync(message.Id, ct);
 		await _unitOfWork.SaveChangesAsync(ct);
+
+		// Delete the underlying media files (and their physical files on disk) —
+		// soft-deleting the message alone left these behind forever, leaking disk space.
+		foreach (var mediaFileId in mediaFileIds)
+		{
+			await _mediaFileService.DeleteAsync(mediaFileId);
+		}
 
 		return true;
 	}
