@@ -266,8 +266,11 @@ public class AccountService : IAccountService
 
         var mediaDto = new MediaFileUploadDto
         {
-            MediaType = "Account",
-            PlacementName = "ProfileImage",
+            MediaType = "Image",
+            // No MediaPlacement lookup row exists for avatars — those are only seeded for
+            // the video placements (WelcomeVideo, CoursePage, etc). Avatars are looked up
+            // via Account.MediaFileId/ProfileImagePath directly, not by placement, so leave
+            // this unset rather than failing CreateAsync's placement validation.
             Title = $"{account.Email} Profile Image"
         };
 
