@@ -33,7 +33,14 @@ public class CoursesController : ControllerBase
         [FromQuery] decimal? maxPrice = null,
         CancellationToken ct = default)
     {
-        var result = await _courseService.GetAllAsync(page, pageSize, searchTerm, levelId, statusId, minPrice, maxPrice, ct);
+        // Anonymous visitors and students get the published catalogue; the admin panel
+        // sends its token here and needs to see drafts and archived courses to manage them.
+        var isAdmin = string.Equals(
+            User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value,
+            "Admin",
+            StringComparison.OrdinalIgnoreCase);
+
+        var result = await _courseService.GetAllAsync(page, pageSize, searchTerm, levelId, statusId, minPrice, maxPrice, isAdmin, ct);
         return CustomJsonResult<PaginatedResult<CourseDto>>.SuccessResult(result);
     }
 

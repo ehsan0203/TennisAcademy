@@ -5,7 +5,12 @@ namespace MTA.Application.Services;
 
 public interface ICourseService
 {
-    Task<PaginatedResult<CourseDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? levelId = null, int? statusId = null, decimal? minPrice = null, decimal? maxPrice = null, CancellationToken ct = default);
+    /// <param name="includeUnpublished">
+    /// Admin-only. The public catalogue must show published courses alone — a draft or
+    /// an archived course still belongs to whoever bought it, but nobody else should
+    /// be able to find it, let alone buy it.
+    /// </param>
+    Task<PaginatedResult<CourseDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? levelId = null, int? statusId = null, decimal? minPrice = null, decimal? maxPrice = null, bool includeUnpublished = false, CancellationToken ct = default);
     Task<CourseDto?> GetByIdAsync(int id, CancellationToken ct = default);
     Task<IEnumerable<CourseDto>> GetByLevelAsync(int levelId, CancellationToken ct = default);
     Task<IEnumerable<CourseDto>> GetByStatusAsync(int statusId, CancellationToken ct = default);

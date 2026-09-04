@@ -12,6 +12,10 @@ namespace MTA.Application.Services;
 /// </summary>
 public class CourseService : ICourseService
 {
+    private const string CourseStatusCategory = "CourseStatus";
+    private const string PublishedStatusKey = "Published";
+    private const string ArchivedStatusKey = "Archived";
+
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IMediaFileService _mediaFileService;
@@ -26,7 +30,7 @@ public class CourseService : ICourseService
     /// <summary>
     /// Get all courses with optional filtering
     /// </summary>
-    public async Task<PaginatedResult<CourseDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? levelId = null, int? statusId = null, decimal? minPrice = null, decimal? maxPrice = null, CancellationToken ct = default)
+    public async Task<PaginatedResult<CourseDto>> GetAllAsync(int page = 1, int pageSize = 10, string? searchTerm = null, int? levelId = null, int? statusId = null, decimal? minPrice = null, decimal? maxPrice = null, bool includeUnpublished = false, CancellationToken ct = default)
     {
         var query = _unitOfWork.Repository<Course>().GetQueryable()
             .AsNoTracking()
@@ -36,6 +40,14 @@ public class CourseService : ICourseService
             .Include(c => c.Status)
             .Include(c => c.Lessons)
             .AsQueryable();
+
+        // The catalogue is public, so anything not published — a draft still being
+        // written, or a course archived in place of deletion because someone had
+        // bought it — must not surface to buyers. Owners still reach theirs by id.
+        if (!includeUnpublished)
+        {
+            query = query.Where(c => c.Status.Key == PublishedStatusKey);
+        }
 
         // Apply filters
         if (!string.IsNullOrEmpty(searchTerm))
@@ -265,8 +277,17 @@ public class CourseService : ICourseService
         // Check if course has enrollments
         if (course.UserCourseHistory.Any())
         {
-            // Archive instead of delete
-            course.StatusId = 4; // Archived
+            // Archive instead of delete, so the people who bought it keep their access.
+            // This used to hardcode 4, which is Draft — the archive path never actually
+            // archived anything. Resolve the real status instead of guessing an id.
+            var archived = await _unitOfWork.Repository<Lookup>()
+                .GetQueryable()
+                .FirstOrDefaultAsync(l => l.Category == CourseStatusCategory && l.Key == ArchivedStatusKey, ct);
+
+            if (archived == null)
+                throw new InvalidOperationException($"Lookup {CourseStatusCategory}/{ArchivedStatusKey} is missing.");
+
+            course.StatusId = archived.Id;
             await _unitOfWork.Repository<Course>().UpdateAsync(course, ct);
         }
         else
