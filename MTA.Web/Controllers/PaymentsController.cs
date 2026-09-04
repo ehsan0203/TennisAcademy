@@ -252,7 +252,9 @@ public class PaymentsController : ControllerBase
             {
                 try
                 {
-                    var subject = $"Payment confirmed: {packageHistory.PackageTitle}";
+                    var subject = packageHistory.PackagePrice <= 0
+                        ? $"Your plan is active: {packageHistory.PackageTitle}"
+                        : $"Payment confirmed: {packageHistory.PackageTitle}";
                     var body = EmailTemplates.PackagePurchase(
                         packageHistory.UserFirstName ?? "there",
                         packageHistory.PackageTitle ?? "your package",
@@ -284,7 +286,9 @@ public class PaymentsController : ControllerBase
                 {
                     try
                     {
-                        var subject = $"Payment confirmed: {course.Title}";
+                        var subject = course.Price <= 0
+                            ? $"Access granted: {course.Title}"
+                            : $"Payment confirmed: {course.Title}";
                         var body = EmailTemplates.CoursePurchase(account.UserProfile?.FirstName ?? "there", course.Title ?? "your course", course.Price);
                         await _emailService.SendEmailAsync(account.Email, subject, body, ct);
                     }

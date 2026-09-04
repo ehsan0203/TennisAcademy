@@ -44,11 +44,20 @@ public static class EmailTemplates
     {
         var safeName = WebUtility.HtmlEncode(firstName);
         var safeTitle = WebUtility.HtmlEncode(packageTitle);
+        // A free plan is still worth confirming, but telling someone their payment
+        // succeeded when they never paid anything reads like a billing mistake.
+        var isFree = price <= 0;
+        var opening = isFree
+            ? $"Your free plan <strong>{safeTitle}</strong> is now active."
+            : $"Thank you for your purchase! Your payment for <strong>{safeTitle}</strong> was successful.";
+        var amountRow = isFree
+            ? "<tr><td style=\"padding: 6px 0; color: #666;\">Price</td><td style=\"padding: 6px 0; text-align: right;\">Free</td></tr>"
+            : $"<tr><td style=\"padding: 6px 0; color: #666;\">Amount paid</td><td style=\"padding: 6px 0; text-align: right;\">${price:0.00}</td></tr>";
         return string.Format(Wrapper, $"""
             <p>Hi {safeName},</p>
-            <p>Thank you for your purchase! Your payment for <strong>{safeTitle}</strong> was successful.</p>
+            <p>{opening}</p>
             <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
-                <tr><td style="padding: 6px 0; color: #666;">Amount paid</td><td style="padding: 6px 0; text-align: right;">${price:0.00}</td></tr>
+                {amountRow}
                 <tr><td style="padding: 6px 0; color: #666;">Remaining tickets</td><td style="padding: 6px 0; text-align: right;">{remainingTickets}</td></tr>
                 <tr><td style="padding: 6px 0; color: #666;">Valid until</td><td style="padding: 6px 0; text-align: right;">{expiredDate:MMM d, yyyy}</td></tr>
             </table>
@@ -60,10 +69,14 @@ public static class EmailTemplates
     {
         var safeName = WebUtility.HtmlEncode(firstName);
         var safeTitle = WebUtility.HtmlEncode(courseTitle);
+        var isFree = price <= 0;
+        var opening = isFree
+            ? $"You now have access to <strong>{safeTitle}</strong>."
+            : $"Thank you for your purchase! You now have access to <strong>{safeTitle}</strong>.";
         return string.Format(Wrapper, $"""
             <p>Hi {safeName},</p>
-            <p>Thank you for your purchase! You now have access to <strong>{safeTitle}</strong>.</p>
-            <p>Amount paid: ${price:0.00}</p>
+            <p>{opening}</p>
+            <p>{(isFree ? "Price: Free" : $"Amount paid: ${price:0.00}")}</p>
             <p>You can start the course anytime from your dashboard.</p>
             """);
     }
