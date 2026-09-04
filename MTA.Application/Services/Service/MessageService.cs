@@ -324,8 +324,8 @@ public class MessageService : IMessageService
                     {
                         var mediaFileDto = new MediaFileUploadDto
                         {
-                            MediaType = "Message",
-                            PlacementName = "Attachment",
+                            MediaType = InferMediaType(file),
+                            PlacementName = null,
                             Title = $"Message {messageDto.TicketId}"
                         };
 

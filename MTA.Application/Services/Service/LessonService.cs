@@ -172,7 +172,6 @@ public class LessonService : ILessonService
             var MediaFileInfo = new MediaFileUploadDto
             {
                 MediaType = "Video",
-                PlacementName = "None",
                 Title = $"{lessonDto.Title} Video"
             };
 
@@ -227,7 +226,6 @@ public class LessonService : ILessonService
                 var mediaFileInfo = new MediaFileUploadDto
                 {
                     MediaType = "Video",
-                    PlacementName = "None",
                     Title = $"{lessonDto.Title ?? lesson.Title} Video"
                 };
 

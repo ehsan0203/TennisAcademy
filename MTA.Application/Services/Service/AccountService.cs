@@ -107,8 +107,7 @@ public class AccountService : IAccountService
             {
                 var mediaDto = new MediaFileUploadDto
                 {
-                    MediaType = "Account",
-                    PlacementName = "ProfileImage",
+                    MediaType = "Image",
                     Title = $"{accountDto.Email} Profile Image"
                 };
 
@@ -224,8 +223,7 @@ public class AccountService : IAccountService
         {
             var mediaDto = new MediaFileUploadDto
             {
-                MediaType = "Account",
-                PlacementName = "ProfileImage",
+                MediaType = "Image",
                 Title = $"{account.Email} Profile Image"
             };
 
@@ -311,8 +309,7 @@ public class AccountService : IAccountService
 
             var mediaDto = new MediaFileUploadDto
             {
-                MediaType = "Account",
-                PlacementName = "ProfileImage",
+                MediaType = "Image",
                 Title = $"{account.Email} Profile Image"
             };
             var uploadedMedia = await _mediaFileService.CreateAsync(updateDto.ProfileImage, mediaDto);

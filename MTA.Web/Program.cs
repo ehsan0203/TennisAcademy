@@ -154,10 +154,15 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MTA API V1"));
 
-app.UseStaticFiles();
 app.UseRouting();
 
+// CORS must run before the static-file middleware: static files short-circuit the
+// pipeline, so anything served from wwwroot (ticket attachments, GIFs, avatars)
+// would otherwise come back with no Access-Control-Allow-Origin header and every
+// fetch() from the two front-ends — download buttons, the GIF picker — would fail.
 app.UseCors("FrontendWithCredentials");
+
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 

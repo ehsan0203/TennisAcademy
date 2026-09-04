@@ -56,6 +56,13 @@ public class PaymentsController : ControllerBase
         if (accountId is null)
             return CustomJsonResult<PaymentLinkResponseDto>.Unauthorized("Account ID not found in token.");
 
+        var package = await _unitOfWork.Repository<Package>().GetByIdAsync(packageId, ct);
+        if (package == null)
+            return CustomJsonResult<PaymentLinkResponseDto>.NotFound($"Package with ID {packageId} not found");
+
+        if (package.Price <= 0)
+            return await GrantFreeItemAsync("package", packageId, accountId.Value, ct);
+
         var link = await _paymentService.CreatePackagePaymentLinkAsync(accountId.Value, packageId, request.SuccessUrl, request.CancelUrl, ct);
         return CustomJsonResult<PaymentLinkResponseDto>.SuccessResult(link);
     }
@@ -82,6 +89,13 @@ public class PaymentsController : ControllerBase
         var alreadyHas = await _userCourseHistoryService.UserHasPurchasedCourseAsync(accountId.Value, courseId, ct);
         if (alreadyHas)
             return CustomJsonResult<PaymentLinkResponseDto>.Conflict("User already owns this course");
+
+        var course = await _unitOfWork.Repository<Course>().GetByIdAsync(courseId, ct);
+        if (course == null)
+            return CustomJsonResult<PaymentLinkResponseDto>.NotFound($"Course with ID {courseId} not found");
+
+        if (course.Price <= 0)
+            return await GrantFreeItemAsync("course", courseId, accountId.Value, ct);
 
         var link = await _paymentService.CreateCoursePaymentLinkAsync(accountId.Value, courseId, request.SuccessUrl, request.CancelUrl, ct);
         return CustomJsonResult<PaymentLinkResponseDto>.SuccessResult(link);
@@ -195,6 +209,24 @@ public class PaymentsController : ControllerBase
         }
 
         return Ok();
+    }
+
+    /// <summary>
+    /// Hands a free item straight to the account instead of sending the buyer to Square.
+    /// The synthetic order id is stable per account+item, so the ProcessedPaymentOrder
+    /// unique index stops a second click from stacking another free package on top.
+    /// </summary>
+    private async Task<CustomJsonResult<PaymentLinkResponseDto>> GrantFreeItemAsync(
+        string type, int itemId, int accountId, CancellationToken ct)
+    {
+        var referenceId = $"{type}:{itemId}:account:{accountId}";
+        await HandleSuccessfulReferenceAsync($"free:{referenceId}", referenceId, ct);
+
+        return CustomJsonResult<PaymentLinkResponseDto>.SuccessResult(new PaymentLinkResponseDto
+        {
+            Granted = true,
+            ReferenceId = referenceId
+        });
     }
 
     private async Task HandleSuccessfulReferenceAsync(string orderId, string referenceId, CancellationToken ct)

@@ -127,8 +127,11 @@ public class CourseService : ICourseService
         {
             var posterDto = new MediaFileUploadDto
             {
-                MediaType = "Course",
-                PlacementName = "Poster",
+                // Only Image/Video/Audio/Document are real MediaType lookups, and the only
+                // MediaPlacement rows are the video slots — "Course"/"Poster" made
+                // MediaFileService.CreateAsync throw, so saving a course with an image
+                // always failed with "Invalid MediaType: Course".
+                MediaType = "Image",
                 Title = $"{createCourseDto.Title} Poster"
             };
 
@@ -141,8 +144,7 @@ public class CourseService : ICourseService
         {
             var iconDto = new MediaFileUploadDto
             {
-                MediaType = "Course",
-                PlacementName = "Icon",
+                MediaType = "Image",
                 Title = $"{createCourseDto.Title} Icon"
             };
 
@@ -197,8 +199,7 @@ public class CourseService : ICourseService
         {
             var posterDto = new MediaFileUploadDto
             {
-                MediaType = "Course",
-                PlacementName = "Poster",
+                MediaType = "Image",
                 Title = $"{updateCourseDto.Title ?? existingCourse.Title} Poster"
             };
 
@@ -222,8 +223,7 @@ public class CourseService : ICourseService
         {
             var iconDto = new MediaFileUploadDto
             {
-                MediaType = "Course",
-                PlacementName = "Icon",
+                MediaType = "Image",
                 Title = $"{updateCourseDto.Title ?? existingCourse.Title} Icon"
             };
 
