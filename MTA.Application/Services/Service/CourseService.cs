@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MTA.Application.DTOs;
 using MTA.Application.DTOs.Course;
 using MTA.Domain.Entities;
+using MTA.Application.Services.Interface;
 using MTA.Domain.Interfaces;
 
 namespace MTA.Application.Services;
@@ -19,12 +20,14 @@ public class CourseService : ICourseService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IMediaFileService _mediaFileService;
+    private readonly ICurrentUser _currentUser;
 
-    public CourseService(IUnitOfWork unitOfWork, IMapper mapper, IMediaFileService mediaFileService)
+    public CourseService(IUnitOfWork unitOfWork, IMapper mapper, IMediaFileService mediaFileService, ICurrentUser currentUser)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _mediaFileService = mediaFileService;
+        _currentUser = currentUser;
     }
 
     /// <summary>
@@ -46,7 +49,11 @@ public class CourseService : ICourseService
         // bought it — must not surface to buyers. Owners still reach theirs by id.
         if (!includeUnpublished)
         {
-            query = query.Where(c => c.Status.Key == PublishedStatusKey);
+            // Someone who already bought a course keeps seeing it after it is archived —
+            // otherwise archiving would quietly strip it from their My Videos shelf.
+            var accountId = _currentUser.Id;
+            query = query.Where(c => c.Status.Key == PublishedStatusKey
+                || (accountId != null && c.UserCourseHistory.Any(h => h.AccountId == accountId)));
         }
 
         // Apply filters
